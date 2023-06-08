@@ -7,12 +7,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ndy/FrontEnd/ButtonComponents.dart';
-import 'package:ndy/FrontEnd/SignUpView.dart';
+import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
+import 'package:ndy/FrontEnd/SignUpFlow/SignUpView.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 
-import '../FrontEnd/TextComponents.dart';
+import '../FrontEndComponents/TextComponents.dart';
 import 'FirebaseComponents.dart';
 
 class GlobalVariables {
@@ -52,6 +52,8 @@ class GlobalVariables {
   static File? mediaOne;
   static File? mediaTwo;
   static File? mediaThree;
+  // Genres
+  
 
 
   static double _getProperWidth() {

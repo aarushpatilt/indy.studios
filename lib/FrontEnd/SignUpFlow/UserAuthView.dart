@@ -1,8 +1,8 @@
 // User deciedes between Sign In or Sign Up
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
-import 'package:ndy/FrontEnd/ButtonComponents.dart';
-import 'package:ndy/FrontEnd/TextComponents.dart';
+import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
+import 'package:ndy/FrontEndComponents/TextComponents.dart';
 
 
 class UserAuthView extends StatelessWidget {

@@ -139,26 +139,28 @@ class ClearFilledTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Container (
       width: width,
       child: TextFormField(
         controller: controller, // Assigned the TextEditingController
-        cursorColor: Colors.white,
+        cursorColor: Colors.grey,
         decoration: InputDecoration(
           filled: false,
           helperText: '',
 
           labelText: labelText,
           labelStyle: const TextStyle(
-            color: Colors.white,
+            color: Colors.grey,
+            fontSize: 15,
+           
           ),
 
           enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: Colors.grey),
           ),
         ),
         style: const TextStyle(
-          color: Colors.white,
+          color: Colors.grey,
         ),
       ),
     );

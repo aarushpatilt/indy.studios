@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ndy/FrontEnd/ButtonComponents.dart';
-import 'package:ndy/FrontEnd/TextComponents.dart';
+import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
+import 'package:ndy/FrontEndComponents/TextComponents.dart';
 
-import '../Backend/GlobalComponents.dart';
+import '../../Backend/GlobalComponents.dart';
 import 'UpgradeView.dart';
 
 class StoryCreationView extends StatelessWidget {
@@ -70,11 +70,6 @@ class StoryCreationView extends StatelessWidget {
 
                 }),
                 const SizedBox(height: GlobalVariables.mediumSpacing),
-                
-
-
-                
-
                 
               ],
             )

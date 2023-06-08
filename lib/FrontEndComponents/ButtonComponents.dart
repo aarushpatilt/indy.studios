@@ -371,33 +371,38 @@ class _RectanglePictureSelectorState extends State<RectanglePictureSelector> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: getImage,
-      child: Container(
-        width: widget.size,
-        height: widget.size,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: widget.color,
-          image: _image != null
-              ? DecorationImage(
-                  image: FileImage(File(_image!.path)),
-                  fit: BoxFit.cover,
-                )
-              : null,
+@override
+Widget build(BuildContext context) {
+  return GestureDetector(
+    onTap: getImage,
+    child: Container(
+      width: widget.size,
+      height: widget.size,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          width: 1,
+          color: Colors.white,
         ),
-        child: _image == null
-            ? Icon(
-                Icons.add,
-                color: Colors.white,
-                size: widget.size * 0.15,
+        color: widget.color,
+        image: _image != null
+            ? DecorationImage(
+                image: FileImage(File(_image!.path)),
+                fit: BoxFit.cover,
               )
             : null,
       ),
-    );
-  }
+      child: _image == null
+          ? Icon(
+              Icons.add,
+              color: Colors.white,
+              size: widget.size * 0.05,
+            )
+          : null,
+    ),
+  );
+}
+
 }
 
 

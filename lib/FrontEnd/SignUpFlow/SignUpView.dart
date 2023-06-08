@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
-import 'package:ndy/FrontEnd/ProfileCreationView.dart';
-import 'package:ndy/FrontEnd/TextComponents.dart';
-import 'ButtonComponents.dart';
+import 'package:ndy/FrontEnd/SignUpFlow/ProfileCreationView.dart';
+import 'package:ndy/FrontEndComponents/TextComponents.dart';
+import '../../FrontEndComponents/ButtonComponents.dart';
 
 class SignUpView extends StatelessWidget {
 

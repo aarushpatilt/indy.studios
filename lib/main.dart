@@ -5,7 +5,9 @@ import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-import 'FrontEnd/UserAuthView.dart';
+import 'FrontEnd/MediaUploadFlows/SingleUploadView.dart';
+import 'FrontEnd/SignUpFlow/UpgradeView.dart';
+import 'FrontEnd/SignUpFlow/UserAuthView.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -79,7 +81,7 @@ void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: UserAuthView(),
+      home: SingleUploadView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

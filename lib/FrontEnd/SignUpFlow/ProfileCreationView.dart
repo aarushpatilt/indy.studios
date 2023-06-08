@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
-import 'package:ndy/FrontEnd/StoryCreationView.dart';
-import 'package:ndy/FrontEnd/TextComponents.dart';
-import 'ButtonComponents.dart';
+import 'package:ndy/FrontEnd/SignUpFlow/StoryCreationView.dart';
+import 'package:ndy/FrontEndComponents/TextComponents.dart';
+import '../../FrontEndComponents/ButtonComponents.dart';
 
 class ProfileCreationView extends StatelessWidget {
 
