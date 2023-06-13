@@ -6,6 +6,9 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
 import 'TextComponents.dart';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
 // Header with previous indicator
 class HeaderPrevious extends StatelessWidget implements PreferredSizeWidget {
@@ -36,6 +39,38 @@ class HeaderPrevious extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
+
+// Same but also takes a list 
+class HeaderPreviousList extends StatelessWidget implements PreferredSizeWidget {
+  final String text;
+  final List<String>? list;
+
+  const HeaderPreviousList({
+    Key? key,
+    required this.text,
+    this.list,
+  }) : super(key: key);
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: GenericText(text: text),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          // Navigate back to the previous screen and send the list
+          Navigator.pop(context, list);
+        },
+      ),
+      backgroundColor: Colors.black,
+    );
+  }
+}
+
+
 
 // Button with white background, black text
 class WhiteButton extends StatelessWidget {
@@ -380,10 +415,6 @@ Widget build(BuildContext context) {
       height: widget.size,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          width: 1,
-          color: Colors.white,
-        ),
         color: widget.color,
         image: _image != null
             ? DecorationImage(
@@ -402,8 +433,261 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
 }
+
+
+class AudioUploadButton extends StatefulWidget {
+  final Function(File) onFileSelected;
+
+  const AudioUploadButton({Key? key, required this.onFileSelected})
+      : super(key: key);
+
+  @override
+  _AudioUploadButtonState createState() => _AudioUploadButtonState();
+}
+
+class _AudioUploadButtonState extends State<AudioUploadButton> {
+  File? _selectedFile;
+
+  Future<void> filePicker() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      setState(() {
+        _selectedFile = file;
+      });
+      widget.onFileSelected(file);
+    } else {
+      print("User cancelled file picker");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _selectedFile != null
+                ? GenericText(text: _selectedFile!.path.split('/').last)
+                : const GenericText(text: "select audio"),
+            GestureDetector(
+              onTap: filePicker,
+              child: const Icon(
+                Icons.search,
+                color: Colors.white,
+                size: 15,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+
+
+class TextClearButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+
+  const TextClearButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: TextButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+          ),
+        ),
+        child: Text(
+          text,
+        ),
+      ),
+    );
+  }
+}
+
+class SearchBarTag extends StatefulWidget {
+  final String collectionPath;
+  final Function(List<String>) onTagsChanged;
+
+  SearchBarTag({required this.collectionPath, required this.onTagsChanged});
+
+  @override
+  _SearchBarTagState createState() => _SearchBarTagState();
+}
+
+class _SearchBarTagState extends State<SearchBarTag> {
+  final TextEditingController _searchController = TextEditingController();
+  StreamSubscription<QuerySnapshot>? _searchResultsSubscription;
+  String _query = '';
+  List<String> _searchResults = [" "];
+  List<String> _addedTags = [];
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchResultsSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _performSearch(String query) {
+    if (query.isNotEmpty) {
+      final CollectionReference collectionReference =
+          FirebaseFirestore.instance.collection(widget.collectionPath);
+
+      _searchResultsSubscription?.cancel();
+      _searchResultsSubscription = collectionReference
+          .orderBy('tag_field')
+          .startAt([query])
+          .endAt([query + '\uf8ff'])
+          .snapshots()
+          .listen((snapshot) {
+        final searchResults = snapshot.docs;
+        if (searchResults.isEmpty) {
+          _searchResults = [query];
+        } else {
+          _searchResults = [];
+          searchResults.forEach((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            final tagName = data['tag_field'] ?? '';
+            _searchResults.add(tagName);
+          });
+        }
+        setState(() {});  // Update the UI
+      });
+    } else {
+      _searchResults = [" "];
+      setState(() {});
+    }
+  }
+
+  void _startSearch(String value) {
+    setState(() {
+      _query = value;
+    });
+    _performSearch(_query);
+  }
+
+  void _onButtonPressed(String value) {
+    if (!_addedTags.contains(value) && _addedTags.length < 3) {
+      setState(() {
+        _addedTags.add(value);
+        widget.onTagsChanged(_addedTags);
+      });
+    }
+  }
+
+  void _onDelete(String tag) {
+    setState(() {
+      _addedTags.remove(tag);
+      widget.onTagsChanged(_addedTags);
+    });
+  }
+
+   @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    hintText: 'search...',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: InputBorder.none,
+                  ),
+                  style: const TextStyle(color: Colors.grey),
+                  onChanged: _startSearch,
+                ),
+              ),
+              const Icon(Icons.search, color: Colors.white, size: 15),
+            ],
+          ),
+        ),
+        ..._searchResults.map((result) {
+          return Container(
+            width: GlobalVariables.properWidth,
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.fromLTRB(0, GlobalVariables.mediumSpacing, 0, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: GenericText(text: "# " + result),
+                ),
+                GestureDetector(
+                  onTap: () => _onButtonPressed(result),
+                  child: (_query == result)
+                      ? const Text("create", style: TextStyle(fontSize: 12, color: Colors.grey))
+                      : const Text("add", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                ),
+                const SizedBox(width: 10),
+                const Text("save", style: TextStyle(fontSize: 12, color: Colors.grey)),
+              ],
+            ),
+          );
+        }).toList(),
+        const SizedBox(height: GlobalVariables.mediumSpacing),
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: GenericText(text: "added"),
+        ),
+        ..._addedTags.map((tag) => Container(
+          width: GlobalVariables.properWidth,
+          padding: const EdgeInsets.fromLTRB(0, GlobalVariables.mediumSpacing, 0, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GenericText(text: "# " + tag),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _addedTags.remove(tag);
+                  });
+                },
+                child: const Text(
+                  "delete",
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ),
+            ],
+          ),
+        )).toList(),
+      ],
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

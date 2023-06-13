@@ -16,6 +16,12 @@ dependencies:
   firebase_storage: ^11.2.1
   flutter:
     sdk: flutter
+  file_picker: ^5.3.2
+  ffmpeg_kit_flutter: ^5.1.0
+  audioplayers: ^4.1.0
+  flutter_sound: ^9.2.13
+  permission_handler: ^10.3.0
+  open_file: ^3.3.1
 
 dev_dependencies:
   flutter_test:

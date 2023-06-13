@@ -6,6 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ndy/Backend/StructureComponents.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
+import 'package:ndy/Backend/FirebaseComponents.dart';
 
 class FirebaseComponents {
 
@@ -86,21 +88,22 @@ class FirebaseComponents {
       return null;
     }
   }
-  // Get a single video from storage ( url )
-  Future<String?> fetchVideoFromStorageURL(String path) async {
-
+  // Get a s from storage ( url )
+  Future<List<String>?> fetchMediaFromStorageURL(String path) async {
     try {
+      DocumentSnapshot documentSnapshot = await firebaseFirestore.doc(path).get();
 
-      final Reference ref = firebaseStorage.child(path);
-      // Fetches the data and parses it as a String
-      final String downloadUrl = await ref.getDownloadURL();
-      return downloadUrl;
+      List<dynamic> imageUrlListDynamic = documentSnapshot['image_urls'];
+      List<String> imageUrlList = imageUrlListDynamic.cast<String>();
+
+      return imageUrlList;
     } catch (e) {
-
       print(e);
       return null;
     }
   }
+
+
 
 
 
@@ -140,25 +143,59 @@ class FirebaseComponents {
     }
   }
 
-   // Set an array of media inside of a folder ( storage )
-  Future<bool> setEachMediaToStorage(String path, Map<String, File> map) async {
+  Future<bool> addDocumentWithTags(String documentID, String documentPath, String tagType, List<String> tags) async {
+    // Get a reference to the Firestore instance
+    final firestore = FirebaseFirestore.instance;
 
-    String filePath = '';
-    String holder = "";
-    try {
-
-      map.forEach((key, value) {
-        // Gets extension type
-        holder = Uri.file(value.path).pathSegments.last.split('.').last;
-        filePath += '$path/$key.$holder';
-        firebaseStorage.child(filePath).putFile(value);
-        filePath = ''; 
-        holder = '';
+    
+    // Add a reference to the document in each tag collection
+    for (String tag in tags) {
+      await firestore.doc('$tagType/$tag').set({"placeholder" : "null"});
+      await firestore.collection('$tagType/$tag/collection').doc(documentID).set({
+        'ref': firestore.collection(documentPath).doc(documentID),
       });
+    }
+
+    return true;
+  }
+   // Set an array of media inside of a folder ( storage )
+  Future<bool> setEachMediaToStorage(String path, String documentPath, Map<String, File> map) async {
+    String filePath = '';
+    String holder = '';
+    List<String> downloadURLs = []; // Array to store the URLs
+
+    try {
+      for (var entry in map.entries) {
+        // Gets extension type
+        holder = Uri.file(entry.value.path).pathSegments.last.split('.').last;
+        filePath = '$path/${entry.key}.$holder';
+        
+        await firebaseStorage
+          .child(filePath)
+          .putFile(entry.value)
+          .then((TaskSnapshot snapshot) async {
+            print('Image upload complete.');
+
+            // Retrieve the download URL
+            final String downloadURL = await snapshot.ref.getDownloadURL();
+
+            // Add the URL to the list
+            downloadURLs.add(downloadURL);
+
+            filePath = '';
+            holder = '';
+          });
+      }
+
+      // Store all download URLs in Firestore under the specified document
+      await FirebaseFirestore.instance.doc(documentPath).update({
+        'image_urls': downloadURLs,
+      });
+
+      print('Image URLs stored in Firestore.');
 
       return true;
     } catch (e) {
-
       print(e);
       return false;
     }
@@ -183,4 +220,35 @@ class FirebaseComponents {
       return false;
     }
   }
+
+  // Get Recents ( tags, moods )
+  
 }
+
+class FirstImageDisplay extends StatelessWidget {
+  final String documentPath;
+
+  FirstImageDisplay({required this.documentPath});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<String>?>(
+      future: FirebaseComponents().fetchMediaFromStorageURL(documentPath),
+      builder: (BuildContext context, AsyncSnapshot<List<String>?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+          return Text('No images found.');
+        } else {
+          // Get the first image URL from the list
+          String firstImageUrl = snapshot.data!.first;
+          return Image.network(firstImageUrl);
+        }
+      },
+    );
+  }
+}
+
+

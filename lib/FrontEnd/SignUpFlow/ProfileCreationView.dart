@@ -73,16 +73,15 @@ class ProfileCreationView extends StatelessWidget {
 
                 Map<String, File> mediaSet = {
 
-                  "profile_picture" : GlobalVariables.mediaOne!,
-                  "background_picture" : GlobalVariables.mediaTwo!,
-
+                  GlobalVariables().generateUUID().toString() : GlobalVariables.mediaOne!,
+                  GlobalVariables().generateUUID().toString() : GlobalVariables.mediaTwo!,
                 };
 
                 FirebaseComponents().updateEachDataToFirestore('users/${GlobalVariables.userUUID}', data).then( (result) {
 
                   if (result) {
 
-                    FirebaseComponents().setEachMediaToStorage('artists/${GlobalVariables.userUUID}/profile', mediaSet).then( (result) {
+                    FirebaseComponents().setEachMediaToStorage('artists/${GlobalVariables.userUUID}/profile', 'artists/${GlobalVariables.userUUID}/profile', mediaSet).then( (result) {
 
                       if (result) {
 

@@ -7,19 +7,23 @@ import 'package:ndy/FrontEndComponents/TextComponents.dart';
 import '../SignUpFlow/UpgradeView.dart';
 import 'TagFinderView.dart';
 
-class SingleUploadView extends StatefulWidget {
+class AlbumUploadView extends StatefulWidget {
+  final String albumID;
+
+  AlbumUploadView({Key? key, required this.albumID}) : super(key: key);
+
   @override
-  _SingleUploadViewState createState() => _SingleUploadViewState();
+  _AlbumUploadViewState createState() => _AlbumUploadViewState();
 }
 
-class _SingleUploadViewState extends State<SingleUploadView> {
+class _AlbumUploadViewState extends State<AlbumUploadView> {
   List<String>? _addedTags;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // No return to previous screen
-      appBar: HeaderPreviousList(text: "singles", list: _addedTags),
+      appBar: HeaderPreviousList(text: "albums", list: _addedTags),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -32,13 +36,7 @@ class _SingleUploadViewState extends State<SingleUploadView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RectanglePictureSelector(
-                  size: GlobalVariables.properWidth,
-                  color: Colors.transparent,
-                  onImageSelected: (File file) {
-                    GlobalVariables.mediaOne = file;
-                  },
-                ),
+                FirstImageDisplay(documentPath: '/users/5f0b7cc7-8235-4ac6-b0e6-dcd1ba3d3d9a/albums/${widget.albumID}'),
                 const SizedBox(height: GlobalVariables.mediumSpacing),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,15 +109,16 @@ class _SingleUploadViewState extends State<SingleUploadView> {
                       
                     };
 
-                    FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/singles/${documentID}', data).then((result) {
+                    FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections/${documentID}', data).then((result) {
                         
                         if (result) {
 
-                          FirebaseComponents().addDocumentWithTags(documentID, 'users/${GlobalVariables.userUUID}/singles', 'tags',_addedTags ?? []).then((result) {
+                          FirebaseComponents().addDocumentWithTags(widget.albumID, 'users/${GlobalVariables.userUUID}/albums', 'tags',_addedTags ?? []).then((result) {
 
                             if (result) {
                               
-                              FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/singles', 'users/${GlobalVariables.userUUID}/singles/${documentID}', mediaData).then((result) {
+                              FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums', 'users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections/${documentID}', mediaData).then((result) {
+                                  GlobalVariables().disposeInputs();
                                   print("done");
                               });
                             }

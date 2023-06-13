@@ -596,6 +596,8 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
+  - audioplayers_darwin (0.0.1):
+    - Flutter
   - BoringSSL-GRPC (0.0.24):
     - BoringSSL-GRPC/Implementation (= 0.0.24)
     - BoringSSL-GRPC/Interface (= 0.0.24)
@@ -607,6 +609,47 @@ PODS:
     - firebase_core
     - Flutter
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - DKImagePickerController/Core (4.3.4):
+    - DKImagePickerController/ImageDataManager
+    - DKImagePickerController/Resource
+  - DKImagePickerController/ImageDataManager (4.3.4)
+  - DKImagePickerController/PhotoGallery (4.3.4):
+    - DKImagePickerController/Core
+    - DKPhotoGallery
+  - DKImagePickerController/Resource (4.3.4)
+  - DKPhotoGallery (0.0.17):
+    - DKPhotoGallery/Core (= 0.0.17)
+    - DKPhotoGallery/Model (= 0.0.17)
+    - DKPhotoGallery/Preview (= 0.0.17)
+    - DKPhotoGallery/Resource (= 0.0.17)
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Core (0.0.17):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Preview
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Model (0.0.17):
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Preview (0.0.17):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Resource
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Resource (0.0.17):
+    - SDWebImage
+    - SwiftyGif
+  - ffmpeg-kit-ios-https (5.1)
+  - ffmpeg_kit_flutter (5.1.0):
+    - ffmpeg_kit_flutter/https (= 5.1.0)
+    - Flutter
+  - ffmpeg_kit_flutter/https (5.1.0):
+    - ffmpeg-kit-ios-https (= 5.1)
+    - Flutter
+  - file_picker (0.0.1):
+    - DKImagePickerController/PhotoGallery
+    - Flutter
   - Firebase/Auth (10.9.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 10.9.0)
@@ -665,6 +708,10 @@ PODS:
     - FirebaseCoreExtension (~> 10.0)
     - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - Flutter (1.0.0)
+  - flutter_sound (9.2.13):
+    - Flutter
+    - flutter_sound_core (= 9.2.13)
+  - flutter_sound_core (9.2.13)
   - GoogleUtilities/AppDelegateSwizzler (7.11.1):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -749,22 +796,43 @@ PODS:
     - nanopb/encode (= 2.30909.0)
   - nanopb/decode (2.30909.0)
   - nanopb/encode (2.30909.0)
+  - open_file (0.0.1):
+    - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - permission_handler_apple (9.1.0):
+    - Flutter
   - PromisesObjC (2.2.0)
+  - SDWebImage (5.16.0):
+    - SDWebImage/Core (= 5.16.0)
+  - SDWebImage/Core (5.16.0)
+  - SwiftyGif (5.4.4)
   - TOCropViewController (2.6.1)
 
 DEPENDENCIES:
+  - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
+  - ffmpeg_kit_flutter (from `.symlinks/plugins/ffmpeg_kit_flutter/ios`)
+  - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
+  - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - open_file (from `.symlinks/plugins/open_file/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
 
 SPEC REPOS:
   trunk:
     - abseil
     - BoringSSL-GRPC
+    - DKImagePickerController
+    - DKPhotoGallery
+    - ffmpeg-kit-ios-https
     - Firebase
     - FirebaseAppCheckInterop
     - FirebaseAuth
@@ -774,6 +842,7 @@ SPEC REPOS:
     - FirebaseCoreInternal
     - FirebaseFirestore
     - FirebaseStorage
+    - flutter_sound_core
     - GoogleUtilities
     - "gRPC-C++"
     - gRPC-Core
@@ -782,11 +851,19 @@ SPEC REPOS:
     - Libuv-gRPC
     - nanopb
     - PromisesObjC
+    - SDWebImage
+    - SwiftyGif
     - TOCropViewController
 
 EXTERNAL SOURCES:
+  audioplayers_darwin:
+    :path: ".symlinks/plugins/audioplayers_darwin/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
+  ffmpeg_kit_flutter:
+    :path: ".symlinks/plugins/ffmpeg_kit_flutter/ios"
+  file_picker:
+    :path: ".symlinks/plugins/file_picker/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -795,15 +872,29 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
+  flutter_sound:
+    :path: ".symlinks/plugins/flutter_sound/ios"
   image_cropper:
     :path: ".symlinks/plugins/image_cropper/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  open_file:
+    :path: ".symlinks/plugins/open_file/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
+  audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   cloud_firestore: f9951b7475ab483af80514228921edbef7109fff
+  DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
+  DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
+  ffmpeg-kit-ios-https: 8dffbe1623a2f227be98fc314294847a97f818e4
+  ffmpeg_kit_flutter: 17e9f35a4ec996ac55051c20be05240f2a0b53e8
+  file_picker: ce3938a0df3cc1ef404671531facef740d03f920
   Firebase: bd152f0f3d278c4060c5c71359db08ebcfd5a3e2
   firebase_auth: 202fb0b14e267d2a91d83b75d0ce064ef2063383
   firebase_core: fc68c0f9eec4e800b9418deff14a7e0a504016f3
@@ -817,6 +908,8 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 584d0e1b0f7f1666c516c5157ff06e785bd8836f
   FirebaseStorage: 075a0c10ec43f24193018c539d65e991db65d9ef
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_sound: c60effa2a350fb977885f0db2fbc4c1ad5160900
+  flutter_sound_core: 26c10e5832e76aaacfae252d8925232281c486ae
   GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
   "gRPC-C++": 9675f953ace2b3de7c506039d77be1f2e77a8db2
   gRPC-Core: 943e491cb0d45598b0b0eb9e910c88080369290b
@@ -826,9 +919,14 @@ SPEC CHECKSUMS:
   leveldb-library: f03246171cce0484482ec291f88b6d563699ee06
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
+  open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
+  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
+  permission_handler_apple: 8f116445eff3c0e7c65ad60f5fef5490aa94b4e4
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
+  SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
+  SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
 
-PODFILE CHECKSUM: 9c46fd01abff66081b39f5fa5767b3f1d0b11d76
+PODFILE CHECKSUM: 2d6c2b678558568e0b3ae456765140dee7811700
 
 COCOAPODS: 1.12.1

@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:ndy/FrontEnd/MainAppFlows/MusicDiscoverView.dart';
 
+import 'FrontEnd/MediaUploadFlows/AlbumCoverUploadView.dart';
 import 'FrontEnd/MediaUploadFlows/SingleUploadView.dart';
 import 'FrontEnd/SignUpFlow/UpgradeView.dart';
 import 'FrontEnd/SignUpFlow/UserAuthView.dart';
@@ -81,7 +83,7 @@ void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SingleUploadView(),
+      home: AlbumCoverUploadView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

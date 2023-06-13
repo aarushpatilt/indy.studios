@@ -47,7 +47,7 @@ class GlobalVariables {
   static final inputFive = TextEditingController();
   static final inputSix = TextEditingController();
   // uuid
-  static var userUUID = "";
+  static var userUUID = "5f0b7cc7-8235-4ac6-b0e6-dcd1ba3d3d9a";
   // Media
   static File? mediaOne;
   static File? mediaTwo;
@@ -141,16 +141,17 @@ class GlobalVariables {
 
       if (result) {
 
-        FirebaseComponents().setEachMediaToStorage(mediaPath, mediaData).then( (result) {
+        // FirebaseComponents().setEachMediaToStorage(mediaPath, mediaData).then( (result) {
 
-          if (result) {
+        //   if (result) {
 
-            GlobalVariables().disposeInputs();
-            //GlobalVariables().disposeMedia();
+        //     GlobalVariables().disposeInputs();
+        //     //GlobalVariables().disposeMedia();
             
-            Navigator.push(context, MaterialPageRoute(builder: (context) => nextView),);
-          }
-        });
+        //     Navigator.push(context, MaterialPageRoute(builder: (context) => nextView),);
+        //   }
+        // });
+        print("lol");
       }
     });
   }

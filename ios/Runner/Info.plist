@@ -53,5 +53,7 @@
 	<string>Library Permission</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Audio Permission</string>
+	<key>NSMediaLibraryUsageDescription</key>
+	<string>We need access to your media library to select audio files.</string>
 </dict>
 </plist>
