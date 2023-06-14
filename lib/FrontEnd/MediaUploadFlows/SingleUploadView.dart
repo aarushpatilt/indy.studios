@@ -115,15 +115,20 @@ class _SingleUploadViewState extends State<SingleUploadView> {
                         
                         if (result) {
 
-                          FirebaseComponents().addDocumentWithTags(documentID, 'users/${GlobalVariables.userUUID}/singles', 'tags',_addedTags ?? []).then((result) {
+                          FirebaseComponents().addDocumentRef('$documentID', 'users/${GlobalVariables.userUUID}/singles', 'songs', GlobalVariables.inputOne.text).then((result) {
 
                             if (result) {
-                              
-                              FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/singles', 'users/${GlobalVariables.userUUID}/singles/${documentID}', mediaData).then((result) {
-                                  print("done");
+                              FirebaseComponents().addDocumentWithTags(documentID, 'users/${GlobalVariables.userUUID}/singles', 'tags',_addedTags ?? []).then((result) {
+
+                                if (result) {
+                                  
+                                  FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/singles', 'users/${GlobalVariables.userUUID}/singles/${documentID}', mediaData).then((result) {
+                                      print("done");
+                                  });
+                                }
                               });
                             }
-                          });
+                         });
                         }
                     });
 

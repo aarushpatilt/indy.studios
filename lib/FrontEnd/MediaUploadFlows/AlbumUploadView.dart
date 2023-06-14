@@ -9,8 +9,9 @@ import 'TagFinderView.dart';
 
 class AlbumUploadView extends StatefulWidget {
   final String albumID;
+  final String albumImageRef;
 
-  AlbumUploadView({Key? key, required this.albumID}) : super(key: key);
+  AlbumUploadView({Key? key, required this.albumID, required this.albumImageRef }) : super(key: key);
 
   @override
   _AlbumUploadViewState createState() => _AlbumUploadViewState();
@@ -104,25 +105,33 @@ class _AlbumUploadViewState extends State<AlbumUploadView> {
                     };
 
                     Map<String, File> mediaData = {
-                      GlobalVariables().generateUUID().toString(): GlobalVariables.mediaOne!,
+
+                      widget.albumImageRef : GlobalVariables.mediaOne!,
                       GlobalVariables().generateUUID().toString(): GlobalVariables.mediaTwo!,
-                      
                     };
 
                     FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections/${documentID}', data).then((result) {
                         
                         if (result) {
 
-                          FirebaseComponents().addDocumentWithTags(widget.albumID, 'users/${GlobalVariables.userUUID}/albums', 'tags',_addedTags ?? []).then((result) {
+                          FirebaseComponents().addDocumentRef('$documentID', 'users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections', 'songs', GlobalVariables.inputOne.text).then((result) {
 
                             if (result) {
-                              
-                              FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums', 'users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections/${documentID}', mediaData).then((result) {
-                                  GlobalVariables().disposeInputs();
-                                  print("done");
+
+                              FirebaseComponents().addDocumentWithTags(widget.albumID, 'users/${GlobalVariables.userUUID}/albums', 'tags',_addedTags ?? []).then((result) {
+
+                                if (result) {
+                                  
+                                  FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums', 'users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections/${documentID}', mediaData).then((result) {
+                                      GlobalVariables().disposeInputs();
+                                      print("done");
+                                  });
+                                }
                               });
                             }
                           });
+
+
                         }
                     });
 

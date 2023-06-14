@@ -158,6 +158,20 @@ class FirebaseComponents {
 
     return true;
   }
+
+    // document name, the reference to the document, and where the reference is going to be placed
+    Future<bool> addDocumentRef(String documentID, String documentPath, String collectionPath, String title) async {
+    // Get a reference to the Firestore instance
+    final firestore = FirebaseFirestore.instance;
+ 
+    // Add a reference to the document in each tag collection
+    await firestore.collection(collectionPath).doc(documentID).set({
+      'title' : title,
+      'ref': firestore.collection(documentPath).doc(documentID),
+    });
+
+    return true;
+  }
    // Set an array of media inside of a folder ( storage )
   Future<bool> setEachMediaToStorage(String path, String documentPath, Map<String, File> map) async {
     String filePath = '';

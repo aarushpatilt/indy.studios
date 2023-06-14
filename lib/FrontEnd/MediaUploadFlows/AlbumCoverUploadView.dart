@@ -50,22 +50,32 @@ class AlbumCoverUploadView extends StatelessWidget {
                   onPressed: () {
 
                     String documentID = GlobalVariables().generateUUID().toString();
+                    String albumImageRef = GlobalVariables().generateUUID().toString();
+
                     Map<String, dynamic> data = {
                       "unique_id": documentID,
                       "title": GlobalVariables.inputOne.text,
                     };
 
                     Map<String, File> mediaData = {
-                      GlobalVariables().generateUUID().toString(): GlobalVariables.mediaOne!,
+                      albumImageRef : GlobalVariables.mediaOne!,
                       
                     };
 
                     FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/albums/${documentID}', data).then((result) {
                         
                         if (result) {
-                          FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums/', 'users/${GlobalVariables.userUUID}/albums/${documentID}', mediaData).then((result) {
-                            GlobalVariables().disposeInputs();
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumUploadView(albumID: documentID)));
+
+                          FirebaseComponents().addDocumentRef('$documentID', 'users/${GlobalVariables.userUUID}/albums', 'songs', GlobalVariables.inputOne.text).then((result) {
+
+                            if(result){
+
+                              FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums/', 'users/${GlobalVariables.userUUID}/albums/${documentID}', mediaData).then((result) {
+
+                                GlobalVariables().disposeInputs();
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumUploadView(albumID: documentID, albumImageRef: albumImageRef)));
+                              });
+                            }
                           });
                         }
                     });
