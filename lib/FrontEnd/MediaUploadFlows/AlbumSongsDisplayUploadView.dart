@@ -105,21 +105,28 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
                             SizedBox(height: GlobalVariables.largeSpacing),
                             GenericTextSemi(text: '${(snapshot.data?['tags'] as List<dynamic>).map((tag) => tag.toString().toUpperCase())?.join(', ')}'),
                             SizedBox(height: GlobalVariables.largeSpacing),
-                            GenericTextRegSmall(text: '${snapshot.data?['description']}'),
-                            // TextClearButton(
-                            //   text: "ADD SONG", 
-                            //   onPressed: () { 
-                            //     Navigator.push(
-                            //       context, 
-                            //       MaterialPageRoute(
-                            //         builder: (context) => AlbumUploadView(
-                            //           albumID: widget.albumID, 
-                            //           albumImageRef: (snapshot.data?['image_urls'] as List<dynamic>)[0].toString(),
-                            //         )
-                            //       )
-                            //     ); 
-                            //   }
-                            // ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AlbumUploadView(
+                                      albumID: widget.albumID,
+                                      albumImageRef: (snapshot.data?['image_urls'] as List<dynamic>)[0].toString(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                "ADD SONG",
+                                style: TextStyle(
+                                  color: Colors.white, // or any other color
+                                  fontSize: 18, // adjust to your needs
+                                  decoration: TextDecoration.underline, // make the text underlined
+                                ),
+                              ),
+                            )
+
                           ],
                         ),
                       );
