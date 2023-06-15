@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:ndy/FrontEndComponents/TextComponents.dart';
 
+import '../../Backend/FirebaseComponents.dart';
 import '../../Backend/GlobalComponents.dart';
 import 'UpgradeView.dart';
 
@@ -66,7 +67,21 @@ class StoryCreationView extends StatelessWidget {
                     "story_picture" : GlobalVariables.mediaOne!,
                   };
 
-                  GlobalVariables().uploadMixedData(context, 'users/${GlobalVariables.userUUID}/profile/story', 'users/${GlobalVariables.userUUID}/profile/story', UpgradeView(), data, mediaData);
+                  FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/bio/story', data).then( (result) {
+
+                  if (result) {
+
+                    FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/profile', 'users/${GlobalVariables.userUUID}/bio/story', mediaData).then( (result) {
+
+                      if (result) {
+
+                        GlobalVariables().disposeInputs();
+                        
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => UpgradeView()),);
+                      }
+                    });
+                  }
+                });
 
                 }),
                 const SizedBox(height: GlobalVariables.mediumSpacing),

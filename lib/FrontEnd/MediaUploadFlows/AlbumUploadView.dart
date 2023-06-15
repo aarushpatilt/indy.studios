@@ -37,7 +37,7 @@ class _AlbumUploadViewState extends State<AlbumUploadView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FirstImageDisplay(documentPath: '/users/5f0b7cc7-8235-4ac6-b0e6-dcd1ba3d3d9a/albums/${widget.albumID}'),
+                FirstImageDisplay(documentPath: '/users/${GlobalVariables.userUUID}/albums/${widget.albumID}'),
                 const SizedBox(height: GlobalVariables.mediumSpacing),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,10 +106,10 @@ class _AlbumUploadViewState extends State<AlbumUploadView> {
 
                     Map<String, File> mediaData = {
 
-                      widget.albumImageRef : GlobalVariables.mediaOne!,
                       GlobalVariables().generateUUID().toString(): GlobalVariables.mediaTwo!,
                     };
 
+                    print(widget.albumImageRef);
                     FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections/${documentID}', data).then((result) {
                         
                         if (result) {

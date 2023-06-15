@@ -68,6 +68,7 @@ class SignUpView extends StatelessWidget {
                       if (result) {
                         
                         GlobalVariables.userUUID = uuid;
+                        print(GlobalVariables.userUUID);
                         GlobalVariables().disposeInputs();
                         Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileCreationView()));
                       }

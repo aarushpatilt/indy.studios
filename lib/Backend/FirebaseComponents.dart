@@ -9,6 +9,9 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 
+import '../FrontEndComponents/TextComponents.dart';
+import 'GlobalComponents.dart';
+
 class FirebaseComponents {
 
   // This ensures there is only one instance of the class, multiple copies can not be made 
@@ -50,28 +53,63 @@ class FirebaseComponents {
     }
   }
 
-  // Get a single piece of data from firestore ( string )
-  Future<String?> fetchDataFromFirestoreString(String path) async {
+  // Get data 
+  Future<Map<String, dynamic>> getSpecificData(
+      {required String documentPath, required List<String> fields}) async {
+    // Get a DocumentReference
+    DocumentReference docRef = firebaseFirestore.doc(documentPath);
 
-    try {
+    // Get the document
+    DocumentSnapshot docSnapshot = await docRef.get();
 
-      final DocumentSnapshot snapshot = await firebaseFirestore.doc(path).get();
+    if (docSnapshot.exists) {
+      // Get the document data
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
-      if (snapshot.exists){
-        // Fetches the data and parses it as a String
-        final String data = snapshot.data() as String;
-        return data;
-      } else {
-        // If snapshot does not exist
-        print("error");
-        return null;
+      // Filter the data to only include the required fields
+      Map<String, dynamic> filteredData = {};
+      for (String field in fields) {
+        if (data.containsKey(field)) {
+          print(data[field]);
+          filteredData[field] = data[field];
+        }
       }
-    } catch (e) {
-      //failure in try / catch
-      print(e);
-      return null;
+
+      return filteredData;
+    } else {
+      throw Exception('Document does not exist');
     }
   }
+
+    Future<List<Map<String, dynamic>>> getCollectionData(
+      {required String collectionPath, required List<String> fields}) async {
+    // Get a CollectionReference
+    CollectionReference colRef = firebaseFirestore.collection(collectionPath);
+
+    // Get the documents in the collection
+    QuerySnapshot querySnapshot = await colRef.get();
+
+    // Get the data for each document in the collection
+    List<Map<String, dynamic>> allData = [];
+    for (DocumentSnapshot docSnapshot in querySnapshot.docs) {
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+
+      // Filter the data to only include the required fields
+      Map<String, dynamic> filteredData = {};
+      for (String field in fields) {
+        if (data.containsKey(field)) {
+          print(data[field]);
+          filteredData[field] = data[field];
+        }
+      }
+
+      allData.add(filteredData);
+    }
+
+    return allData;
+  }
+
+
 
   // Get a single image from storage ( url )
   Future<String?> fetchImageFromStorageURL(String path) async {
@@ -145,7 +183,7 @@ class FirebaseComponents {
 
   Future<bool> addDocumentWithTags(String documentID, String documentPath, String tagType, List<String> tags) async {
     // Get a reference to the Firestore instance
-    final firestore = FirebaseFirestore.instance;
+    final firestore = firebaseFirestore;
 
     
     // Add a reference to the document in each tag collection
@@ -210,6 +248,7 @@ class FirebaseComponents {
 
       return true;
     } catch (e) {
+      print("Breh");
       print(e);
       return false;
     }
@@ -264,5 +303,95 @@ class FirstImageDisplay extends StatelessWidget {
     );
   }
 }
+
+class FirstImageDisplayFull extends StatelessWidget {
+  final String documentPath;
+
+  FirstImageDisplayFull({required this.documentPath});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<String>?>(
+      future: FirebaseComponents().fetchMediaFromStorageURL(documentPath),
+      builder: (BuildContext context, AsyncSnapshot<List<String>?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+          return Text('No images found.');
+        } else {
+          // Get the first image URL from the list
+          String firstImageUrl = snapshot.data!.first;
+          return Image.network(firstImageUrl);
+        }
+      },
+    );
+  }
+}
+
+class CollectionDataDisplay {
+  final String collectionPath;
+  final List<String> fields;
+
+  CollectionDataDisplay({required this.collectionPath, required this.fields});
+
+  Future<List<Map<String, dynamic>>> getCollectionData() {
+    return FirebaseComponents().getCollectionData(
+      collectionPath: this.collectionPath,
+      fields: this.fields,
+    );
+  }
+
+  Widget displayData() {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: getCollectionData(),
+      builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              Map<String, dynamic> docData = snapshot.data![index];
+              return Padding(
+                padding: const EdgeInsets.only(
+                  left: GlobalVariables.horizontalSpacing,
+                  right: GlobalVariables.horizontalSpacing,
+                ),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(2.0),
+                      child: Image.network(
+                        docData['image_urls'][0],
+                        width: 50,
+                        height: 50,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GenericTextSemi(text: docData['title']),
+                        const SizedBox(height: GlobalVariables.smallSpacing - 5),
+                        GenericTextReg(text: docData['artists']),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
 
 

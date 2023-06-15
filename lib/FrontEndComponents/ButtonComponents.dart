@@ -508,11 +508,6 @@ class TextClearButton extends StatelessWidget {
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
           foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
-          ),
         ),
         child: Text(
           text,

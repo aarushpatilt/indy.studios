@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-import 'package:ndy/FrontEnd/MainAppFlows/MusicDiscoverView.dart';
+import 'package:ndy/FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
+import 'package:ndy/FrontEnd/SignUpFlow/ArtistUploadView.dart';
 
 import 'FrontEnd/MediaUploadFlows/AlbumCoverUploadView.dart';
+import 'FrontEnd/MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
 import 'FrontEnd/MediaUploadFlows/SingleUploadView.dart';
 import 'FrontEnd/SignUpFlow/UpgradeView.dart';
 import 'FrontEnd/SignUpFlow/UserAuthView.dart';
@@ -72,18 +74,18 @@ class DefaultFirebaseOptions {
 
 
 
-void main() {
+void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  Firebase.initializeApp(
+  await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
   );
 
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AlbumCoverUploadView(),
+      home: AlbumSongDisplayUploadView(albumID: '99606e58-60c1-4b6b-ad62-07d2c80e0deb'),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
+import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumUploadView.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:ndy/FrontEndComponents/TextComponents.dart';
@@ -73,7 +74,7 @@ class AlbumCoverUploadView extends StatelessWidget {
                               FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums/', 'users/${GlobalVariables.userUUID}/albums/${documentID}', mediaData).then((result) {
 
                                 GlobalVariables().disposeInputs();
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumUploadView(albumID: documentID, albumImageRef: albumImageRef)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: documentID)));
                               });
                             }
                           });

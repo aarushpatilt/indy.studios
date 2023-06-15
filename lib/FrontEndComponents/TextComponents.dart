@@ -15,7 +15,31 @@ class TitleText extends StatelessWidget {
     return Text(
       text,
       style: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w700,
         fontSize: 50,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class SubTitleText extends StatelessWidget {
+  final String text;
+
+  const SubTitleText({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w700,
+        fontSize: 35,
         color: Colors.white,
       ),
     );
@@ -55,8 +79,10 @@ class DescriptorText extends StatelessWidget {
     return Text(
       text,
       style: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w300,
         fontSize: 15,
-        color: Colors.grey,
+        color: Colors.white,
       ),
     );
   }
@@ -76,8 +102,76 @@ class InformationText extends StatelessWidget {
     return Text(
       text,
       style: const TextStyle(
-        fontSize: 10,
-        color: Colors.grey,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w400,
+        fontSize: 15,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class GenericTextSemi extends StatelessWidget {
+  final String text;
+
+  const GenericTextSemi ({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w600,
+        fontSize: 15,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class GenericTextReg extends StatelessWidget {
+  final String text;
+
+  const GenericTextReg ({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w400,
+        fontSize: 15,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class GenericTextRegSmall extends StatelessWidget {
+  final String text;
+
+  const GenericTextRegSmall ({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w300,
+        fontSize: 15,
+        color: Colors.white,
       ),
     );
   }

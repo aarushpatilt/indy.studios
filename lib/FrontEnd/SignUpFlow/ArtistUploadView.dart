@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
+import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumCoverUploadView.dart';
+import 'package:ndy/FrontEnd/MediaUploadFlows/SingleUploadView.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:ndy/FrontEndComponents/TextComponents.dart';
+
+import '../MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
 
 class ArtistUploadView extends StatelessWidget {
 
@@ -45,10 +49,10 @@ class ArtistUploadView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
 
-                    ClearButton(text: 'Artist', width: GlobalVariables.properWidth, onPressed: () { Navigator.push( context, MaterialPageRoute(builder: (context) => ArtistUploadView()), );}),
+                    ClearButton(text: 'Single', width: GlobalVariables.properWidth, onPressed: () { Navigator.push( context, MaterialPageRoute(builder: (context) => SingleUploadView()) );}),
                     const SizedBox(height: 10),
 
-                    WhiteButton(text: 'Listener', width: GlobalVariables.properWidth, onPressed: () { GlobalVariables.instance.openSignUpSheet(context); }),
+                    WhiteButton(text: 'Album', width: GlobalVariables.properWidth, onPressed: () { Navigator.push( context, MaterialPageRoute(builder: (context) => AlbumCoverUploadView()) ); }),
                   ],
                 ),
               )
