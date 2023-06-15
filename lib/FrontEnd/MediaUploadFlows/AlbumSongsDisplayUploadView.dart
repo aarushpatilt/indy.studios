@@ -105,6 +105,8 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
                             SizedBox(height: GlobalVariables.largeSpacing),
                             GenericTextSemi(text: '${(snapshot.data?['tags'] as List<dynamic>).map((tag) => tag.toString().toUpperCase())?.join(', ')}'),
                             SizedBox(height: GlobalVariables.largeSpacing),
+                            GenericTextRegSmall(text: '${snapshot.data?['description']}'),
+                            const SizedBox(height: GlobalVariables.largeSpacing),
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(
@@ -117,27 +119,17 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
                                   ),
                                 );
                               },
-                              child: const Text(
+                              child: const GenericTextSemi( text:
                                 "ADD SONG",
-                                style: TextStyle(
-                                  color: Colors.white, // or any other color
-                                  fontSize: 18, // adjust to your needs
-                                  decoration: TextDecoration.underline, // make the text underlined
-                                ),
                               ),
-                            )
-
+                            ),
                           ],
                         ),
                       );
                     },
                   ),
-                  const SizedBox(height: GlobalVariables.smallSpacing),
                   _collectionDataDisplay.displayData(),
                   const SizedBox(height: GlobalVariables.mediumSpacing),
-
-
-
                 ],
               ),
             ),
