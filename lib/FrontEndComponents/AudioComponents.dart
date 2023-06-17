@@ -43,19 +43,21 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
   }
 
   // Function to play or pause audio
-  void _playPauseAudio() async {
-    if (widget.playNotifier.value) {
-      await _audioPlayer.play(UrlSource(widget.url));
-      setState(() {
-        _playerState = PlayerState.PLAYING;
-      });
-    } else {
-      await _audioPlayer.pause();
-      setState(() {
-        _playerState = PlayerState.PAUSED;
-      });
-    }
+void _playPauseAudio() {
+  AudioManager audioManager = AudioManager();
+  if (widget.playNotifier.value) {
+    audioManager.play(_audioPlayer, widget.url);
+    setState(() {
+      _playerState = PlayerState.PLAYING;
+    });
+  } else {
+    audioManager.pause(_audioPlayer);
+    setState(() {
+      _playerState = PlayerState.PAUSED;
+    });
   }
+}
+
 
   @override
   void dispose() {
@@ -82,5 +84,32 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
         ),
       ],
     );
+  }
+}
+
+class AudioManager {
+  static final AudioManager _instance = AudioManager._internal();
+
+  factory AudioManager() {
+    return _instance;
+  }
+
+  AudioManager._internal();
+
+  AudioPlayer? _currentPlayer;
+
+  void play(AudioPlayer player, String url) async {
+    if (_currentPlayer != null && _currentPlayer != player) {
+      await _currentPlayer!.pause();
+    }
+    _currentPlayer = player;
+    await player.play(UrlSource(url));
+  }
+
+  void pause(AudioPlayer player) async {
+    if (_currentPlayer == player) {
+      await player.pause();
+      _currentPlayer = null;
+    }
   }
 }
