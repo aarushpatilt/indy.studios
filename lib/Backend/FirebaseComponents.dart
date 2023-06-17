@@ -564,6 +564,33 @@ class _MusicTileState extends State<MusicTile> {
               )
 
             ),
+            const SizedBox(height: GlobalVariables.mediumSpacing),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                IconButton(
+                  onPressed: () {
+                    playNotifier.value = !playNotifier.value;
+                  },
+                  icon: ValueListenableBuilder(
+                    valueListenable: playNotifier,
+                    builder: (context, bool value, child) {
+                      return Icon(value ? Icons.pause : Icons.play_arrow, size: GlobalVariables.mediumSize, color: Colors.white);
+                    },
+                  ),
+                  padding: EdgeInsets.all(0), // This removes all padding
+                  alignment: Alignment.centerLeft,
+                ),
+                IconButton(
+                  onPressed: () {
+                    // Add logic for heart button here
+                  },
+                  icon: Icon(Icons.favorite_border, size: GlobalVariables.mediumSize - 5, color: Colors.white),
+                  padding: EdgeInsets.all(0), // This removes all padding
+                  alignment: Alignment.centerRight,
+                ),
+              ],
+            ),
           ],
         ),
       ),
