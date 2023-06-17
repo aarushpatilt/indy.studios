@@ -16,15 +16,15 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
   final playNotifier = ValueNotifier<bool>(false);
   final firestoreService = FirestoreService();
   List<Map<String, dynamic>> documents = [];
-  final _scrollController = ScrollController();
+  final _pageController = PageController(viewportFraction: 1); // Change viewportFraction based on your needs
 
   @override
   void initState() {
     super.initState();
     _loadMoreData();
-    _scrollController.addListener(() {
-      if (_scrollController.position.atEdge) {
-        if (_scrollController.position.pixels != 0) _loadMoreData();
+    _pageController.addListener(() {
+      if (_pageController.position.atEdge) {
+        if (_pageController.position.pixels != 0) _loadMoreData();
       }
     });
   }
@@ -41,10 +41,8 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
     return Scaffold(
       appBar: const HeaderPrevious(text: "discover"),
       backgroundColor: Colors.black,
-      body: ListView.builder(
-        controller: _scrollController,
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal, // Change scroll direction here
+      body: PageView.builder(
+        controller: _pageController,
         itemCount: documents.length,
         itemBuilder: (BuildContext context, int index) {
           final docData = documents[index];
