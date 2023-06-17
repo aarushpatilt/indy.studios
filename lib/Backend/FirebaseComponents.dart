@@ -483,13 +483,12 @@ class FirestoreService {
 
 
 
-class MusicTile extends StatelessWidget {
+class MusicTile extends StatefulWidget {
   final String title;
   final String artist;
   final DateTime timestamp;
   final String imageUrl;
   final String audioUrl;
-  final ValueNotifier<bool> playNotifier;
 
   MusicTile({
     required this.title,
@@ -497,19 +496,29 @@ class MusicTile extends StatelessWidget {
     required this.timestamp,
     required this.imageUrl,
     required this.audioUrl,
-    required this.playNotifier,
   });
+
+  @override
+  _MusicTileState createState() => _MusicTileState();
+}
+
+class _MusicTileState extends State<MusicTile> {
+  final playNotifier = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    playNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        top: GlobalVariables.mediumSpacing,
-        left: GlobalVariables.horizontalSpacing,
-        right: GlobalVariables.horizontalSpacing
-      ),
-      child: 
-      Container(
+          top: GlobalVariables.mediumSpacing,
+          left: GlobalVariables.horizontalSpacing,
+          right: GlobalVariables.horizontalSpacing),
+      child: Container(
         width: GlobalVariables.properWidth - 40,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -522,12 +531,12 @@ class MusicTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SubTitleText(text: title),
+                      SubTitleText(text: widget.title),
                       const SizedBox(height: GlobalVariables.smallSpacing - 5),
                       Row(
                         children: [
-                          InformationText(text: artist + ', '),
-                          InformationText(text: DateFormat('MMMM yyyy').format(timestamp)),
+                          InformationText(text: widget.artist),
+                          //InformationText(text: DateFormat('MMMM yyyy').format(widget.timestamp)),
                         ],
                       )
                     ],
@@ -535,22 +544,21 @@ class MusicTile extends StatelessWidget {
                 ),
                 SizedBox(width: GlobalVariables.smallSpacing),
                 ClipOval(
-                  child: Container(
-                    width: 70.0,
-                    height: 70.0,
-                    child: FirstImageDisplay(documentPath: '/users/${GlobalVariables.userUUID}')
-                  ),
-                ),
+                    child: Container(
+                        width: 70.0,
+                        height: 70.0,
+                        child: FirstImageDisplay(
+                            documentPath: '/users/${GlobalVariables.userUUID}'))),
               ],
             ),
             const SizedBox(height: GlobalVariables.largeSpacing),
-            AudioPlayerUI(url: audioUrl, playNotifier: playNotifier), 
+            AudioPlayerUI(url: widget.audioUrl, playNotifier: playNotifier),
             const SizedBox(height: GlobalVariables.largeSpacing),
             GestureDetector(
               onTap: () {
                 playNotifier.value = !playNotifier.value;
               },
-              child: Image.network(imageUrl),
+              child: Image.network(widget.imageUrl),
             ),
           ],
         ),
@@ -558,6 +566,7 @@ class MusicTile extends StatelessWidget {
     );
   }
 }
+
 
 
 

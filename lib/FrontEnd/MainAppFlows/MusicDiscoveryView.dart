@@ -54,7 +54,6 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
             timestamp: docData['timestamp'].toDate(),
             imageUrl: docData['image_urls'][1],
             audioUrl: docData['image_urls'][0],
-            playNotifier: playNotifier,
           );
         },
       ),
