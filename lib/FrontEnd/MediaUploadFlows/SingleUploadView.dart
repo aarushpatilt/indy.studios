@@ -106,9 +106,9 @@ class _SingleUploadViewState extends State<SingleUploadView> {
                     };
 
                     Map<String, File> mediaData = {
-                      GlobalVariables().generateUUID().toString(): GlobalVariables.mediaOne!,
-                      GlobalVariables().generateUUID().toString(): GlobalVariables.mediaTwo!,
                       
+                      GlobalVariables().generateUUID().toString(): GlobalVariables.mediaTwo!,
+                      GlobalVariables().generateUUID().toString(): GlobalVariables.mediaOne!,
                     };
 
                     FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/singles/${documentID}', data).then((result) {

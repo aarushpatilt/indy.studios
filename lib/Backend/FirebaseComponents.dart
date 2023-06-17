@@ -3,12 +3,14 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:ndy/Backend/StructureComponents.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 
+import '../FrontEndComponents/AudioComponents.dart';
 import '../FrontEndComponents/TextComponents.dart';
 import 'GlobalComponents.dart';
 
@@ -81,8 +83,7 @@ class FirebaseComponents {
     }
   }
 
-    Future<List<Map<String, dynamic>>> getCollectionData(
-      {required String collectionPath, required List<String> fields}) async {
+    Future<List<Map<String, dynamic>>> getCollectionData( {required String collectionPath, required List<String> fields}) async {
     // Get a CollectionReference
     CollectionReference colRef = firebaseFirestore.collection(collectionPath);
 
@@ -108,6 +109,38 @@ class FirebaseComponents {
 
     return allData;
   }
+
+  Future<List<Map<String, dynamic>>> getReferencedData( {required String collectionPath, required List<String> fields}) async {
+  List<Map<String, dynamic>> dataList = [];
+
+  print("test 1");
+
+  CollectionReference colRef = firebaseFirestore.collection(collectionPath);
+  QuerySnapshot snapshot = await colRef.get();
+  print(snapshot.docs);
+
+  for (var doc in snapshot.docs) {
+    print("test 2");
+    String ref = doc['ref'].path;
+    DocumentSnapshot refDocSnapshot = await FirebaseFirestore.instance.doc(ref).get();
+    Map<String, dynamic> data = refDocSnapshot.data() as Map<String, dynamic>;
+
+    // Now we have the data, but we only want to keep the fields you're interested in
+    Map<String, dynamic> filteredData = {};
+    for (String field in fields) {
+      
+      print(field);
+      filteredData[field] = data[field];
+    }
+
+    dataList.add(filteredData);
+    print(dataList);
+  }
+
+  print("test 3");
+
+  return dataList;
+}
 
 
 
@@ -254,6 +287,9 @@ class FirebaseComponents {
     }
   }
 
+
+
+
   // User sign in 
   Future<bool> signUp(String email, String password) async {
 
@@ -359,29 +395,36 @@ class CollectionDataDisplay {
             itemBuilder: (context, index) {
               Map<String, dynamic> docData = snapshot.data![index];
               return Padding(
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                   left: GlobalVariables.horizontalSpacing,
                   right: GlobalVariables.horizontalSpacing,
+                  bottom: GlobalVariables.mediumSpacing,  // changed the value to GlobalVariables.mediumSpacing
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,  // added this line to space out the elements
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(2.0),
-                      child: Image.network(
-                        docData['image_urls'][0],
-                        width: 50,
-                        height: 50,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
-                        GenericTextSemi(text: docData['title']),
-                        const SizedBox(height: GlobalVariables.smallSpacing - 5),
-                        GenericTextReg(text: docData['artists']),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(2.0),
+                          child: Image.network(
+                            docData['image_urls'][1],
+                            width: 50,
+                            height: 50,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GenericTextSemi(text: docData['title']),
+                            const SizedBox(height: GlobalVariables.smallSpacing - 5),
+                            GenericTextReg(text: docData['artists']),
+                          ],
+                        ),
                       ],
                     ),
+                    Icon(Icons.favorite_border, color: Colors.white, size: 20),  // added this line to add the heart icon
                   ],
                 ),
               );
@@ -391,7 +434,133 @@ class CollectionDataDisplay {
       },
     );
   }
+
+  
+
 }
+
+class FirestoreService {
+  final _firestore = FirebaseComponents.firebaseFirestore;
+  DocumentSnapshot? _lastDocument;
+  bool _hasMoreData = true;
+
+  Future<List<Map<String, dynamic>>> fetchNextBatch() async {
+    if (!_hasMoreData) return [];
+
+    Query query = _firestore
+        .collection('songs')
+        .limit(2);
+    
+    print(query);
+
+    if (_lastDocument != null) {
+      query = query.startAfterDocument(_lastDocument!);
+    }
+
+    final snapshots = await query.get();
+    print(snapshots);
+
+    if (snapshots.docs.length < 2) _hasMoreData = false;
+
+    List<Map<String, dynamic>> fetchedData = [];
+    for (var doc in snapshots.docs) {
+      final DocumentReference ref = doc['ref'];
+      final data = await ref.get();
+      fetchedData.add(data.data() as Map<String, dynamic>);
+    }
+
+    // Update _lastDocument after the loop
+    if (snapshots.docs.isNotEmpty) {
+      _lastDocument = snapshots.docs.last;
+    }
+
+    return fetchedData;
+
+  }
+}
+
+
+
+
+
+class MusicTile extends StatelessWidget {
+  final String title;
+  final String artist;
+  final DateTime timestamp;
+  final String imageUrl;
+  final String audioUrl;
+  final ValueNotifier<bool> playNotifier;
+
+  MusicTile({
+    required this.title,
+    required this.artist,
+    required this.timestamp,
+    required this.imageUrl,
+    required this.audioUrl,
+    required this.playNotifier,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: GlobalVariables.mediumSpacing,
+        left: GlobalVariables.horizontalSpacing,
+        right: GlobalVariables.horizontalSpacing
+      ),
+      child: 
+      Container(
+        width: GlobalVariables.properWidth - 40,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SubTitleText(text: title),
+                      const SizedBox(height: GlobalVariables.smallSpacing - 5),
+                      Row(
+                        children: [
+                          InformationText(text: artist + ', '),
+                          InformationText(text: DateFormat('MMMM yyyy').format(timestamp)),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(width: GlobalVariables.smallSpacing),
+                ClipOval(
+                  child: Container(
+                    width: 70.0,
+                    height: 70.0,
+                    child: FirstImageDisplay(documentPath: '/users/${GlobalVariables.userUUID}')
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: GlobalVariables.largeSpacing),
+            AudioPlayerUI(url: audioUrl, playNotifier: playNotifier), 
+            const SizedBox(height: GlobalVariables.largeSpacing),
+            GestureDetector(
+              onTap: () {
+                playNotifier.value = !playNotifier.value;
+              },
+              child: Image.network(imageUrl),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
 
 
 

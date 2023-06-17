@@ -29,7 +29,7 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
       fields: ['title', 'timestamp', 'tags', 'description', 'image_urls'],
     );
     _collectionDataDisplay = CollectionDataDisplay(  // create an instance of the new class
-      collectionPath: '/users/5f0b7cc7-8235-4ac6-b0e6-dcd1ba3d3d9a/albums/22af7a8d-e92d-4ac5-887f-6e8401a86c7b/collections',
+      collectionPath: '/users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections',
       fields: ['title', 'artists', 'image_urls'],
     );
   }

@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart'
 import 'package:ndy/FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
 import 'package:ndy/FrontEnd/SignUpFlow/ArtistUploadView.dart';
 
+import 'FrontEnd/MainAppFlows/MusicDiscoveryView.dart';
 import 'FrontEnd/MediaUploadFlows/AlbumCoverUploadView.dart';
 import 'FrontEnd/MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
 import 'FrontEnd/MediaUploadFlows/SingleUploadView.dart';
@@ -85,7 +86,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AlbumSongDisplayUploadView(albumID: '99606e58-60c1-4b6b-ad62-07d2c80e0deb'),
+      home: MusicDiscoveryView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

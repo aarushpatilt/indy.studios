@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
@@ -123,8 +124,20 @@ class _AlbumUploadViewState extends State<AlbumUploadView> {
                                 if (result) {
                                   
                                   FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums', 'users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections/${documentID}', mediaData).then((result) {
-                                      GlobalVariables().disposeInputs();
-                                      print("done");
+
+                                      if (result){
+
+                                        final collection = FirebaseComponents.firebaseFirestore.collection('users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections/');
+                                        final docRef = collection.doc(documentID);
+
+                                        // Then update the array field with arrayUnion
+                                        docRef.update({
+                                          'image_urls': FieldValue.arrayUnion([widget.albumImageRef])
+                                        });
+
+                                        GlobalVariables().disposeInputs();
+                                        Navigator.of(context).pop();
+                                      }
                                   });
                                 }
                               });
