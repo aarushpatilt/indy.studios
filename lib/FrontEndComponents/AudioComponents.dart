@@ -15,8 +15,6 @@ class AudioPlayerUI extends StatefulWidget {
 }
 
 class _AudioPlayerUIState extends State<AudioPlayerUI> {
-  late AudioPlayer _audioPlayer;
-  late Timer _positionTimer;
   PlayerState _playerState = PlayerState.PAUSED;
   double _currentPosition = 0;
   double _totalDuration = 0;
@@ -24,18 +22,22 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
   @override
   void initState() {
     super.initState();
-    _audioPlayer = AudioPlayer();
-    _audioPlayer.onDurationChanged.listen((Duration d) {
-      setState(() {
-        _totalDuration = d.inMilliseconds.toDouble();
-      });
+
+    AudioManager().audioPlayer.onDurationChanged.listen((Duration d) {
+      if (mounted) {
+        setState(() {
+          _totalDuration = d.inMilliseconds.toDouble();
+        });
+      }
     });
 
-    _positionTimer = Timer.periodic(const Duration(seconds: 1), (Timer t) async {
-      int result = (await _audioPlayer.getCurrentPosition())!.inMilliseconds;
-      setState(() {
-        _currentPosition = result.toDouble();
-      });
+    // Listen to the position changes
+    AudioManager().audioPlayer.onPositionChanged.listen((Duration p) {
+      if (mounted) {
+        setState(() {
+          _currentPosition = p.inMilliseconds.toDouble();
+        });
+      }
     });
 
     // Listen to the ValueNotifier
@@ -43,26 +45,27 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
   }
 
   // Function to play or pause audio
-void _playPauseAudio() {
-  AudioManager audioManager = AudioManager();
-  if (widget.playNotifier.value) {
-    audioManager.play(_audioPlayer, widget.url);
-    setState(() {
-      _playerState = PlayerState.PLAYING;
-    });
-  } else {
-    audioManager.pause(_audioPlayer);
-    setState(() {
-      _playerState = PlayerState.PAUSED;
-    });
+  void _playPauseAudio() {
+    AudioManager audioManager = AudioManager();
+    if (widget.playNotifier.value) {
+      audioManager.play(widget.url);
+      if (mounted) {
+        setState(() {
+          _playerState = PlayerState.PLAYING;
+        });
+      }
+    } else {
+      audioManager.pause();
+      if (mounted) {
+        setState(() {
+          _playerState = PlayerState.PAUSED;
+        });
+      }
+    }
   }
-}
-
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
-    _positionTimer.cancel();
     widget.playNotifier.removeListener(_playPauseAudio);  // Remove the listener
     super.dispose();
   }
@@ -89,6 +92,7 @@ void _playPauseAudio() {
 
 class AudioManager {
   static final AudioManager _instance = AudioManager._internal();
+  final AudioPlayer audioPlayer = AudioPlayer();
 
   factory AudioManager() {
     return _instance;
@@ -96,20 +100,11 @@ class AudioManager {
 
   AudioManager._internal();
 
-  AudioPlayer? _currentPlayer;
-
-  void play(AudioPlayer player, String url) async {
-    if (_currentPlayer != null && _currentPlayer != player) {
-      await _currentPlayer!.pause();
-    }
-    _currentPlayer = player;
-    await player.play(UrlSource(url));
+  void play(String url) async {
+    await audioPlayer.play(UrlSource(url));
   }
 
-  void pause(AudioPlayer player) async {
-    if (_currentPlayer == player) {
-      await player.pause();
-      _currentPlayer = null;
-    }
+  void pause() async {
+    await audioPlayer.pause();
   }
 }

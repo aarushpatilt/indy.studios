@@ -1,18 +1,16 @@
 // This class is a single instance class that other files can access it's variables and functions
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:intl/intl.dart';
-import 'package:ndy/Backend/StructureComponents.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
-import 'package:ndy/Backend/FirebaseComponents.dart';
-
 import '../FrontEndComponents/AudioComponents.dart';
 import '../FrontEndComponents/TextComponents.dart';
 import 'GlobalComponents.dart';
+import 'package:palette_generator/palette_generator.dart';
+
 
 class FirebaseComponents {
 
@@ -515,9 +513,10 @@ class _MusicTileState extends State<MusicTile> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-          top: GlobalVariables.mediumSpacing,
-          left: GlobalVariables.horizontalSpacing,
-          right: GlobalVariables.horizontalSpacing),
+        top: GlobalVariables.mediumSpacing,
+        left: GlobalVariables.horizontalSpacing,
+        right: GlobalVariables.horizontalSpacing,
+      ),
       child: Container(
         width: GlobalVariables.properWidth - 40,
         child: Column(
@@ -538,17 +537,18 @@ class _MusicTileState extends State<MusicTile> {
                           InformationText(text: widget.artist),
                           //InformationText(text: DateFormat('MMMM yyyy').format(widget.timestamp)),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
                 SizedBox(width: GlobalVariables.smallSpacing),
                 ClipOval(
-                    child: Container(
-                        width: 70.0,
-                        height: 70.0,
-                        child: FirstImageDisplay(
-                            documentPath: '/users/${GlobalVariables.userUUID}'))),
+                  child: Container(
+                    width: 70.0,
+                    height: 70.0,
+                    child: FirstImageDisplay(documentPath: '/users/${GlobalVariables.userUUID}'),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: GlobalVariables.largeSpacing),
@@ -558,7 +558,11 @@ class _MusicTileState extends State<MusicTile> {
               onTap: () {
                 playNotifier.value = !playNotifier.value;
               },
-              child: Image.network(widget.imageUrl),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0), // Adjust the value to change the roundness
+                child: Image.network(widget.imageUrl),
+              )
+
             ),
           ],
         ),
@@ -566,10 +570,3 @@ class _MusicTileState extends State<MusicTile> {
     );
   }
 }
-
-
-
-
-
-
-

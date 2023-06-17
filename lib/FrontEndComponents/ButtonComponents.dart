@@ -11,6 +11,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
 // Header with previous indicator
+import 'package:flutter/material.dart';
+
 class HeaderPrevious extends StatelessWidget implements PreferredSizeWidget {
   final String text;
 
@@ -35,10 +37,57 @@ class HeaderPrevious extends StatelessWidget implements PreferredSizeWidget {
         },
       ),
 
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.transparent,
+      elevation: 0.0, // Set elevation to 0
     );
   }
 }
+
+
+class HeaderMenuStack extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+
+  HeaderMenuStack({required this.title});
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);  // increase the AppBar height by 50
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      titleSpacing: 0.0,  // remove the default padding
+      backgroundColor: Colors.transparent,  // make the AppBar background transparent
+      elevation: 0,  // remove shadow underneath AppBar
+      title: Padding(
+        padding: EdgeInsets.only(top: 50.0),  // add 50.0 padding to the top
+        child: Container(
+          alignment: Alignment.center,  // center align vertically
+          child: Row(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  // Add your functionality here
+                },
+                child: Icon(Icons.menu),  // icon with three horizontal lines
+              ),
+              Expanded(
+                child: Center(
+                  child: GenericText(text: title),  // already defined in another file
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
 
 // Same but also takes a list 
 class HeaderPreviousList extends StatelessWidget implements PreferredSizeWidget {

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumUploadView.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
-import 'package:ndy/FrontEndComponents/TextComponents.dart';
 import '../../Backend/FirebaseComponents.dart';
-import '../../Backend/GlobalComponents.dart';
-import 'package:intl/intl.dart';
-import '../../FrontEndComponents/AudioComponents.dart';
+import 'package:palette_generator/palette_generator.dart';
 
 class MusicDiscoveryView extends StatefulWidget {
   @override
@@ -16,12 +12,16 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
   final playNotifier = ValueNotifier<bool>(false);
   final firestoreService = FirestoreService();
   List<Map<String, dynamic>> documents = [];
-  final _pageController = PageController(viewportFraction: 1); // Change viewportFraction based on your needs
+  final _pageController = PageController(viewportFraction: 1);
+
+  PaletteGenerator? paletteGenerator;
+  int currentPage = 0;
 
   @override
   void initState() {
     super.initState();
     _loadMoreData();
+    _updatePaletteGenerator();
     _pageController.addListener(() {
       if (_pageController.position.atEdge) {
         if (_pageController.position.pixels != 0) _loadMoreData();
@@ -36,25 +36,62 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
     });
   }
 
+  Future<void> _updatePaletteGenerator() async {
+    if (currentPage < documents.length) {
+      final generator = await PaletteGenerator.fromImageProvider(
+        NetworkImage(documents[currentPage]['image_urls'][1]),
+      );
+      setState(() {
+        paletteGenerator = generator;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const HeaderPrevious(text: "discover"),
-      backgroundColor: Colors.black,
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: documents.length,
-        itemBuilder: (BuildContext context, int index) {
-          final docData = documents[index];
-          return MusicTile(
-            title: docData['title'],
-            artist: docData['artists'],
-            timestamp: docData['timestamp'].toDate(),
-            imageUrl: docData['image_urls'][1],
-            audioUrl: docData['image_urls'][0],
-          );
-        },
-      ),
+    return Stack(
+      children: [
+        // Gradient background
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                paletteGenerator?.dominantColor?.color ?? Colors.blue,
+                Colors.black,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+        // The Scaffold is on top of the gradient
+        Scaffold(
+          appBar: const HeaderPrevious(text: "discover"),
+          backgroundColor: Colors.transparent,
+          body: PageView.builder(
+            controller: _pageController,
+            itemCount: documents.length,
+            onPageChanged: (int index) {
+              setState(() {
+                currentPage = index;
+              });
+              _updatePaletteGenerator();
+            },
+            itemBuilder: (BuildContext context, int index) {
+              final docData = documents[index];
+              return MusicTile(
+                title: docData['title'],
+                artist: docData['artists'],
+                timestamp: docData['timestamp'].toDate(),
+                imageUrl: docData['image_urls'][1],
+                audioUrl: docData['image_urls'][0],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
+
+
