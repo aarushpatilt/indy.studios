@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
-import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumUploadView.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:ndy/FrontEndComponents/TextComponents.dart';
-import '../SignUpFlow/UpgradeView.dart';
-import 'TagFinderView.dart';
 
 class AlbumCoverUploadView extends StatelessWidget {
 
@@ -63,15 +60,15 @@ class AlbumCoverUploadView extends StatelessWidget {
                       
                     };
 
-                    FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/albums/${documentID}', data).then((result) {
+                    FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/albums/$documentID', data).then((result) {
                         
                         if (result) {
 
-                          FirebaseComponents().addDocumentRef('$documentID', 'users/${GlobalVariables.userUUID}/albums', 'songs', GlobalVariables.inputOne.text).then((result) {
+                          FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/albums', 'songs', GlobalVariables.inputOne.text).then((result) {
 
                             if(result){
 
-                              FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums/', 'users/${GlobalVariables.userUUID}/albums/${documentID}', mediaData).then((result) {
+                              FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums/', 'users/${GlobalVariables.userUUID}/albums/$documentID', mediaData).then((result) {
 
                                 GlobalVariables().disposeInputs();
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: documentID)));

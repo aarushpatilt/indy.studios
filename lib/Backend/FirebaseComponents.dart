@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
+import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import '../FrontEndComponents/AudioComponents.dart';
 import '../FrontEndComponents/TextComponents.dart';
 import 'GlobalComponents.dart';
@@ -323,11 +325,11 @@ class FirstImageDisplay extends StatelessWidget {
       future: FirebaseComponents().fetchMediaFromStorageURL(documentPath),
       builder: (BuildContext context, AsyncSnapshot<List<String>?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.data == null || snapshot.data!.isEmpty) {
-          return Text('No images found.');
+          return const Text('No images found.');
         } else {
           // Get the first image URL from the list
           String firstImageUrl = snapshot.data!.first;
@@ -349,11 +351,11 @@ class FirstImageDisplayFull extends StatelessWidget {
       future: FirebaseComponents().fetchMediaFromStorageURL(documentPath),
       builder: (BuildContext context, AsyncSnapshot<List<String>?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.data == null || snapshot.data!.isEmpty) {
-          return Text('No images found.');
+          return const Text('No images found.');
         } else {
           // Get the first image URL from the list
           String firstImageUrl = snapshot.data!.first;
@@ -382,18 +384,18 @@ class CollectionDataDisplay {
       future: getCollectionData(),
       builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           return ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               Map<String, dynamic> docData = snapshot.data![index];
               return Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: GlobalVariables.horizontalSpacing,
                   right: GlobalVariables.horizontalSpacing,
                   bottom: GlobalVariables.mediumSpacing,  // changed the value to GlobalVariables.mediumSpacing
@@ -422,7 +424,7 @@ class CollectionDataDisplay {
                         ),
                       ],
                     ),
-                    Icon(Icons.favorite_border, color: Colors.white, size: 20),  // added this line to add the heart icon
+                    const Icon(Icons.favorite_border, color: Colors.white, size: 20),  // added this line to add the heart icon
                   ],
                 ),
               );
@@ -445,18 +447,13 @@ class FirestoreService {
   Future<List<Map<String, dynamic>>> fetchNextBatch() async {
     if (!_hasMoreData) return [];
 
-    Query query = _firestore
-        .collection('songs')
-        .limit(2);
-    
-    print(query);
+    Query query = _firestore.collection('songs').limit(2);
 
     if (_lastDocument != null) {
       query = query.startAfterDocument(_lastDocument!);
     }
 
     final snapshots = await query.get();
-    print(snapshots);
 
     if (snapshots.docs.length < 2) _hasMoreData = false;
 
@@ -464,7 +461,10 @@ class FirestoreService {
     for (var doc in snapshots.docs) {
       final DocumentReference ref = doc['ref'];
       final data = await ref.get();
-      fetchedData.add(data.data() as Map<String, dynamic>);
+
+      Map<String, dynamic> documentData = data.data() as Map<String, dynamic>;
+      documentData['ref'] = ref.path; // Add 'ref' parameter to the document data
+      fetchedData.add(documentData);
     }
 
     // Update _lastDocument after the loop
@@ -473,9 +473,9 @@ class FirestoreService {
     }
 
     return fetchedData;
-
   }
 }
+
 
 
 
@@ -487,6 +487,9 @@ class MusicTile extends StatefulWidget {
   final DateTime timestamp;
   final String imageUrl;
   final String audioUrl;
+  final Future<String?> albumId;
+  final String userID;
+  final List<dynamic> tags;
 
   MusicTile({
     required this.title,
@@ -494,6 +497,9 @@ class MusicTile extends StatefulWidget {
     required this.timestamp,
     required this.imageUrl,
     required this.audioUrl,
+    required this.albumId,
+    required this.userID,
+    required this.tags,
   });
 
   @override
@@ -511,87 +517,110 @@ class _MusicTileState extends State<MusicTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: GlobalVariables.mediumSpacing,
-        left: GlobalVariables.horizontalSpacing,
-        right: GlobalVariables.horizontalSpacing,
-      ),
-      child: Container(
-        width: GlobalVariables.properWidth - 40,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SubTitleText(text: widget.title),
-                      const SizedBox(height: GlobalVariables.smallSpacing - 5),
-                      Row(
-                        children: [
-                          InformationText(text: widget.artist),
-                          //InformationText(text: DateFormat('MMMM yyyy').format(widget.timestamp)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: GlobalVariables.smallSpacing),
-                ClipOval(
-                  child: Container(
-                    width: 70.0,
-                    height: 70.0,
-                    child: FirstImageDisplay(documentPath: '/users/${GlobalVariables.userUUID}'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: GlobalVariables.largeSpacing),
-            AudioPlayerUI(url: widget.audioUrl, playNotifier: playNotifier),
-            const SizedBox(height: GlobalVariables.largeSpacing),
-            GestureDetector(
-              onTap: () {
-                playNotifier.value = !playNotifier.value;
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0), // Adjust the value to change the roundness
-                child: Image.network(widget.imageUrl),
-              )
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: GlobalVariables.mediumSpacing,
+          left: GlobalVariables.horizontalSpacing,
+          right: GlobalVariables.horizontalSpacing,
+        ),
+        child: Container(
+          width: GlobalVariables.properWidth - 40,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () async {
+                            String? something = await widget.albumId;
 
-            ),
-            const SizedBox(height: GlobalVariables.mediumSpacing),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    playNotifier.value = !playNotifier.value;
-                  },
-                  icon: ValueListenableBuilder(
-                    valueListenable: playNotifier,
-                    builder: (context, bool value, child) {
-                      return Icon(value ? Icons.pause : Icons.play_arrow, size: GlobalVariables.mediumSize, color: Colors.white);
-                    },
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: something!)));
+                          },
+                          child: Column( 
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SubTitleText(text: widget.title),
+                              const SizedBox(height: GlobalVariables.smallSpacing - 5),
+                              Row(
+                                children: [
+                                  InformationText(text: widget.artist),
+                                ],
+                              ),
+                            ], 
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  padding: EdgeInsets.all(0), // This removes all padding
-                  alignment: Alignment.centerLeft,
-                ),
-                IconButton(
-                  onPressed: () {
-                    // Add logic for heart button here
-                  },
-                  icon: Icon(Icons.favorite_border, size: GlobalVariables.mediumSize - 5, color: Colors.white),
-                  padding: EdgeInsets.all(0), // This removes all padding
-                  alignment: Alignment.centerRight,
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: GlobalVariables.smallSpacing),
+                  ClipOval(
+                    child: Container(
+                      width: 70.0,
+                      height: 70.0,
+                      child: FirstImageDisplay(documentPath: '/users/${GlobalVariables.userUUID}'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: GlobalVariables.largeSpacing),
+              AudioPlayerUI(url: widget.audioUrl, playNotifier: playNotifier),
+              const SizedBox(height: GlobalVariables.mediumSpacing),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: GenericTextSemi(
+                      text: widget.tags.map((tag) => tag.toString().toUpperCase()).join(', ')
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      playNotifier.value = !playNotifier.value;
+                    },
+                    icon: ValueListenableBuilder(
+                      valueListenable: playNotifier,
+                      builder: (context, bool value, child) {
+                        return Icon(value ? Icons.pause : Icons.play_arrow, size: GlobalVariables.mediumSize - 5, color: Colors.white);
+                      },
+                    ),
+                    padding: const EdgeInsets.all(0), // This removes all padding
+                    alignment: Alignment.centerRight,
+                  ),
+                  const SizedBox(width: 10), // This adds 10 width space between the buttons
+                  IconButton(
+                    onPressed: () {
+                      // Add logic for heart button here
+                    },
+                    icon: const Icon(Icons.favorite_border, size: GlobalVariables.mediumSize - 10, color: Colors.white),
+                    padding: const EdgeInsets.all(0), // This removes all padding
+                    alignment: Alignment.centerRight,
+                  ),
+                ],
+              ),
+              const SizedBox(height: GlobalVariables.mediumSpacing),
+              GestureDetector(
+                onTap: () {
+                  playNotifier.value = !playNotifier.value;
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0), // Adjust the value to change the roundness
+                  child: Image.network(widget.imageUrl),
+                )
+
+              ),
+              // const SizedBox(height: GlobalVariables.smallSpacing),
+
+              const SizedBox(height: GlobalVariables.mediumSpacing),
+              BioPreview(userID: widget.userID)
+            ],
+          ),
         ),
       ),
     );

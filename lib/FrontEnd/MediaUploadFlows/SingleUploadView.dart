@@ -102,7 +102,8 @@ class _SingleUploadViewState extends State<SingleUploadView> {
                       "unique_id": documentID,
                       "title": GlobalVariables.inputOne.text,
                       "artists": GlobalVariables.inputTwo.text,
-                      "tags": _addedTags
+                      "tags": _addedTags,
+                      "user_id": GlobalVariables.userUUID
                     };
 
                     Map<String, File> mediaData = {

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
 import 'TextComponents.dart';
 import 'dart:io';
@@ -720,6 +721,155 @@ class _SearchBarTagState extends State<SearchBarTag> {
     );
   }
 }
+
+class BioPreview extends StatefulWidget {
+
+  final String userID;
+
+  BioPreview( { required this.userID } );
+
+  @override _BioPreviewState createState() => _BioPreviewState();
+
+}
+
+class _BioPreviewState extends State<BioPreview> {
+  late Future<Map<String, dynamic>> futureData;
+
+  @override
+  void initState() {
+    super.initState();
+    futureData = fetchData();
+  }
+
+  Future<Map<String, dynamic>> fetchData() async {
+    Map<String, dynamic> data = {};
+
+    
+    var usernameMap = await FirebaseComponents().getSpecificData(documentPath: 'users/${widget.userID}', fields: ['user_id']);
+    print(usernameMap);
+    var bioMap = await FirebaseComponents().getSpecificData(documentPath: 'users/${widget.userID}/bio/story', fields: ['title', 'story', 'image_urls', 'timestamp']);
+    
+    data.addAll(usernameMap);
+    data.addAll(bioMap);
+
+    print("yuh");
+    print(data);
+
+    return data;
+  }
+
+  @override
+Widget build(BuildContext context) {
+  return FutureBuilder<Map<String, dynamic>>(
+    future: futureData,
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();  // Show a loading indicator while waiting for data.
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');  // Show an error message if something went wrong.
+      } else {
+        // If the Future completed with data, display it in your UI.
+        Map<String, dynamic> data = snapshot.data!;
+        return Stack(
+          children: <Widget>[
+            // The background image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                data['image_urls'][0],
+                width: GlobalVariables.properWidth,
+                height: 250, // Set height to 200
+                fit: BoxFit.cover,
+              ),
+            ),
+            // The shadow gradient
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Container(
+                width: GlobalVariables.properWidth,
+                height: 250,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.7),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // The overlaying text
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: GlobalVariables.smallSpacing, top: 125, right: GlobalVariables.smallSpacing),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end, // Aligns column children towards the end
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // The title
+                    TitleText(text: data['title']),
+                    const SizedBox(height: GlobalVariables.smallSpacing),  // Add spacing between the title and its description.
+                    // The story preview, limited to 2 lines
+                    Text(
+                      data['story'],
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.white), 
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+    },
+  );
+}
+
+
+
+
+}
+
+
+/* 
+
+Boiler Plate
+
+class BioPreview extends StatefulWidget {
+
+  final String collectionPath;
+  final Function(List<String>) onTagsChanged;
+
+  BioPreview({required this.collectionPath, required this.onTagsChanged});
+
+  @override _BioPreviewState createState() => _BioPreviewState();
+
+}
+
+class  _BioPreviewState extends State<BioPreview> {
+
+  // create a data set to hold all values
+  late Map<String, dynamic> data;
+
+  // init state
+  @override
+  void initState() {
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Use your data to build your widget here.
+    return Container();  // Replace with your actual widget.
+  }
+}
+
+*/
 
 
 

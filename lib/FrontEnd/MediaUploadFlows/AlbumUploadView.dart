@@ -102,7 +102,9 @@ class _AlbumUploadViewState extends State<AlbumUploadView> {
                       "unique_id": documentID,
                       "title": GlobalVariables.inputOne.text,
                       "artists": GlobalVariables.inputTwo.text,
-                      "tags": _addedTags
+                      "tags": _addedTags,
+                      "album_id": widget.albumID,
+                      "user_id": GlobalVariables.userUUID
                     };
 
                     Map<String, File> mediaData = {

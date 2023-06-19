@@ -47,6 +47,16 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
     }
   }
 
+  Future<String?> _getAlbumId() async {
+
+    if(documents[currentPage]['image_urls'][1].contains('%2Falbums%2F')){ //does contain
+
+      Map<String, dynamic> data = await FirebaseComponents().getSpecificData(documentPath: documents[currentPage]['ref'], fields: ['album_id']);
+      return data['album_id'];
+    }
+
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -85,6 +95,10 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
                 timestamp: docData['timestamp'].toDate(),
                 imageUrl: docData['image_urls'][1],
                 audioUrl: docData['image_urls'][0],
+                albumId: _getAlbumId(),
+                userID: docData['user_id'],
+                tags: docData['tags']
+     
               );
             },
           ),
