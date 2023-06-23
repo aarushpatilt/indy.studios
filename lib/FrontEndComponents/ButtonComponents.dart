@@ -87,7 +87,35 @@ class HeaderMenuStack extends StatelessWidget implements PreferredSizeWidget {
 
 
 
+// Same but also takes a list 
+class HeaderPreviousString extends StatelessWidget implements PreferredSizeWidget {
+  final String text;
+  final String? str;
 
+  const HeaderPreviousString({
+    Key? key,
+    required this.text,
+    this.str,
+  }) : super(key: key);
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: GenericText(text: text),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          // Navigate back to the previous screen and send the list
+          Navigator.pop(context, str);
+        },
+      ),
+      backgroundColor: Colors.black,
+    );
+  }
+}
 
 
 // Same but also takes a list 
@@ -566,6 +594,151 @@ class TextClearButton extends StatelessWidget {
     );
   }
 }
+
+class SearchBarSong extends StatefulWidget {
+  final String collectionPath;
+  final Function(String) onDocumentSelected;
+  final Function(String) onTitleSelected;
+
+  SearchBarSong({required this.collectionPath, required this.onDocumentSelected, required this.onTitleSelected});
+
+  @override
+  _SearchBarSongState createState() => _SearchBarSongState();
+}
+
+class _SearchBarSongState extends State<SearchBarSong> {
+  final TextEditingController _searchController = TextEditingController();
+  StreamSubscription<QuerySnapshot>? _searchResultsSubscription;
+  String _query = '';
+  List<DocumentSnapshot> _searchResults = [];
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchResultsSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _performSearch(String query) {
+    if (query.isNotEmpty) {
+      final CollectionReference collectionReference =
+          FirebaseFirestore.instance.collection(widget.collectionPath);
+
+      _searchResultsSubscription?.cancel();
+      _searchResultsSubscription = collectionReference
+          .orderBy('title')
+          .startAt([query])
+          .endAt([query + '\uf8ff'])
+          .snapshots()
+          .listen((snapshot) {
+        _searchResults = snapshot.docs;
+        setState(() {});  // Update the UI
+      });
+    } else {
+      _searchResults = [];
+      setState(() {});
+    }
+  }
+
+  void _startSearch(String value) {
+    setState(() {
+      _query = value;
+    });
+    _performSearch(_query);
+  }
+
+  void _onButtonPressed(String image, String title) {
+    widget.onDocumentSelected(image);
+    widget.onTitleSelected(title);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    hintText: 'search...',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: InputBorder.none,
+                  ),
+                  style: const TextStyle(color: Colors.grey),
+                  onChanged: _startSearch,
+                ),
+              ),
+              const Icon(Icons.search, color: Colors.white, size: 15),
+            ],
+          ),
+        ),
+        ..._searchResults.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          final songTitle = data['title'] ?? '';
+          final songRef = data['ref'] as DocumentReference;
+          return FutureBuilder<DocumentSnapshot>(
+            future: songRef.get(),
+            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+              if (!snapshot.hasData || !snapshot.data!.exists) {
+                return Text('Song not found');
+              }
+              final songData = snapshot.data!.data() as Map<String, dynamic>;
+              final imageUrls = songData['image_urls'];
+              final imageUrl = imageUrls[1];
+              final songArtist = songData['artists'];
+              print(imageUrls);
+              
+              // Wait until image is loaded with precacheImage
+              return FutureBuilder<void>(
+                future: precacheImage(NetworkImage(imageUrl), context),
+                builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return CircularProgressIndicator(); // Display loading indicator while image is loading
+                  }
+                  return InkWell(
+                    onTap: () => _onButtonPressed(songData['image_urls'][0], songTitle),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        children: [
+                          Image.network(
+                            imageUrl,
+                            width: GlobalVariables.largeSize,
+                            height: GlobalVariables.largeSize,
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(width: GlobalVariables.smallSpacing),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GenericTextReg(text: songTitle),
+                              const SizedBox(height: GlobalVariables.smallSpacing - 10) ,
+                              GenericTextReg(text: songArtist),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        }).toList(),
+      ],
+    );
+  }
+}
+
+
+
 
 class SearchBarTag extends StatefulWidget {
   final String collectionPath;

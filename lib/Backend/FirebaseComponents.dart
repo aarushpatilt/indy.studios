@@ -274,7 +274,7 @@ class FirebaseComponents {
 
       // Store all download URLs in Firestore under the specified document
       await FirebaseFirestore.instance.doc(documentPath).update({
-        'image_urls': downloadURLs,
+          'image_urls': FieldValue.arrayUnion(downloadURLs),
       });
 
       print('Image URLs stored in Firestore.');

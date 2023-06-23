@@ -33,7 +33,7 @@ class GlobalVariables {
   static const double smallSpacing = 20;
   static const double mediumSpacing = 35;
   static const double largeSpacing = 65;
-  static const double horizontalSpacing = 20;
+  static const double horizontalSpacing = 10;
   // Sizing
   static const double smallSize = 15;
   static const double mediumSize = 30;

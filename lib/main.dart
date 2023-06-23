@@ -10,6 +10,7 @@ import 'package:ndy/FrontEnd/SignUpFlow/ArtistUploadView.dart';
 import 'FrontEnd/MainAppFlows/MusicDiscoveryView.dart';
 import 'FrontEnd/MediaUploadFlows/AlbumCoverUploadView.dart';
 import 'FrontEnd/MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
+import 'FrontEnd/MediaUploadFlows/CameraUploadView.dart';
 import 'FrontEnd/MediaUploadFlows/SingleUploadView.dart';
 import 'FrontEnd/SignUpFlow/UpgradeView.dart';
 import 'FrontEnd/SignUpFlow/UserAuthView.dart';
@@ -86,7 +87,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MusicDiscoveryView(),
+      home: UserAuthView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
