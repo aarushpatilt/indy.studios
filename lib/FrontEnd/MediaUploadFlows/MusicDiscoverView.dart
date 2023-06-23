@@ -3,6 +3,8 @@ import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:ndy/FrontEndComponents/TextComponents.dart';
 
+import '../../FrontEndComponents/CustomTabController.dart';
+
 class MusicDiscoverView extends StatelessWidget {
 
   @override
@@ -68,3 +70,5 @@ class MusicDiscoverView extends StatelessWidget {
     );
   }
 }
+
+

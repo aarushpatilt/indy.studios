@@ -4,63 +4,55 @@ import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:ndy/FrontEndComponents/TextComponents.dart';
 
-
 class UserAuthView extends StatelessWidget {
+
+  const UserAuthView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-
-        leading: const Icon(Icons.brightness_low_outlined, size: 15),
-        title: const Text('@indie.app.studios', style: TextStyle(fontSize: 15)),
-        // AppBar Modifiers
-        backgroundColor: Colors.black,
-        centerTitle: false,
-      ),
-      body: Padding(
-        // Padding
-        padding: const EdgeInsets.only(top: GlobalVariables.smallSpacing, left: GlobalVariables.horizontalSpacing, right: GlobalVariables.horizontalSpacing),
-        child: Align(
-          // Alignment
-          alignment: Alignment.topLeft,
-          child: Column(
-            // Pushes text to left
-            crossAxisAlignment: CrossAxisAlignment.start,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage('https://media4.giphy.com/media/3oGRFmRn07P3Vc5t7y/giphy.gif?cid=ecf05e47ni7vhiiv1rtoo3w6zkuxbre18xrhh3vacub5o05b&rid=giphy.gif&ct=g'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken)
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+          child: Stack(
             children: [
-
-              const TitleText(text: 'Welcome'),
-              const SizedBox(height: 15),
-
-              const Row(
-                children: [
-
-                  TitleText(text: 'to'),
-                  SizedBox(width: 15),
-                  Text('Studios', style: TextStyle(fontSize: 50, color: Colors.white, decoration: TextDecoration.underline))
-                ],
-              ),
-              // Add more body content here if needed
-              const SizedBox(height: 45),
-
-              const DescriptorText(text: 'A groundbreaking platform and disruptive marketing to reshape the way the world discovers talent'),       
-              SizedBox(height: GlobalVariables.properHeight / 2.75),
-
-              Container(
-
-                width: GlobalVariables.properWidth,
-
+              const Center(
                 child: Column(
-                  
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
-                    ClearButton(text: 'Sign In', width: GlobalVariables.properWidth, onPressed: () {}),
-                    const SizedBox(height: 10),
-
-                    WhiteButton(text: 'Sign Up', width: GlobalVariables.properWidth, onPressed: () { GlobalVariables.instance.openSignUpSheet(context); }),
+                    GenericTextReg(text: "INDY"),
+                    SizedBox(height: GlobalVariables.smallSpacing),
+                    GenericTextReg(text: "Take your photography"),
+                    GenericTextReg(text: "to the next level"),
                   ],
                 ),
-              )
+              ),
+              Positioned(
+                left: GlobalVariables.horizontalSpacing,
+                right: GlobalVariables.horizontalSpacing,
+                bottom: 0,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 50.0),
+                  child: SizedBox(
+                    width: GlobalVariables.properWidth,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ClearButton(text: 'SIGN IN', width: GlobalVariables.properWidth, onPressed: () {}),
+                        const SizedBox(height: 10),
+                        WhiteButton(text: 'SIGN UP', width: GlobalVariables.properWidth, onPressed: () { GlobalVariables.instance.openSignUpSheet(context); }),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -68,5 +60,3 @@ class UserAuthView extends StatelessWidget {
     );
   }
 }
-
-

@@ -487,7 +487,7 @@ class MusicTile extends StatefulWidget {
   final DateTime timestamp;
   final String imageUrl;
   final String audioUrl;
-  final Future<String?> albumId;
+  final String? albumId;
   final String userID;
   final List<dynamic> tags;
 

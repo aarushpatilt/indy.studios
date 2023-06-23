@@ -17,14 +17,14 @@ class StoryCreationView extends StatelessWidget {
 
     return Scaffold(
 
-      appBar: HeaderPrevious(text: "story"),
+      appBar: const HeaderPrevious(text: "STORY"),
       
       //Scrolling to body
       body: SingleChildScrollView(
 
         child: Padding(
 
-          padding: const EdgeInsets.only(top: GlobalVariables.largeSpacing, left: GlobalVariables.horizontalSpacing, right: GlobalVariables.horizontalSpacing),
+          padding: const EdgeInsets.only(top: GlobalVariables.smallSpacing, left: GlobalVariables.horizontalSpacing, right: GlobalVariables.horizontalSpacing),
 
           child: Align (
 
@@ -35,26 +35,19 @@ class StoryCreationView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
-
-                const TitleText(text: "Create"),
-                const SizedBox(height: GlobalVariables.smallSpacing),
-                const TitleText(text: "Story"),             
-                const SizedBox(height: GlobalVariables.largeSpacing),
-                const DescriptorText(text: "Story of you, written by you."),
-                const SizedBox(height: GlobalVariables.largeSpacing),
                 RectanglePictureSelector(size: GlobalVariables.properWidth, color: Colors.grey, onImageSelected: (File file) {
 
                   GlobalVariables.mediaOne = file;
                 }),
                 const SizedBox(height: GlobalVariables.smallSpacing),
 
-                ClearFilledTextField(labelText: "Title", width: GlobalVariables.properWidth, controller: GlobalVariables.inputOne),
+                ClearFilledTextField(labelText: "title", width: GlobalVariables.properWidth, controller: GlobalVariables.inputOne),
                 const SizedBox(height: GlobalVariables.smallSpacing),
 
-                ParagraphTextField(text: "Start typing...", controller: GlobalVariables.inputTwo),
+                ParagraphTextField(text: "type here...", controller: GlobalVariables.inputTwo),
                 const SizedBox(height: GlobalVariables.smallSpacing),
 
-                ClearButton(text: "Compelete", width: GlobalVariables.properWidth, onPressed: () {
+                ClearButton(text: "CONTINUE", width: GlobalVariables.properWidth, onPressed: () {
 
                   Map<String, dynamic> data = {
 

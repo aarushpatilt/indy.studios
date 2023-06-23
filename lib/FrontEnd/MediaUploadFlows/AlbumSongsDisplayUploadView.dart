@@ -49,8 +49,8 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
                 fit: StackFit.expand,
                 children: <Widget>[
                   FittedBox( // Added FittedBox
-                    child: FirstImageDisplay(documentPath: '/users/${GlobalVariables.userUUID}/albums/${widget.albumID}'),
-                    fit: BoxFit.fill,  // Change BoxFit.cover to BoxFit.fill
+                    fit: BoxFit.fill, // Added FittedBox
+                    child: FirstImageDisplay(documentPath: '/users/${GlobalVariables.userUUID}/albums/${widget.albumID}'),  // Change BoxFit.cover to BoxFit.fill
                   ),
                   Container(  // black rectangle over the image
                     color: Colors.black.withOpacity(0.3),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:ndy/FrontEnd/MediaUploadFlows/MoodUploadView.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
 import 'package:ndy/FrontEnd/SignUpFlow/ArtistUploadView.dart';
 
@@ -14,6 +15,7 @@ import 'FrontEnd/MediaUploadFlows/CameraUploadView.dart';
 import 'FrontEnd/MediaUploadFlows/SingleUploadView.dart';
 import 'FrontEnd/SignUpFlow/UpgradeView.dart';
 import 'FrontEnd/SignUpFlow/UserAuthView.dart';
+import 'FrontEndComponents/CustomTabController.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -87,7 +89,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: UserAuthView(),
+      home: MoodUploadView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

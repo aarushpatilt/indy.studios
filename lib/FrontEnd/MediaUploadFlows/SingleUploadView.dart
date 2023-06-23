@@ -124,7 +124,8 @@ class _SingleUploadViewState extends State<SingleUploadView> {
                                 if (result) {
                                   
                                   FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/singles', 'users/${GlobalVariables.userUUID}/singles/${documentID}', mediaData).then((result) {
-                                      print("done");
+                                    GlobalVariables().disposeInputs();
+                                    Navigator.pop(context);
                                   });
                                 }
                               });

@@ -28,14 +28,15 @@ class HeaderPrevious extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: GenericText(text: text),
+      title: GenericTextSmall(text: text),
 
       leading: IconButton(
-        icon: Icon(Icons.arrow_back),
+        icon: const Icon(Icons.arrow_back),
         onPressed: () {
           // Navigate back to the previous screen
           Navigator.pop(context);
         },
+        iconSize: 17,
       ),
 
       backgroundColor: Colors.transparent,
@@ -174,13 +175,12 @@ class WhiteButton extends StatelessWidget {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
 
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3),
         ),
       ),
-        child: Text(
-          text,
-        ),
+        child: 
+          GenericTextSmallDark(text: text)
       ),
     );
   }
@@ -214,9 +214,8 @@ class ClearButton extends StatelessWidget {
           borderRadius: BorderRadius.zero,
         ),
       ),
-        child: Text(
-          text,
-        ),
+        child: 
+        GenericTextSmall(text: text)
       ),
     );
   }
@@ -245,14 +244,13 @@ class WhiteOutlineButton extends StatelessWidget {
 
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
-        side: const BorderSide(color: Colors.white, width: 1),
+        side: const BorderSide(color: Colors.white, width: 0.5),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero,
         ),
       ),
-        child: Text(
-          text,
-        ),
+        child: 
+        GenericTextSmall(text: text)
       ),
     );
   }
@@ -295,8 +293,6 @@ class BlackOutlineButton extends StatelessWidget {
 }
 
 // Profile picture selector ( circle )
-
-
 class ProfilePictureSelector extends StatefulWidget {
   final double size;
   final Color color;
@@ -351,6 +347,7 @@ class _ProfilePictureSelectorState extends State<ProfilePictureSelector> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: widget.color,
+          border: Border.all(color: Colors.white, width: 0.5), // Add this
           image: _image != null
               ? DecorationImage(
                   image: FileImage(File(_image!.path)),
@@ -359,16 +356,17 @@ class _ProfilePictureSelectorState extends State<ProfilePictureSelector> {
               : null,
         ),
         child: _image == null
-            ? Icon(
+            ? const Icon(
                 Icons.add,
                 color: Colors.white,
-                size: widget.size * 0.25,
+                size: 15,
               )
             : null,
       ),
     );
   }
 }
+
 
 class BackgroundPictureSelector extends StatefulWidget {
   final double width;
@@ -416,6 +414,10 @@ class _BackgroundPictureSelectorState
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           color: widget.color,
+          border: Border.all( // Added the border property
+            color: Colors.white,
+            width: 0.5,
+          ),
           image: _image != null
               ? DecorationImage(
                   image: FileImage(File(_image!.path)),
@@ -424,10 +426,10 @@ class _BackgroundPictureSelectorState
               : null,
         ),
         child: _image == null
-            ? Icon(
+            ? const Icon(
                 Icons.add,
                 color: Colors.white,
-                size: widget.height * 0.15,
+                size: 15,
               )
             : null,
       ),
@@ -435,18 +437,19 @@ class _BackgroundPictureSelectorState
   }
 }
 
+
 // Generic Square selector
 
 class RectanglePictureSelector extends StatefulWidget {
   final double size;
-  final Color color;
   final Function(File) onImageSelected;
+  final Color? color;
 
   const RectanglePictureSelector({
     Key? key,
     required this.size,
-    required this.color,
     required this.onImageSelected,
+    this.color
   }) : super(key: key);
 
   @override
@@ -462,7 +465,7 @@ class _RectanglePictureSelectorState extends State<RectanglePictureSelector> {
     XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-      final CropAspectRatio aspectRatio = CropAspectRatio(ratioX: 1, ratioY: 1);
+      const CropAspectRatio aspectRatio = CropAspectRatio(ratioX: 1, ratioY: 1);
       final ImageCropper imageCropper = ImageCropper();
 
       final CroppedFile? croppedImage = await imageCropper.cropImage(
@@ -484,34 +487,39 @@ class _RectanglePictureSelectorState extends State<RectanglePictureSelector> {
     }
   }
 
-@override
-Widget build(BuildContext context) {
-  return GestureDetector(
-    onTap: getImage,
-    child: Container(
-      width: widget.size,
-      height: widget.size,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: widget.color,
-        image: _image != null
-            ? DecorationImage(
-                image: FileImage(File(_image!.path)),
-                fit: BoxFit.cover,
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: getImage,
+      child: Container(
+        width: widget.size,
+        height: widget.size,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.transparent,
+          image: _image != null
+              ? DecorationImage(
+                  image: FileImage(File(_image!.path)),
+                  fit: BoxFit.cover,
+                )
+              : null,
+          border: Border.all(
+            color: Colors.white,
+            width: 0.5,
+          ),
+        ),
+        child: _image == null
+            ? Icon(
+                Icons.add,
+                color: Colors.white,
+                size: widget.size * 0.05,
               )
             : null,
       ),
-      child: _image == null
-          ? Icon(
-              Icons.add,
-              color: Colors.white,
-              size: widget.size * 0.05,
-            )
-          : null,
-    ),
-  );
+    );
+  }
 }
-}
+
 
 
 class AudioUploadButton extends StatefulWidget {

@@ -48,15 +48,13 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
   }
 
   Future<String?> _getAlbumId() async {
-
     if(documents[currentPage]['image_urls'][1].contains('%2Falbums%2F')){ //does contain
-
       Map<String, dynamic> data = await FirebaseComponents().getSpecificData(documentPath: documents[currentPage]['ref'], fields: ['album_id']);
       return data['album_id'];
     }
-
     return null;
   }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -76,7 +74,7 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
         ),
         // The Scaffold is on top of the gradient
         Scaffold(
-          appBar: const HeaderPrevious(text: "discover"),
+          appBar: const HeaderPrevious(text: "DISCOVER"),
           backgroundColor: Colors.transparent,
           body: PageView.builder(
             controller: _pageController,
@@ -89,16 +87,26 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
             },
             itemBuilder: (BuildContext context, int index) {
               final docData = documents[index];
-              return MusicTile(
-                title: docData['title'],
-                artist: docData['artists'],
-                timestamp: docData['timestamp'].toDate(),
-                imageUrl: docData['image_urls'][1],
-                audioUrl: docData['image_urls'][0],
-                albumId: _getAlbumId(),
-                userID: docData['user_id'],
-                tags: docData['tags']
-     
+              return FutureBuilder<String?>(
+                future: _getAlbumId(), 
+                builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();  // Or some other placeholder
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return MusicTile(
+                      title: docData['title'],
+                      artist: docData['artists'],
+                      timestamp: docData['timestamp'].toDate(),
+                      imageUrl: docData['image_urls'][1],
+                      audioUrl: docData['image_urls'][0],
+                      albumId: snapshot.data, // Now you are providing a String or null, as your function specifies
+                      userID: docData['user_id'],
+                      tags: docData['tags']
+                    );
+                  }
+                }
               );
             },
           ),
@@ -107,5 +115,3 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
     );
   }
 }
-
-

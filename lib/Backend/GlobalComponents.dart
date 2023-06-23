@@ -12,6 +12,7 @@ import 'package:ndy/FrontEnd/SignUpFlow/SignUpView.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 
+import '../FrontEnd/MediaUploadFlows/TagFinderView.dart';
 import '../FrontEndComponents/TextComponents.dart';
 import 'FirebaseComponents.dart';
 
@@ -33,7 +34,7 @@ class GlobalVariables {
   static const double smallSpacing = 20;
   static const double mediumSpacing = 35;
   static const double largeSpacing = 65;
-  static const double horizontalSpacing = 10;
+  static const double horizontalSpacing = 15;
   // Sizing
   static const double smallSize = 15;
   static const double mediumSize = 30;
@@ -47,7 +48,7 @@ class GlobalVariables {
   static final inputFive = TextEditingController();
   static final inputSix = TextEditingController();
   // uuid
-  static var userUUID = '86462c92-9908-463f-b307-438c2456f181';
+  static var userUUID = '63da0b53-e51e-43e0-ae2d-441e65373974';
   // Media
   static File? mediaOne;
   static File? mediaTwo;
@@ -157,5 +158,63 @@ class GlobalVariables {
   }
 }
 
- 
+class TagsComponent extends StatefulWidget {
+  final void Function(List<String> tags)? onTagsChanged;
+
+  TagsComponent({this.onTagsChanged});
+
+  @override
+  _TagsComponentState createState() => _TagsComponentState();
+}
+
+class _TagsComponentState extends State<TagsComponent> {
+  List<String>? _addedTags;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: GlobalVariables.properWidth, // Set the width using GlobalVariables.properWidth
+      child: Row(
+        children: [
+          if (_addedTags != null)
+            Row(
+              children: [
+                for (int i = 0; i < _addedTags!.length; i++) ...[
+                  GenericText(text: "#" + _addedTags![i]),
+                  const SizedBox(width: 5),
+                ],
+              ],
+            )
+          else
+            GenericText(text: "tags"),
+          Spacer(), // Adds a spacer widget to create space between text and icon
+          GestureDetector(
+            onTap: () async {
+              final List<String>? selectedTags = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TagFinderView()),
+              );
+              if (selectedTags != null) {
+                setState(() {
+                  _addedTags = selectedTags;
+                });
+                widget.onTagsChanged?.call(selectedTags);
+              }
+            },
+            child: const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(
+                Icons.search,
+                size: 15,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
 

@@ -6,7 +6,14 @@ import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:ndy/FrontEndComponents/TextComponents.dart';
 
-class AlbumCoverUploadView extends StatelessWidget {
+class AlbumCoverUploadView extends StatefulWidget {
+  @override
+  _AlbumCoverUploadViewState createState() => _AlbumCoverUploadViewState();
+}
+
+class _AlbumCoverUploadViewState extends State<AlbumCoverUploadView> {
+
+  List<String> _tags = [];
 
 
   @override
@@ -35,6 +42,15 @@ class AlbumCoverUploadView extends StatelessWidget {
                     GlobalVariables.mediaOne = file;
                   },
                 ),
+                const SizedBox(height: GlobalVariables.mediumSpacing),
+                TagsComponent(
+                  onTagsChanged: (tags) {
+                    setState(() {
+                      _tags = tags;
+                      
+                    });
+                  },
+                ),
 
                 const SizedBox(height: GlobalVariables.mediumSpacing),
                 ClearFilledTextField(
@@ -42,6 +58,8 @@ class AlbumCoverUploadView extends StatelessWidget {
                   width: GlobalVariables.properWidth,
                   controller: GlobalVariables.inputOne,
                 ),
+                const SizedBox(height: GlobalVariables.mediumSpacing),
+                ParagraphTextField(text: "type here...", controller: GlobalVariables.inputTwo),
                 ClearButton(
                   text: "Complete",
                   width: GlobalVariables.properWidth,
@@ -53,6 +71,8 @@ class AlbumCoverUploadView extends StatelessWidget {
                     Map<String, dynamic> data = {
                       "unique_id": documentID,
                       "title": GlobalVariables.inputOne.text,
+                      "description": GlobalVariables.inputTwo.text,
+                      "tags": _tags
                     };
 
                     Map<String, File> mediaData = {

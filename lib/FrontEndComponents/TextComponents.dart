@@ -155,6 +155,50 @@ class GenericTextReg extends StatelessWidget {
   }
 }
 
+class GenericTextSmall extends StatelessWidget {
+  final String text;
+
+  const GenericTextSmall({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w400,
+        fontSize: 12,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class GenericTextSmallDark extends StatelessWidget {
+  final String text;
+
+  const GenericTextSmallDark({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w400,
+        fontSize: 12,
+        color: Colors.black,
+      ),
+    );
+  }
+}
+
 class GenericTextRegSmall extends StatelessWidget {
   final String text;
 
@@ -237,7 +281,7 @@ class ClearFilledTextField extends StatelessWidget {
       width: width,
       child: TextFormField(
         controller: controller, // Assigned the TextEditingController
-        cursorColor: Colors.grey,
+        cursorColor: Colors.white,
         decoration: InputDecoration(
           filled: false,
           helperText: '',
@@ -250,23 +294,23 @@ class ClearFilledTextField extends StatelessWidget {
           ),
 
           enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey),
+            borderSide: BorderSide(color: Colors.white, width: 0.5), // Update this line
           ),
         ),
         style: const TextStyle(
-          color: Colors.grey,
+          color: Colors.white,
         ),
       ),
     );
   }
 }
 
+
 class ParagraphTextField extends StatelessWidget {
-
   final String text;
-  final TextEditingController controller; 
+  final TextEditingController controller;
 
-  const ParagraphTextField ({
+  const ParagraphTextField({
     Key? key,
     required this.text,
     required this.controller,
@@ -289,17 +333,42 @@ class ParagraphTextField extends StatelessWidget {
         border: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.white,
+            width: 0.5, // specified the border width
           ),
         ),
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.white,
+            width: 0.5, // specified the border width
           ),
         ),
       ),
     );
   }
 }
+
+class TransparentCircleWithBorder extends StatelessWidget {
+
+  const TransparentCircleWithBorder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 10, // Adjust the size of the circle as needed
+      height: 10,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.transparent,
+        border: Border.all(
+          color: Colors.white,
+          width: 0.5,
+        ),
+      ),
+    );
+  }
+}
+
+
 
 
 
