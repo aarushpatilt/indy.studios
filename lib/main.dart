@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:ndy/FrontEnd/MainAppFlows/MoodDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/MoodUploadView.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
 import 'package:ndy/FrontEnd/SignUpFlow/ArtistUploadView.dart';
@@ -89,7 +90,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MoodUploadView(),
+      home: MoodDiscoveryView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

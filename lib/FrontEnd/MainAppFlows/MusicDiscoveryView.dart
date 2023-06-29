@@ -4,13 +4,15 @@ import '../../Backend/FirebaseComponents.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 class MusicDiscoveryView extends StatefulWidget {
+  const MusicDiscoveryView({super.key});
+
   @override
   _MusicDiscoveryViewState createState() => _MusicDiscoveryViewState();
 }
 
 class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
   final playNotifier = ValueNotifier<bool>(false);
-  final firestoreService = FirestoreService();
+  final firestoreService = FirestoreService('songs');
   List<Map<String, dynamic>> documents = [];
   final _pageController = PageController(viewportFraction: 1);
 

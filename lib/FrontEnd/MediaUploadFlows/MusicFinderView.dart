@@ -14,12 +14,13 @@ class MusicFinderView extends StatefulWidget {
 class _MusicFinderViewState extends State<MusicFinderView> {
   String? _selectedSongImage;
   String? _selectedTitle;
+  String? _selectedAudio;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // No return to previous screen
-      appBar: HeaderPreviousList(text: "music", list: [_selectedTitle ?? "", _selectedSongImage ?? ""]),
+      appBar: HeaderPreviousList(text: "music", list: [_selectedTitle ?? "", _selectedSongImage ?? "", _selectedAudio ?? ""]),
       body: Padding(
         padding: const EdgeInsets.only(
           top: GlobalVariables.largeSpacing,
@@ -37,14 +38,17 @@ class _MusicFinderViewState extends State<MusicFinderView> {
                   setState(() {
                     _selectedSongImage = imageUrl;
                   });
-                  print('Selected song image URL: $_selectedSongImage');
                 },
                 onTitleSelected: (String title) {
                   setState(() {
                     _selectedTitle = title;
                   });
-                  print('Selected song image URL: $_selectedTitle');
-                }
+                },
+                onAudioSelected: (String audio) {
+                  setState(() {
+                    _selectedAudio = audio;
+                  });
+                },
               ),
             ],
           ),

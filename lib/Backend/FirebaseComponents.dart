@@ -227,6 +227,13 @@ class FirebaseComponents {
       });
     }
 
+    await firestore.doc('$tagType/mix').set({"placeholder" : "null"});
+    for (String tag in tags) {
+      await firestore.collection('$tagType/mix/collection').doc(documentID).set({
+        'ref': firestore.collection(documentPath).doc(documentID),
+      });
+    }
+
     return true;
   }
 
@@ -443,11 +450,14 @@ class FirestoreService {
   final _firestore = FirebaseComponents.firebaseFirestore;
   DocumentSnapshot? _lastDocument;
   bool _hasMoreData = true;
+  String collectionName; // Add collectionName parameter
+
+  FirestoreService(this.collectionName); // Add to constructor
 
   Future<List<Map<String, dynamic>>> fetchNextBatch() async {
     if (!_hasMoreData) return [];
 
-    Query query = _firestore.collection('songs').limit(2);
+    Query query = _firestore.collection(collectionName).limit(2); // Use collectionName instead of 'songs'
 
     if (_lastDocument != null) {
       query = query.startAfterDocument(_lastDocument!);
@@ -461,9 +471,12 @@ class FirestoreService {
     for (var doc in snapshots.docs) {
       final DocumentReference ref = doc['ref'];
       final data = await ref.get();
-
+      
       Map<String, dynamic> documentData = data.data() as Map<String, dynamic>;
       documentData['ref'] = ref.path; // Add 'ref' parameter to the document data
+      Map<String, dynamic> temp = await FirebaseComponents().getSpecificData(documentPath: 'users/${documentData['user_id']}', fields: ['username', 'image_urls']);
+      documentData['username'] = temp['username'];
+      documentData['profile'] = temp['image_urls'][0];
       fetchedData.add(documentData);
     }
 
@@ -475,6 +488,7 @@ class FirestoreService {
     return fetchedData;
   }
 }
+
 
 
 

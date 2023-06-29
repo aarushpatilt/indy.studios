@@ -607,8 +607,9 @@ class SearchBarSong extends StatefulWidget {
   final String collectionPath;
   final Function(String) onDocumentSelected;
   final Function(String) onTitleSelected;
+  final Function(String) onAudioSelected;
 
-  SearchBarSong({required this.collectionPath, required this.onDocumentSelected, required this.onTitleSelected});
+  SearchBarSong({required this.collectionPath, required this.onDocumentSelected, required this.onTitleSelected, required this.onAudioSelected});
 
   @override
   _SearchBarSongState createState() => _SearchBarSongState();
@@ -655,9 +656,10 @@ class _SearchBarSongState extends State<SearchBarSong> {
     _performSearch(_query);
   }
 
-  void _onButtonPressed(String image, String title) {
+  void _onButtonPressed(String image, String title, String audio) {
     widget.onDocumentSelected(image);
     widget.onTitleSelected(title);
+    widget.onAudioSelected(audio);
   }
 
   @override
@@ -701,7 +703,7 @@ class _SearchBarSongState extends State<SearchBarSong> {
               final imageUrls = songData['image_urls'];
               final imageUrl = imageUrls[1];
               final songArtist = songData['artists'];
-              print(imageUrls);
+              print(imageUrl);
               
               // Wait until image is loaded with precacheImage
               return FutureBuilder<void>(
@@ -711,7 +713,7 @@ class _SearchBarSongState extends State<SearchBarSong> {
                     return CircularProgressIndicator(); // Display loading indicator while image is loading
                   }
                   return InkWell(
-                    onTap: () => _onButtonPressed(songData['image_urls'][0], songTitle),
+                    onTap: () => _onButtonPressed(songData['image_urls'][1], songTitle, songData['image_urls'][0]),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Row(

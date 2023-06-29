@@ -24,6 +24,7 @@ class _MoodUploadViewState extends State<MoodUploadView> {
   VideoPlayerController? _videoController;
   String? _title;
   String? _audioRef;
+  String? _imageRef;
 
   @override
   void initState() {
@@ -130,7 +131,9 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                             );
                             setState(() {
                               _title = title[0];
-                              _audioRef = title[1];
+                              _imageRef = title[1];
+                              _audioRef = title[2];
+                              
                             });
                           },
                           child: const Padding(
@@ -161,11 +164,11 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                       "caption": GlobalVariables.inputOne.text,
                       "tags": _addedTags,
                       "user_id": GlobalVariables.userUUID,
-                      "image_urls": _audioRef
+                      "image_urls": [_audioRef, _imageRef],
+                      "title": _title
 
                     };
 
-                    print("yo");
 
                     Map<String, File> mediaData = {
                     
