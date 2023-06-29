@@ -1,51 +1,68 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter/material.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import '../../Backend/FirebaseComponents.dart';
 import '../Backend/GlobalComponents.dart';
 import 'TextComponents.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
-class VideoPlayerWidget extends StatefulWidget {
-  final String url;
 
-  const VideoPlayerWidget({Key? key, required this.url}) : super(key: key);
+class VideoPlayerModel extends ChangeNotifier {
+  late VideoPlayerController controller;
+  bool isPlaying = false;
 
-  @override
-  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
-}
-
-class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  late VideoPlayerController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.network(widget.url)
+  void initialize(String url) {
+    controller = VideoPlayerController.network(url)
       ..initialize().then((_) {
-        setState(() {});
+        notifyListeners();
       });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
+  void play() {
+    isPlaying = true;
+    controller.play();
+    notifyListeners();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return _controller.value.isInitialized
-      ? AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
-          child: VideoPlayer(_controller),
-        )
-      : Container();
+  void pause() {
+    isPlaying = false;
+    controller.pause();
+    notifyListeners();
+  }
+
+  void dispose() {
+    controller.dispose();
   }
 }
 
 
+class VideoPlayerWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<VideoPlayerModel>(
+      builder: (context, model, _) => model.controller.value.isInitialized
+          ? Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                AspectRatio(
+                  aspectRatio: model.controller.value.aspectRatio,
+                  child: VideoPlayer(model.controller),
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    model.isPlaying ? model.pause() : model.play();
+                  },
+                  child: Icon(
+                    model.isPlaying ? Icons.pause : Icons.play_arrow,
+                  ),
+                ),
+              ],
+            )
+          : Container(),
+    );
+  }
+}
 
 class MoodTile extends StatefulWidget {
   final String mediaUrl;
@@ -58,7 +75,6 @@ class MoodTile extends StatefulWidget {
   final String imageUrl;
 
   const MoodTile({
-
     required this.mediaUrl,
     required this.audioUrl,
     required this.username,
@@ -66,16 +82,30 @@ class MoodTile extends StatefulWidget {
     required this.tags,
     required this.caption,
     required this.title,
-    required this.imageUrl
+    required this.imageUrl,
   });
 
   @override
   _MoodTileState createState() => _MoodTileState();
 }
 
-class _MoodTileState extends State<MoodTile> {
+class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<MoodTile> {
+  late VideoPlayerController _controller;
 
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.mediaUrl)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,82 +116,97 @@ class _MoodTileState extends State<MoodTile> {
       right: false,
       child: Column(
         children: [
-          Container(
-            height: GlobalVariables.properHeight - 85,
-            color: Colors.transparent,
-            child: Stack(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.center,
-                  child: VideoPlayerWidget(url: widget.mediaUrl),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,    // For proper positioning
-                  right: 0,   // For proper positioning
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing), 
-                    child: Row(
-                      children: [
-                        Expanded( // This makes sure the Column takes up all remaining space in the Row
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,  // This line aligns text to the left
-                            children: [
-                              Row(
-                                children: [
-                                  ClipOval(
-                                    child: Container(
-                                      width: 25.0,
-                                      height: 25.0,
-                                      child: Image.network(widget.profileUrl)
+          VisibilityDetector(
+            key: Key(widget.mediaUrl),
+            onVisibilityChanged: (VisibilityInfo info) {
+              if (info.visibleFraction == 1) {
+                _controller.play();
+              } else {
+                _controller.pause();
+              }
+            },
+            child: Container(
+              height: GlobalVariables.properHeight - 85,
+              color: Colors.transparent,
+              child: Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.center,
+                    child: _controller.value.isInitialized
+                        ? AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: VideoPlayer(_controller),
+                          )
+                        : Container(),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing), 
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    ClipOval(
+                                      child: Container(
+                                        width: 25.0,
+                                        height: 25.0,
+                                        child: Image.network(widget.profileUrl),
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: GlobalVariables.smallSpacing - 5),
-                                  GenericTextReg(text: widget.username),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start, // This line aligns text to the left
-                                      children: [
-                                        const SizedBox(height: GlobalVariables.smallSpacing - 5),
-                                        GenericTextReg(text: widget.caption),
-                                        const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                        GenericTextRegSmall(text: widget.title),
-                                      ],
+                                    const SizedBox(width: GlobalVariables.smallSpacing - 5),
+                                    GenericTextReg(text: widget.username),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(height: GlobalVariables.smallSpacing - 5),
+                                          GenericTextRegSmall(text: widget.caption),
+                                          const SizedBox(height: GlobalVariables.smallSpacing - 10),
+                                          GenericTextSmall(text: widget.title),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  const Spacer(),
-                                  Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Container(
-                                      width: 35,
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.white,
-                                          width: 1,
-                                        ),
-                                        image: DecorationImage(
-                                          image: NetworkImage(widget.imageUrl), // replace 'IMAGE_URL' with your actual image url
-                                          fit: BoxFit.cover,
+                                    const Spacer(),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Container(
+                                        width: 35,
+                                        height: 35,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.white,
+                                            width: 1,
+                                          ),
+                                          image: DecorationImage(
+                                            image: NetworkImage(widget.imageUrl),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Container(
@@ -191,15 +236,16 @@ class _MoodTileState extends State<MoodTile> {
                       color: Color.fromARGB(255, 90, 90, 90),
                       size: 20.0,
                     ),
-                  ]
+                  ],
                 ),
               ),
             ),
-          )
-
+          ),
         ],
       ),
     );
   }
 
+  @override
+  bool get wantKeepAlive => true;
 }

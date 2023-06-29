@@ -3,7 +3,6 @@ import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:ndy/FrontEndComponents/TextComponents.dart';
 import '../../Backend/FirebaseComponents.dart';
 import 'package:palette_generator/palette_generator.dart';
-
 import '../../FrontEndComponents/VideoComponent.dart';
 
 class MoodDiscoveryView extends StatefulWidget {
@@ -37,17 +36,7 @@ class _MoodDiscoveryViewState extends State<MoodDiscoveryView> {
     });
   }
 
-  // Future<String> _getAlbumId() async {
-
-  //   if(documents[currentPage]['image_urls'][1].contains('%2Falbums%2F')){ //does contain
-  //     Map<String, dynamic> data = await FirebaseComponents().getSpecificData(documentPath: documents[currentPage]['ref'], fields: ['album_id']);
-  //     return data['album_id'] ?? "";
-  //   }
-  //   print("nothing");
-  //   return "";
-  // }
-
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -72,14 +61,10 @@ class _MoodDiscoveryViewState extends State<MoodDiscoveryView> {
               caption: docData['caption'],
               title: docData['title'],
               imageUrl: docData['image_urls'][1],
-              );
+            );
           },
         ),
       ),
     );
   }
-
-
-
-
 }
