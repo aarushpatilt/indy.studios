@@ -111,12 +111,12 @@ class _MoodTileState extends State<MoodTile> {
                                 children: [
                                   ClipOval(
                                     child: Container(
-                                      width: 30.0,
-                                      height: 30.0,
+                                      width: 25.0,
+                                      height: 25.0,
                                       child: Image.network(widget.profileUrl)
                                     ),
                                   ),
-                                  const SizedBox(width: GlobalVariables.smallSpacing - 10),
+                                  const SizedBox(width: GlobalVariables.smallSpacing - 5),
                                   GenericTextReg(text: widget.username),
                                 ],
                               ),
