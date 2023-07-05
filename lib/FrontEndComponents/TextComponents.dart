@@ -155,6 +155,78 @@ class GenericTextReg extends StatelessWidget {
   }
 }
 
+class ProfileText400 extends StatelessWidget {
+  final String text;
+  final double size;
+
+  const ProfileText400 ({
+    Key? key,
+    required this.text,
+    required this.size,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w400,
+        fontSize: size,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class ProfileText500 extends StatelessWidget {
+  final String text;
+  final double size;
+
+  const ProfileText500 ({
+    Key? key,
+    required this.text,
+    required this.size,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w500,
+        fontSize: size,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class ProfileText600 extends StatelessWidget {
+  final String text;
+  final double size;
+
+  const ProfileText600 ({
+    Key? key,
+    required this.text,
+    required this.size,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w600,
+        fontSize: size,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
 class GenericTextSmall extends StatelessWidget {
   final String text;
 

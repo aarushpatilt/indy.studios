@@ -534,7 +534,7 @@ class _MusicTileState extends State<MusicTile> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.only(
-          top: GlobalVariables.mediumSpacing,
+          top: 150,
           left: GlobalVariables.horizontalSpacing,
           right: GlobalVariables.horizontalSpacing,
         ),

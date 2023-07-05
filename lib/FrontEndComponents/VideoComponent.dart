@@ -125,87 +125,89 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                 _controller.pause();
               }
             },
-            child: Container(
-              height: GlobalVariables.properHeight - 85,
-              color: Colors.transparent,
-              child: Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.center,
-                    child: _controller.value.isInitialized
-                        ? AspectRatio(
-                            aspectRatio: _controller.value.aspectRatio,
-                            child: VideoPlayer(_controller),
-                          )
-                        : Container(),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing), 
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    ClipOval(
-                                      child: Container(
-                                        width: 25.0,
-                                        height: 25.0,
-                                        child: Image.network(widget.profileUrl),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: GlobalVariables.properHeight - 85),
+              child: Container(
+                color: Colors.transparent,
+                child: Stack(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.center,
+                      child: _controller.value.isInitialized
+                          ? AspectRatio(
+                              aspectRatio: _controller.value.aspectRatio,
+                              child: VideoPlayer(_controller),
+                            )
+                          : Container(),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      ClipOval(
+                                        child: Container(
+                                          width: 25.0,
+                                          height: 25.0,
+                                          child: Image.network(widget.profileUrl),
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: GlobalVariables.smallSpacing - 5),
-                                    GenericTextReg(text: widget.username),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(height: GlobalVariables.smallSpacing - 5),
-                                          GenericTextRegSmall(text: widget.caption),
-                                          const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                          GenericTextSmall(text: widget.title),
-                                        ],
+                                      const SizedBox(width: GlobalVariables.smallSpacing - 5),
+                                      GenericTextReg(text: widget.username),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: GlobalVariables.smallSpacing - 5),
+                                            GenericTextRegSmall(text: widget.caption),
+                                            const SizedBox(height: GlobalVariables.smallSpacing - 10),
+                                            GenericTextSmall(text: widget.title),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    const Spacer(),
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: Container(
-                                        width: 35,
-                                        height: 35,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: Colors.white,
-                                            width: 1,
-                                          ),
-                                          image: DecorationImage(
-                                            image: NetworkImage(widget.imageUrl),
-                                            fit: BoxFit.cover,
+                                      const Spacer(),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Container(
+                                          width: 35,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.white,
+                                              width: 1,
+                                            ),
+                                            image: DecorationImage(
+                                              image: NetworkImage(widget.imageUrl),
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -249,3 +251,4 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
   @override
   bool get wantKeepAlive => true;
 }
+

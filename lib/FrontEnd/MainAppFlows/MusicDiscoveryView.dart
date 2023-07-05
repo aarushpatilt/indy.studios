@@ -66,7 +66,7 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                paletteGenerator?.dominantColor?.color ?? Colors.blue,
+                paletteGenerator?.dominantColor?.color ?? Colors.black,
                 Colors.black,
               ],
               begin: Alignment.topCenter,
@@ -76,7 +76,6 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
         ),
         // The Scaffold is on top of the gradient
         Scaffold(
-          appBar: const HeaderPrevious(text: "DISCOVER"),
           backgroundColor: Colors.transparent,
           body: PageView.builder(
             controller: _pageController,
@@ -97,7 +96,8 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    return MusicTile(
+                    return 
+                    MusicTile(
                       title: docData['title'],
                       artist: docData['artists'],
                       timestamp: docData['timestamp'].toDate(),

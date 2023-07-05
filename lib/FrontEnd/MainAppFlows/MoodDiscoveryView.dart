@@ -52,7 +52,8 @@ class _MoodDiscoveryViewState extends State<MoodDiscoveryView> {
           itemBuilder: (BuildContext context, int index) {
             final docData = documents[index];
             currentPage = index;
-            return MoodTile(
+            return 
+            MoodTile(
               mediaUrl: docData['image_urls'][2],
               audioUrl: docData['image_urls'][0],
               username: docData['username'],
