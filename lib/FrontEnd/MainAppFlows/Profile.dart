@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../Backend/FirebaseComponents.dart';
 import '../../Backend/GlobalComponents.dart';
+import '../../FrontEndComponents/ButtonComponents.dart';
 import '../../FrontEndComponents/TextComponents.dart';
 
 class Profile extends StatefulWidget {
@@ -38,6 +40,7 @@ class _ProfileState extends State<Profile> {
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
+                  backgroundColor: Colors.black,
                   expandedHeight: 400.0,
                   flexibleSpace: FlexibleSpaceBar(
                     background: Stack(
@@ -143,6 +146,8 @@ class _ProfileState extends State<Profile> {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: GlobalVariables.largeSpacing),
+                            TabSliderMenu(initialIndex: 0, userID: GlobalVariables.userUUID),
                           ],
                         ),
                       ),
@@ -157,3 +162,32 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
+
+class ProfileSubView extends StatefulWidget {
+  final String userID;
+
+  ProfileSubView({required this.userID});
+
+  @override
+  _ProfileSubViewState createState() => _ProfileSubViewState();
+}
+
+class _ProfileSubViewState extends State<ProfileSubView> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: GlobalVariables.smallSpacing),
+          BioPreview(userID: widget.userID),
+          const SizedBox(height: GlobalVariables.mediumSpacing),
+          AlbumListDisplay(userID: GlobalVariables.userUUID, collectionPath: '/users/${widget.userID}/albums', title: 'Albums'),
+          const SizedBox(height: GlobalVariables.mediumSpacing),
+          AlbumListDisplay(userID: GlobalVariables.userUUID, collectionPath: '/users/${widget.userID}/singles', title: 'Singles', type: 1)
+        ],
+      ),
+    );
+  }
+}
+

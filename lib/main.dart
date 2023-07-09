@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
+import 'package:ndy/FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
 
 import 'FrontEnd/MainAppFlows/Feed.dart';
 import 'FrontEndComponents/CustomTabController.dart';
@@ -81,7 +83,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Profile(),
+      home:  CustomTabPage(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

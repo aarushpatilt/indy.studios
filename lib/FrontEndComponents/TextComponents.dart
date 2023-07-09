@@ -36,6 +36,7 @@ class SubTitleText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      overflow: TextOverflow.ellipsis, // Add this line
       style: const TextStyle(
         fontFamily: 'Inter',
         fontWeight: FontWeight.w700,
@@ -45,6 +46,7 @@ class SubTitleText extends StatelessWidget {
     );
   }
 }
+
 
 class TitleTextDark extends StatelessWidget {
   final String text;

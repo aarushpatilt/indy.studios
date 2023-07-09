@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
+import '../FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
 import '../FrontEndComponents/AudioComponents.dart';
 import '../FrontEndComponents/TextComponents.dart';
 import 'GlobalComponents.dart';
@@ -56,34 +57,40 @@ class FirebaseComponents {
   }
 
   // Get data 
-  Future<Map<String, dynamic>> getSpecificData(
-      {required String documentPath, required List<String> fields}) async {
-    // Get a DocumentReference
-    DocumentReference docRef = firebaseFirestore.doc(documentPath);
+Future<Map<String, dynamic>> getSpecificData(
+  {required String documentPath, List<String>? fields}) async {
+// Get a DocumentReference
+DocumentReference docRef = firebaseFirestore.doc(documentPath);
+print(docRef);
 
-    // Get the document
-    DocumentSnapshot docSnapshot = await docRef.get();
+// Get the document
+DocumentSnapshot docSnapshot = await docRef.get();
 
-    if (docSnapshot.exists) {
-      // Get the document data
-      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+if (docSnapshot.exists) {
+  // Get the document data
+  Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
-      // Filter the data to only include the required fields
-      Map<String, dynamic> filteredData = {};
-      for (String field in fields) {
-        if (data.containsKey(field)) {
-          print(data[field]);
-          filteredData[field] = data[field];
-        }
+  // Filter the data to only include the required fields
+  if (fields != null) {
+    Map<String, dynamic> filteredData = {};
+    for (String field in fields) {
+      if (data.containsKey(field)) {
+        filteredData[field] = data[field];
       }
-
-      return filteredData;
-    } else {
-      throw Exception('Document does not exist');
     }
+    return filteredData;
+  } else {
+    // If fields is null, return all data
+    return data;
   }
+} else {
+  throw Exception('Document does not exist');
+}
+}
 
-    Future<List<Map<String, dynamic>>> getCollectionData( {required String collectionPath, required List<String> fields}) async {
+
+  Future<List<Map<String, dynamic>>> getCollectionData( 
+  {required String collectionPath, List<String>? fields}) async {
     // Get a CollectionReference
     CollectionReference colRef = firebaseFirestore.collection(collectionPath);
 
@@ -95,16 +102,19 @@ class FirebaseComponents {
     for (DocumentSnapshot docSnapshot in querySnapshot.docs) {
       Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
-      // Filter the data to only include the required fields
-      Map<String, dynamic> filteredData = {};
-      for (String field in fields) {
-        if (data.containsKey(field)) {
-          print(data[field]);
-          filteredData[field] = data[field];
+      // If fields are not null then filter the data to only include the required fields
+      // Else add the entire data
+      if (fields != null) {
+        Map<String, dynamic> filteredData = {};
+        for (String field in fields) {
+          if (data.containsKey(field)) {
+            filteredData[field] = data[field];
+          }
         }
+        allData.add(filteredData);
+      } else {
+        allData.add(data);
       }
-
-      allData.add(filteredData);
     }
 
     return allData;
@@ -113,11 +123,9 @@ class FirebaseComponents {
   Future<List<Map<String, dynamic>>> getReferencedData( {required String collectionPath, required List<String> fields}) async {
   List<Map<String, dynamic>> dataList = [];
 
-  print("test 1");
 
   CollectionReference colRef = firebaseFirestore.collection(collectionPath);
   QuerySnapshot snapshot = await colRef.get();
-  print(snapshot.docs);
 
   for (var doc in snapshot.docs) {
     print("test 2");
@@ -129,12 +137,11 @@ class FirebaseComponents {
     Map<String, dynamic> filteredData = {};
     for (String field in fields) {
       
-      print(field);
+  
       filteredData[field] = data[field];
     }
 
     dataList.add(filteredData);
-    print(dataList);
   }
 
   print("test 3");
@@ -331,9 +338,7 @@ class FirstImageDisplay extends StatelessWidget {
     return FutureBuilder<List<String>?>(
       future: FirebaseComponents().fetchMediaFromStorageURL(documentPath),
       builder: (BuildContext context, AsyncSnapshot<List<String>?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
+        if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.data == null || snapshot.data!.isEmpty) {
           return const Text('No images found.');
@@ -504,6 +509,8 @@ class MusicTile extends StatefulWidget {
   final String? albumId;
   final String userID;
   final List<dynamic> tags;
+  final Color barColor;
+  final String uniqueID;
 
   MusicTile({
     required this.title,
@@ -514,6 +521,8 @@ class MusicTile extends StatefulWidget {
     required this.albumId,
     required this.userID,
     required this.tags,
+    required this.barColor,
+    required this.uniqueID
   });
 
   @override
@@ -553,14 +562,26 @@ class _MusicTileState extends State<MusicTile> {
                       children: <Widget>[
                         GestureDetector(
                           onTap: () async {
-                            String? something = await widget.albumId;
 
+                            if(widget.albumId != null){
+                              // ignore: use_build_context_synchronously
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: widget.albumId!, userID: widget.userID)));
+                            } else {
                             // ignore: use_build_context_synchronously
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: something!)));
+                            print("HEY");
+                             Navigator.push(context, MaterialPageRoute(builder: (context) => SingleCoverDisplay(singleID: widget.uniqueID, userID: widget.userID)));
+                            }
+
+                            
                           },
                           child: Column( 
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              ProfileText500(
+                                text: widget.tags.map((tag) => tag.toString().toUpperCase()).join(', '),
+                                size: 10
+                              ),
+                              const SizedBox(height: GlobalVariables.smallSpacing - 5),
                               SubTitleText(text: widget.title),
                               const SizedBox(height: GlobalVariables.smallSpacing - 5),
                               Row(
@@ -579,46 +600,12 @@ class _MusicTileState extends State<MusicTile> {
                     child: Container(
                       width: 70.0,
                       height: 70.0,
-                      child: FirstImageDisplay(documentPath: '/users/${GlobalVariables.userUUID}'),
+                      child: FirstImageDisplay(documentPath: '/users/${widget.userID}'),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: GlobalVariables.largeSpacing),
-              AudioPlayerUI(url: widget.audioUrl, playNotifier: playNotifier),
-              const SizedBox(height: GlobalVariables.mediumSpacing),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: GenericTextSemi(
-                      text: widget.tags.map((tag) => tag.toString().toUpperCase()).join(', ')
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      playNotifier.value = !playNotifier.value;
-                    },
-                    icon: ValueListenableBuilder(
-                      valueListenable: playNotifier,
-                      builder: (context, bool value, child) {
-                        return Icon(value ? Icons.pause : Icons.play_arrow, size: GlobalVariables.mediumSize - 5, color: Colors.white);
-                      },
-                    ),
-                    padding: const EdgeInsets.all(0), // This removes all padding
-                    alignment: Alignment.centerRight,
-                  ),
-                  const SizedBox(width: 10), // This adds 10 width space between the buttons
-                  IconButton(
-                    onPressed: () {
-                      // Add logic for heart button here
-                    },
-                    icon: const Icon(Icons.favorite_border, size: GlobalVariables.mediumSize - 10, color: Colors.white),
-                    padding: const EdgeInsets.all(0), // This removes all padding
-                    alignment: Alignment.centerRight,
-                  ),
-                ],
-              ),
-              const SizedBox(height: GlobalVariables.mediumSpacing),
               GestureDetector(
                 onTap: () {
                   playNotifier.value = !playNotifier.value;
@@ -629,7 +616,31 @@ class _MusicTileState extends State<MusicTile> {
                 )
 
               ),
-              // const SizedBox(height: GlobalVariables.smallSpacing),
+              const SizedBox(height: GlobalVariables.mediumSpacing),
+              AudioPlayerUI(url: widget.audioUrl, playNotifier: playNotifier, barColor: widget.barColor),
+              const SizedBox(height: GlobalVariables.mediumSpacing),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // This will place space between your children
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      playNotifier.value = !playNotifier.value;
+                    },
+                    child: ValueListenableBuilder(
+                      valueListenable: playNotifier,
+                      builder: (context, bool value, child) {
+                        return Icon(value ? Icons.circle : Icons.circle_outlined,  size: 30, color: Colors.white);
+                      },
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // Add logic for heart button here
+                    },
+                    child: const Icon(Icons.favorite_border, size: 30, color: Colors.white),
+                  ),
+                ],
+              ),
 
               const SizedBox(height: GlobalVariables.mediumSpacing),
               BioPreview(userID: widget.userID)
@@ -637,6 +648,76 @@ class _MusicTileState extends State<MusicTile> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class AlbumListDisplay extends StatefulWidget {
+  final String userID;
+  final String collectionPath;
+  final String title;
+  final int? type;
+
+  AlbumListDisplay({required this.userID, required this.collectionPath, required this.title, this.type});
+
+  @override
+  _AlbumListDisplayState createState() => _AlbumListDisplayState();
+}
+
+class _AlbumListDisplayState extends State<AlbumListDisplay> {
+  List<Map<String, dynamic>> albums = [];
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseComponents().getCollectionData(collectionPath: widget.collectionPath).then((data) {
+      setState(() {
+        albums = data;
+        print(albums);
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ProfileText400(text: widget.title, size: 15), // The text above the scroll
+        const SizedBox(height: GlobalVariables.smallSpacing), // Optional: To give some spacing between the text and the horizontal scroll
+        SizedBox(
+          height: 150, // Adjusted the height to match the image size
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: albums.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  if (widget.type != 1) {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => AlbumSongDisplayUploadView(userID: widget.userID, albumID: albums[index]['unique_id'])));
+                  } else {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => SingleCoverDisplay(userID: widget.userID, singleID: albums[index]['unique_id'])));
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: GlobalVariables.smallSpacing),
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0), // Adding corner edges
+                      image: DecorationImage(
+                        image: NetworkImage(albums[index]['image_urls'][widget.type ?? 0]),
+                        fit: BoxFit.cover, // This will make the image fill the entire container
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

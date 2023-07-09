@@ -1,4 +1,6 @@
   import 'package:flutter/material.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/MoodDiscoveryView.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 
   import '../FrontEnd/MainAppFlows/Feed.dart';
   import '../FrontEnd/MainAppFlows/MusicDiscoveryView.dart';
@@ -52,7 +54,7 @@
             tabs: widget.tabs
                 .map((tab) => Tab(child: Padding(
                   padding: const EdgeInsets.only(bottom: 25),  // Adjust this value to suit your needs
-                  child: GenericTextSmall(text: tab),
+                  child: ProfileText500(text: tab, size: 10),
                 )))
                 .toList(),
             indicatorColor: Colors.transparent, // This makes the indicator invisible
@@ -66,12 +68,14 @@
     @override
     Widget build(BuildContext context) {
       return CustomTabController(
-        tabs: const ['MUSIC', 'Tab 2', 'Tab 3'],
+        tabs: const ['MUSIC', 'MOOD', 'UPLOAD', 'ACTIVITY', 'PROFILE'],
         tabViews: [
-          MusicDiscoveryView(),
-          const Center(child: Text('View 2')),
-          const Center(child: Text('View 3')),
+          const MusicDiscoveryView(),
+          MoodDiscoveryView(),
+          Profile(),
         ],
       );
     }
   }
+
+  

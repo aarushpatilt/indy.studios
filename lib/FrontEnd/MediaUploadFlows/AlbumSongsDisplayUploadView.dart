@@ -8,8 +8,9 @@ import 'package:intl/intl.dart';
 
 class AlbumSongDisplayUploadView extends StatefulWidget {
   final String albumID;
+  final String userID;
 
-  AlbumSongDisplayUploadView({required this.albumID});
+  AlbumSongDisplayUploadView({required this.albumID, required this.userID});
 
   @override
   _AlbumSongDisplayUploadViewState createState() =>
@@ -23,7 +24,6 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
   @override
   void initState() {
     super.initState();
-    print(widget.albumID);
     _albumDataFuture = FirebaseComponents().getSpecificData(
       documentPath: '/users/${GlobalVariables.userUUID}/albums/${widget.albumID}',
       fields: ['title', 'timestamp', 'tags', 'description', 'image_urls'],

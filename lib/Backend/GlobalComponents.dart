@@ -12,6 +12,7 @@ import 'package:ndy/FrontEnd/SignUpFlow/SignUpView.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 
+import '../FrontEnd/MainAppFlows/Profile.dart';
 import '../FrontEnd/MediaUploadFlows/TagFinderView.dart';
 import '../FrontEndComponents/TextComponents.dart';
 import 'FirebaseComponents.dart';
@@ -66,7 +67,7 @@ class GlobalVariables {
   }
 
   String generateUUID() {
-    final uuid = Uuid();
+    final uuid = const Uuid();
     return uuid.v4();
   }
 
@@ -186,8 +187,8 @@ class _TagsComponentState extends State<TagsComponent> {
               ],
             )
           else
-            GenericText(text: "tags"),
-          Spacer(), // Adds a spacer widget to create space between text and icon
+            const GenericText(text: "tags"),
+          const Spacer(), // Adds a spacer widget to create space between text and icon
           GestureDetector(
             onTap: () async {
               final List<String>? selectedTags = await Navigator.push(
@@ -217,4 +218,112 @@ class _TagsComponentState extends State<TagsComponent> {
 }
 
 
+class TabSliderMenu extends StatefulWidget {
+  final int initialIndex;
+  final String userID;  // Assuming that userID is passed from parent to this widget
 
+  TabSliderMenu({this.initialIndex = 0, required this.userID});
+
+  @override
+  _TabSliderMenuState createState() => _TabSliderMenuState();
+}
+
+class _TabSliderMenuState extends State<TabSliderMenu> {
+  int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.initialIndex;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          color: Colors.transparent,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              buildTabItem('Profile', 0),
+              const SizedBox(width: 15),
+              buildTabItem('Moods', 1),
+            ],
+          ),
+        ),
+        if (selectedIndex == 0) 
+          ProfileSubView(userID: widget.userID),
+          const SizedBox(height: GlobalVariables.smallSpacing),
+        // Add here the widget to display when selectedIndex == 1 for "Moods" tab
+        // if (selectedIndex == 1) 
+        //   MoodsSubView(userID: widget.userID),
+      ],
+    );
+  }
+
+  Widget buildTabItem(String title, int index) {
+    final isSelected = index == selectedIndex;
+    return GestureDetector(
+      onTap: () => onTabSelected(index),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: GlobalVariables.smallSpacing),
+        child: ProfileText400(
+          text: title,
+          size: 15,
+        ),
+      ),
+    );
+  }
+
+  void onTabSelected(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+}
+
+class SongImageDisplay extends StatelessWidget {
+  final String url;
+  final String title;
+  final String artists;
+
+  SongImageDisplay({
+    required this.url,
+    required this.title,
+    required this.artists,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          height: 50,
+          width: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(3),
+            image: DecorationImage(
+              image: NetworkImage(url),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        const SizedBox(width: GlobalVariables.smallSpacing - 5),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ProfileText600(text: title, size: 15,),
+              const SizedBox(height: 10),
+              ProfileText400(text: artists, size: 15),
+            ],
+          ),
+        ),
+        const SizedBox(width: 10),
+        const Icon(Icons.favorite_border, color: Colors.white),
+      ],
+    );
+  }
+}

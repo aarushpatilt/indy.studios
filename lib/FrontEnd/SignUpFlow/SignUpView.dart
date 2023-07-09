@@ -48,7 +48,6 @@ class SignUpView extends StatelessWidget {
                       FirebaseComponents().setEachDataToFirestore('/users/$uuid', data).then ( (result) {
                         if (result) {
                           GlobalVariables.userUUID = uuid;
-                          print(GlobalVariables.userUUID);
                           GlobalVariables().disposeInputs();
                           Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileCreationView()));
                         }

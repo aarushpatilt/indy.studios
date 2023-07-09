@@ -1,3 +1,5 @@
+import 'dart:ffi';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import '../../Backend/FirebaseComponents.dart';
@@ -38,6 +40,15 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
     });
   }
 
+  Future<String?> _getAlbumId() async {
+    if(documents[currentPage]['image_urls'][1].contains('%2Falbums%2F')){ //does contain
+      Map<String, dynamic> data = await FirebaseComponents().getSpecificData(documentPath: documents[currentPage]['ref'], fields: ['album_id']);
+      
+      return data['album_id'];
+    }
+    return null;
+  }
+
   Future<void> _updatePaletteGenerator() async {
     if (currentPage < documents.length) {
       final generator = await PaletteGenerator.fromImageProvider(
@@ -49,13 +60,6 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
     }
   }
 
-  Future<String?> _getAlbumId() async {
-    if(documents[currentPage]['image_urls'][1].contains('%2Falbums%2F')){ //does contain
-      Map<String, dynamic> data = await FirebaseComponents().getSpecificData(documentPath: documents[currentPage]['ref'], fields: ['album_id']);
-      return data['album_id'];
-    }
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +70,22 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                paletteGenerator?.dominantColor?.color ?? Colors.black,
+                paletteGenerator?.dominantColor?.color.withOpacity(0.5)?? Colors.black,
                 Colors.black,
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+        // Glass effect overlay
+        ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.3),
+              ),
             ),
           ),
         ),
@@ -88,12 +103,10 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
             },
             itemBuilder: (BuildContext context, int index) {
               final docData = documents[index];
-              return FutureBuilder<String?>(
+              return FutureBuilder<String?>( 
                 future: _getAlbumId(), 
                 builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();  // Or some other placeholder
-                  } else if (snapshot.hasError) {
+                  if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
                     return 
@@ -105,7 +118,10 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
                       audioUrl: docData['image_urls'][0],
                       albumId: snapshot.data, // Now you are providing a String or null, as your function specifies
                       userID: docData['user_id'],
-                      tags: docData['tags']
+                      tags: docData['tags'],
+                      barColor: paletteGenerator?.dominantColor?.color ?? Colors.white, 
+                      uniqueID: docData['unique_id'],
+                       // pass color to MusicTile
                     );
                   }
                 }

@@ -703,7 +703,6 @@ class _SearchBarSongState extends State<SearchBarSong> {
               final imageUrls = songData['image_urls'];
               final imageUrl = imageUrls[1];
               final songArtist = songData['artists'];
-              print(imageUrl);
               
               // Wait until image is loaded with precacheImage
               return FutureBuilder<void>(
@@ -929,14 +928,12 @@ class _BioPreviewState extends State<BioPreview> {
 
     
     var usernameMap = await FirebaseComponents().getSpecificData(documentPath: 'users/${widget.userID}', fields: ['user_id']);
-    print(usernameMap);
     var bioMap = await FirebaseComponents().getSpecificData(documentPath: 'users/${widget.userID}/bio/story', fields: ['title', 'story', 'image_urls', 'timestamp']);
     
     data.addAll(usernameMap);
     data.addAll(bioMap);
 
-    print("yuh");
-    print(data);
+
 
     return data;
   }

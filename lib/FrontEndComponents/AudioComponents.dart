@@ -6,9 +6,14 @@ enum PlayerState { PLAYING, PAUSED }
 
 class AudioPlayerUI extends StatefulWidget {
   final String url;
-  final ValueNotifier<bool> playNotifier;  // New Notifier
+  final ValueNotifier<bool> playNotifier;
+  final Color barColor;  // New property
 
-  AudioPlayerUI({required this.url, required this.playNotifier});
+  AudioPlayerUI({
+    required this.url,
+    required this.playNotifier,
+    required this.barColor,  // New parameter
+  });
 
   @override
   _AudioPlayerUIState createState() => _AudioPlayerUIState();
@@ -80,7 +85,7 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
             child: LinearProgressIndicator(
               minHeight: 2.0,
               backgroundColor: Colors.white,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.pink),
+              valueColor: AlwaysStoppedAnimation<Color>(widget.barColor), // Use the passed color
               value: (_totalDuration > 0) ? _currentPosition / _totalDuration : 0.0,
             ),
           ),

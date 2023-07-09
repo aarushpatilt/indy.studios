@@ -34,7 +34,6 @@ class _TagFinderViewState extends State<TagFinderView> {
                 onTagsChanged: (tags) {
                   setState(() {
                     _addedTags = tags;
-                    print(_addedTags);
                   });
                 },
               ),
