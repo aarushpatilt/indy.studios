@@ -92,6 +92,11 @@ class _SingleUploadViewState extends State<SingleUploadView> {
                   width: GlobalVariables.properWidth,
                   controller: GlobalVariables.inputTwo,
                 ),
+                ClearFilledTextField(
+                  labelText: "description ",
+                  width: GlobalVariables.properWidth,
+                  controller: GlobalVariables.inputThree,
+                ),
                 ClearButton(
                   text: "Complete",
                   width: GlobalVariables.properWidth,
@@ -103,7 +108,8 @@ class _SingleUploadViewState extends State<SingleUploadView> {
                       "title": GlobalVariables.inputOne.text,
                       "artists": GlobalVariables.inputTwo.text,
                       "tags": _addedTags,
-                      "user_id": GlobalVariables.userUUID
+                      "user_id": GlobalVariables.userUUID,
+                      "description": GlobalVariables.inputThree.text,
                     };
 
                     Map<String, File> mediaData = {

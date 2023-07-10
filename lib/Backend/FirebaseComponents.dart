@@ -429,7 +429,7 @@ class CollectionDataDisplay {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            GenericTextSemi(text: docData['title']),
+                            GenericTextSemi(text:  docData['title']),
                             const SizedBox(height: GlobalVariables.smallSpacing - 5),
                             GenericTextReg(text: docData['artists']),
                           ],
@@ -539,117 +539,118 @@ class _MusicTileState extends State<MusicTile> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 150,
-          left: GlobalVariables.horizontalSpacing,
-          right: GlobalVariables.horizontalSpacing,
-        ),
-        child: Container(
-          width: GlobalVariables.properWidth - 40,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () async {
-
-                            if(widget.albumId != null){
-                              // ignore: use_build_context_synchronously
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: widget.albumId!, userID: widget.userID)));
-                            } else {
-                            // ignore: use_build_context_synchronously
-                            print("HEY");
-                             Navigator.push(context, MaterialPageRoute(builder: (context) => SingleCoverDisplay(singleID: widget.uniqueID, userID: widget.userID)));
-                            }
-
-                            
-                          },
-                          child: Column( 
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ProfileText500(
-                                text: widget.tags.map((tag) => tag.toString().toUpperCase()).join(', '),
-                                size: 10
-                              ),
-                              const SizedBox(height: GlobalVariables.smallSpacing - 5),
-                              SubTitleText(text: widget.title),
-                              const SizedBox(height: GlobalVariables.smallSpacing - 5),
-                              Row(
-                                children: [
-                                  InformationText(text: widget.artist),
-                                ],
-                              ),
-                            ], 
+Widget build(BuildContext context) {
+  return SingleChildScrollView(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: GlobalVariables.horizontalSpacing,
+        vertical: 150,
+      ),
+      child: Container(
+        width: GlobalVariables.properWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Column( 
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ProfileText500(
+                            text: widget.tags.map((tag) => tag.toString().toUpperCase()).join(', '),
+                            size: 10
                           ),
-                        )
+                          const SizedBox(height: GlobalVariables.smallSpacing),
+                        ], 
+                      )],
+                  ),
+                ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () async {
+                if(widget.albumId != null){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: widget.albumId!, userID: widget.userID)));
+                } else {
+                  print("HEY");
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SingleCoverDisplay(singleID: widget.uniqueID, userID: widget.userID)));
+                }
+              },
+              child: SizedBox(
+                width: GlobalVariables.properWidth,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SubTitleText(text: widget.title),
+                        const SizedBox(height: GlobalVariables.smallSpacing - 15),
+                        InformationText(text: widget.artist),
                       ],
                     ),
-                  ),
-                  const SizedBox(width: GlobalVariables.smallSpacing),
-                  ClipOval(
-                    child: Container(
-                      width: 70.0,
-                      height: 70.0,
-                      child: FirstImageDisplay(documentPath: '/users/${widget.userID}'),
+                    ClipOval(
+                      child: SizedBox(
+                        width: 70.0,
+                        height: 70.0,
+                        child: FirstImageDisplay(documentPath: '/users/${widget.userID}'),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const SizedBox(height: GlobalVariables.largeSpacing),
-              GestureDetector(
-                onTap: () {
-                  playNotifier.value = !playNotifier.value;
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0), // Adjust the value to change the roundness
-                  child: Image.network(widget.imageUrl),
-                )
-
-              ),
-              const SizedBox(height: GlobalVariables.mediumSpacing),
-              AudioPlayerUI(url: widget.audioUrl, playNotifier: playNotifier, barColor: widget.barColor),
-              const SizedBox(height: GlobalVariables.mediumSpacing),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // This will place space between your children
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      playNotifier.value = !playNotifier.value;
+            ),
+           
+            const SizedBox(height: GlobalVariables.mediumSpacing),
+            GestureDetector(
+              onTap: () {
+                playNotifier.value = !playNotifier.value;
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(widget.imageUrl),
+              )
+            ),
+            const SizedBox(height: GlobalVariables.mediumSpacing),
+            AudioPlayerUI(url: widget.audioUrl, playNotifier: playNotifier, barColor: widget.barColor),
+            const SizedBox(height: GlobalVariables.mediumSpacing),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    playNotifier.value = !playNotifier.value;
+                  },
+                  child: ValueListenableBuilder(
+                    valueListenable: playNotifier,
+                    builder: (context, bool value, child) {
+                      return Icon(value ? Icons.circle : Icons.circle_outlined,  size: 30, color: Colors.white);
                     },
-                    child: ValueListenableBuilder(
-                      valueListenable: playNotifier,
-                      builder: (context, bool value, child) {
-                        return Icon(value ? Icons.circle : Icons.circle_outlined,  size: 30, color: Colors.white);
-                      },
-                    ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      // Add logic for heart button here
-                    },
-                    child: const Icon(Icons.favorite_border, size: 30, color: Colors.white),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: GlobalVariables.mediumSpacing),
-              BioPreview(userID: widget.userID)
-            ],
-          ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // Add logic for heart button here
+                  },
+                  child: const Icon(Icons.favorite_border, size: 30, color: Colors.white),
+                ),
+              ],
+            ),
+            const SizedBox(height: GlobalVariables.mediumSpacing),
+            BioPreview(userID: widget.userID)
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
 
 class AlbumListDisplay extends StatefulWidget {

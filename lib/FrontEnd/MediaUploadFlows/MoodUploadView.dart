@@ -166,7 +166,6 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                       "user_id": GlobalVariables.userUUID,
                       "image_urls": [_audioRef, _imageRef],
                       "title": _title
-
                     };
 
 
