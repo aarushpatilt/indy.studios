@@ -65,19 +65,85 @@ import 'package:ndy/FrontEnd/MainAppFlows/SearchMasterView.dart';
     }
   }
 
-  class CustomTabPage extends StatelessWidget {
-    @override
-    Widget build(BuildContext context) {
-      return CustomTabController(
-        tabs: const ['MUSIC', 'MOOD', 'SEARCH', 'PROFILE'],
-        tabViews: [
-          const MusicDiscoveryView(),
-          MoodDiscoveryView(),
-          SearchMasterView(),
-          Profile(),
-        ],
-      );
-    }
+class CustomTabPage extends StatefulWidget {
+  @override
+  _CustomTabPageState createState() => _CustomTabPageState();
+}
+
+class _CustomTabPageState extends State<CustomTabPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  bool _showMoodDiscoveryView = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
   }
 
-  
+  void _toggleMoodDiscoveryView() {
+    setState(() {
+      _showMoodDiscoveryView = !_showMoodDiscoveryView;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomTabController(
+      tabs: const ['MUSIC', 'MOOD', 'SEARCH', 'PROFILE'],
+      tabViews: [
+        const MusicDiscoveryView(),
+        MoodDiscoveryView(),
+        SearchMasterView(),
+        Profile(),
+      ],
+    );
+  }
+}
+
+
+
+class CustomAppBar extends StatelessWidget {
+  final VoidCallback toggleMoodDiscoveryView;
+
+  CustomAppBar({required this.toggleMoodDiscoveryView});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(
+                Icons.circle_outlined,
+                size: 25.0,
+                color: Colors.white,
+              ),
+              padding: const EdgeInsets.all(0),
+              onPressed: toggleMoodDiscoveryView,
+            ),
+            const ProfileText400(
+              text: 'music',
+              size: 15,
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.circle_outlined,
+                size: 25.0,
+                color: Colors.white,
+              ),
+              padding: const EdgeInsets.all(0),
+              onPressed: () {
+                // TODO: Add implementation
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

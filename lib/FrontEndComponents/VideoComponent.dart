@@ -145,13 +145,37 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                       left: 0,
                       right: 0,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+                        padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
                         child: Row(
                           children: [
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Row(
+                                    children: [
+                                      ProfileText600(text: widget.tags.map((tag) => tag.toString().toUpperCase()).join(', '), size: 10),
+                                      const Spacer(),
+                                      const Icon(
+                                        Icons.favorite_border,
+                                        color: Color.fromARGB(255, 90, 90, 90),
+                                        size: 20.0,
+                                      ),
+                                      const SizedBox(width: GlobalVariables.smallSpacing),
+                                      const Icon(
+                                        Icons.repeat,
+                                        color: Color.fromARGB(255, 90, 90, 90),
+                                        size: 20.0,
+                                      ),
+                                      const SizedBox(width: GlobalVariables.smallSpacing),
+                                      const Icon(
+                                        Icons.circle_outlined,
+                                        color: Color.fromARGB(255, 90, 90, 90),
+                                        size: 20.0,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 17),
                                   Row(
                                     children: [
                                       ClipOval(
@@ -161,10 +185,11 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                           child: Image.network(widget.profileUrl),
                                         ),
                                       ),
-                                      const SizedBox(width: GlobalVariables.smallSpacing - 5),
-                                      GenericTextReg(text: widget.username),
+                                      const SizedBox(width: 10),
+                                      ProfileText400(text: widget.username, size: 15),
                                     ],
                                   ),
+                                  const SizedBox(height: 20),
                                   Row(
                                     children: [
                                       Align(
@@ -172,10 +197,25 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const SizedBox(height: GlobalVariables.smallSpacing - 5),
-                                            GenericTextRegSmall(text: widget.caption),
+                                            ProfileText400(text: widget.caption, size: 15),
                                             const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                            GenericTextSmall(text: widget.title),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.circle_outlined,
+                                                  size: 15,
+                                                  color: Colors.white,
+                                                ),
+                                                const SizedBox(width: 8), // Adjust the width as needed
+                                                Text(
+                                                  widget.title,
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
                                           ],
                                         ),
                                       ),
@@ -205,38 +245,6 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Container(
-            height: 85,
-            color: Colors.black,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
-                child: Row(
-                  children: [
-                    GenericTextSmall(text: widget.tags.map((tag) => tag.toString().toUpperCase()).join(', ')),
-                    const Spacer(),
-                    const Icon(
-                      Icons.favorite_border,
-                      color: Color.fromARGB(255, 90, 90, 90),
-                      size: 20.0,
-                    ),
-                    const SizedBox(width: GlobalVariables.smallSpacing),
-                    const Icon(
-                      Icons.repeat,
-                      color: Color.fromARGB(255, 90, 90, 90),
-                      size: 20.0,
-                    ),
-                    const SizedBox(width: GlobalVariables.smallSpacing),
-                    const Icon(
-                      Icons.circle_outlined,
-                      color: Color.fromARGB(255, 90, 90, 90),
-                      size: 20.0,
                     ),
                   ],
                 ),

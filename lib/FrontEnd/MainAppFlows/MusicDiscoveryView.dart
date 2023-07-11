@@ -5,6 +5,9 @@ import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import '../../Backend/FirebaseComponents.dart';
 import 'package:palette_generator/palette_generator.dart';
 
+import '../../FrontEndComponents/CustomTabController.dart';
+import 'MoodDiscoveryView.dart';
+
 class MusicDiscoveryView extends StatefulWidget {
   const MusicDiscoveryView({super.key});
 
@@ -60,6 +63,13 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
     }
   }
 
+  bool _showMoodDiscoveryView = false;
+
+  void _toggleMoodDiscoveryView() {
+    setState(() {
+      _showMoodDiscoveryView = !_showMoodDiscoveryView;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +139,12 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
             },
           ),
         ),
+        // CustomAppBar(toggleMoodDiscoveryView: _toggleMoodDiscoveryView),
+        
+        // if (_showMoodDiscoveryView)
+        //   Positioned.fill(
+        //     child: MoodDiscoveryView(),
+        //   ),
       ],
     );
   }

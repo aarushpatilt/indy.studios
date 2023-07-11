@@ -38,34 +38,36 @@ class _MoodDiscoveryViewState extends State<MoodDiscoveryView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        top: false,
-        bottom: false,
-        left: false,
-        right: false,
-        child: PageView.builder(
-          controller: _pageController,
-          pageSnapping: true,
-          scrollDirection: Axis.vertical,
-          itemCount: documents.length,
-          itemBuilder: (BuildContext context, int index) {
-            final docData = documents[index];
-            currentPage = index;
-            return 
-            MoodTile(
-              mediaUrl: docData['image_urls'][2],
-              audioUrl: docData['image_urls'][0],
-              username: docData['username'],
-              profileUrl: docData['profile'],
-              tags: docData['tags'],
-              caption: docData['caption'],
-              title: docData['title'],
-              imageUrl: docData['image_urls'][1],
-            );
-          },
-        ),
+return Scaffold(
+  body: SafeArea(
+    top: false,
+    bottom: false,
+    left: false,
+    right: false,
+    child: Flexible( // or Expanded
+      child: PageView.builder(
+        controller: _pageController,
+        pageSnapping: true,
+        scrollDirection: Axis.vertical,
+        itemCount: documents.length,
+        itemBuilder: (BuildContext context, int index) {
+          final docData = documents[index];
+          currentPage = index;
+          return MoodTile(
+            mediaUrl: docData['image_urls'][2],
+            audioUrl: docData['image_urls'][0],
+            username: docData['username'],
+            profileUrl: docData['profile'],
+            tags: docData['tags'],
+            caption: docData['caption'],
+            title: docData['title'],
+            imageUrl: docData['image_urls'][1],
+          );
+        },
       ),
-    );
+    ),
+  ),
+);
+
   }
 }
