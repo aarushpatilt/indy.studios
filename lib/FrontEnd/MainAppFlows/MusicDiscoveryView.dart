@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
+import 'package:provider/provider.dart';
 import '../../Backend/FirebaseComponents.dart';
 import 'package:palette_generator/palette_generator.dart';
 
@@ -9,7 +10,7 @@ import '../../FrontEndComponents/CustomTabController.dart';
 import 'MoodDiscoveryView.dart';
 
 class MusicDiscoveryView extends StatefulWidget {
-  const MusicDiscoveryView({super.key});
+  const MusicDiscoveryView({Key? key}) : super(key: key);
 
   @override
   _MusicDiscoveryViewState createState() => _MusicDiscoveryViewState();
@@ -44,9 +45,10 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
   }
 
   Future<String?> _getAlbumId() async {
-    if(documents[currentPage]['image_urls'][1].contains('%2Falbums%2F')){ //does contain
-      Map<String, dynamic> data = await FirebaseComponents().getSpecificData(documentPath: documents[currentPage]['ref'], fields: ['album_id']);
-      
+    if (documents[currentPage]['image_urls'][1].contains('%2Falbums%2F')) {
+      Map<String, dynamic> data = await FirebaseComponents()
+          .getSpecificData(documentPath: documents[currentPage]['ref'], fields: ['album_id']);
+
       return data['album_id'];
     }
     return null;
@@ -75,12 +77,11 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Gradient background
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                paletteGenerator?.dominantColor?.color.withOpacity(0.5)?? Colors.black,
+                paletteGenerator?.dominantColor?.color.withOpacity(0.5) ?? Colors.black,
                 Colors.black,
               ],
               begin: Alignment.topCenter,
@@ -88,7 +89,6 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
             ),
           ),
         ),
-        // Glass effect overlay
         ClipRRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
@@ -99,7 +99,6 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
             ),
           ),
         ),
-        // The Scaffold is on top of the gradient
         Scaffold(
           backgroundColor: Colors.transparent,
           body: PageView.builder(
@@ -113,33 +112,40 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
             },
             itemBuilder: (BuildContext context, int index) {
               final docData = documents[index];
-              return FutureBuilder<String?>( 
-                future: _getAlbumId(), 
+              return FutureBuilder<String?>(
+                future: _getAlbumId(),
                 builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    return 
-                    MusicTile(
-                      title: docData['title'],
-                      artist: docData['artists'],
-                      timestamp: docData['timestamp'].toDate(),
-                      imageUrl: docData['image_urls'][1],
-                      audioUrl: docData['image_urls'][0],
-                      albumId: snapshot.data, // Now you are providing a String or null, as your function specifies
-                      userID: docData['user_id'],
-                      tags: docData['tags'],
-                      barColor: paletteGenerator?.dominantColor?.color ?? Colors.white, 
-                      uniqueID: docData['unique_id'],
-                       // pass color to MusicTile
+                    return ChangeNotifierProvider.value(
+                      value: MusicTileProvider(),
+                      builder: (context, child) {
+                        return Consumer<MusicTileProvider>(
+                          builder: (context, provider, _) {
+                            return MusicTile(
+                              title: docData['title'],
+                              artist: docData['artists'],
+                              timestamp: docData['timestamp'].toDate(),
+                              imageUrl: docData['image_urls'][1],
+                              audioUrl: docData['image_urls'][0],
+                              albumId: snapshot.data,
+                              userID: docData['user_id'],
+                              tags: docData['tags'],
+                              barColor: paletteGenerator?.dominantColor?.color ?? Colors.white,
+                              uniqueID: docData['unique_id'],
+                            );
+                          },
+                        );
+                      },
                     );
                   }
-                }
+                },
               );
             },
           ),
         ),
-        CustomAppBar()
+        CustomAppBar(),
       ],
     );
   }

@@ -7,12 +7,12 @@ enum PlayerState { PLAYING, PAUSED }
 class AudioPlayerUI extends StatefulWidget {
   final String url;
   final ValueNotifier<bool> playNotifier;
-  final Color barColor;  // New property
+  final Color barColor;
 
   AudioPlayerUI({
     required this.url,
     required this.playNotifier,
-    required this.barColor,  // New parameter
+    required this.barColor,
   });
 
   @override
@@ -36,7 +36,6 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
       }
     });
 
-    // Listen to the position changes
     AudioManager().audioPlayer.onPositionChanged.listen((Duration p) {
       if (mounted) {
         setState(() {
@@ -45,11 +44,9 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
       }
     });
 
-    // Listen to the ValueNotifier
     widget.playNotifier.addListener(_playPauseAudio);
   }
 
-  // Function to play or pause audio
   void _playPauseAudio() {
     AudioManager audioManager = AudioManager();
     if (widget.playNotifier.value) {
@@ -71,7 +68,7 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
 
   @override
   void dispose() {
-    widget.playNotifier.removeListener(_playPauseAudio);  // Remove the listener
+    widget.playNotifier.removeListener(_playPauseAudio);
     super.dispose();
   }
 
@@ -85,7 +82,7 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
             child: LinearProgressIndicator(
               minHeight: 2.0,
               backgroundColor: Colors.white,
-              valueColor: AlwaysStoppedAnimation<Color>(widget.barColor), // Use the passed color
+              valueColor: AlwaysStoppedAnimation<Color>(widget.barColor),
               value: (_totalDuration > 0) ? _currentPosition / _totalDuration : 0.0,
             ),
           ),

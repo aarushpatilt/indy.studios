@@ -692,8 +692,7 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
                   tags: data['tags'],
                   barColor: Colors.black,
                   uniqueID: data['unique_id'],
-                ),
-              ),
+              ),)
             ],
           );
         },
@@ -710,22 +709,25 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
       children: [
         Container(
           width: double.infinity,
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _searchController,
-                  decoration: const InputDecoration(
-                    hintText: 'search...',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    border: InputBorder.none,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, GlobalVariables.smallSpacing, 0, 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'search...',
+                      hintStyle: TextStyle(color: Colors.white),
+                      border: InputBorder.none,
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                    onChanged: _startSearch,
                   ),
-                  style: const TextStyle(color: Colors.grey),
-                  onChanged: _startSearch,
                 ),
-              ),
-              const Icon(Icons.search, color: Colors.white, size: 15),
-            ],
+                const Icon(Icons.search, color: Colors.white, size: 15),
+              ],
+            ),
           ),
         ),
         ..._searchResults.map((doc) {
@@ -765,7 +767,7 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
                       }
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
                       child: Row(
                         children: [
                           Image.network(
