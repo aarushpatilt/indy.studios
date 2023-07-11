@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
+import '../FrontEnd/MainAppFlows/Profile.dart';
 import 'TextComponents.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
@@ -13,6 +14,8 @@ import 'dart:async';
 
 // Header with previous indicator
 import 'package:flutter/material.dart';
+
+import 'VideoComponent.dart';
 
 class HeaderPrevious extends StatelessWidget implements PreferredSizeWidget {
   final String text;
@@ -608,8 +611,9 @@ class SearchBarSong extends StatefulWidget {
   final Function(String)? onDocumentSelected;
   final Function(String)? onTitleSelected;
   final Function(String)? onAudioSelected;
+  final int? type;
 
-  SearchBarSong({required this.collectionPath, this.onDocumentSelected, this.onTitleSelected, this.onAudioSelected});
+  SearchBarSong({required this.collectionPath, this.onDocumentSelected, this.onTitleSelected, this.onAudioSelected, this.type});
 
   @override
   _SearchBarSongState createState() => _SearchBarSongState();
@@ -662,6 +666,44 @@ class _SearchBarSongState extends State<SearchBarSong> {
     widget.onAudioSelected!(audio);
   }
 
+void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (BuildContext context) {
+      return DraggableScrollableSheet(
+        initialChildSize: 1,
+        expand: false,
+        builder: (BuildContext context, ScrollController scrollController) {
+          return ListView(
+            controller: scrollController,
+            shrinkWrap: true, // Allow the ListView to take up the available space
+            children: [
+              Container(
+                color: Colors.black,
+                child: MusicTile(
+                  title: data['title'],
+                  artist: data['artists'],
+                  timestamp: (data['timestamp'] as Timestamp).toDate(),
+                  imageUrl: data['image_urls'][1],
+                  audioUrl: data['image_urls'][0],
+                  albumId: data['album_id'],
+                  userID: data['user_id'],
+                  tags: data['tags'],
+                  barColor: Colors.black,
+                  uniqueID: data['unique_id'],
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -703,6 +745,8 @@ class _SearchBarSongState extends State<SearchBarSong> {
               final imageUrls = songData['image_urls'];
               final imageUrl = imageUrls[1];
               final songArtist = songData['artists'];
+
+              print(songData);
               
               // Wait until image is loaded with precacheImage
               return FutureBuilder<void>(
@@ -712,7 +756,14 @@ class _SearchBarSongState extends State<SearchBarSong> {
                     return CircularProgressIndicator(); // Display loading indicator while image is loading
                   }
                   return InkWell(
-                    onTap: () => _onButtonPressed(songData['image_urls'][1], songTitle, songData['image_urls'][0]),
+                    onTap: () => {
+
+                      if(widget.type != null){
+                        _onButtonMusic(context, songData)
+                      } else {
+                        _onButtonPressed(songData['image_urls'][1], songTitle, songData['image_urls'][0])
+                      }
+                    },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Row(
@@ -781,7 +832,7 @@ class _SearchBarUserState extends State<SearchBarUser> {
           .snapshots()
           .listen((snapshot) {
         _searchResults = snapshot.docs;
-        setState(() {});  // Update the UI
+        setState(() {}); // Update the UI
       });
     } else {
       _searchResults = [];
@@ -794,6 +845,16 @@ class _SearchBarUserState extends State<SearchBarUser> {
       _query = value;
     });
     _performSearch(_query);
+  }
+
+  void _navigateToProfile(String userID) {
+    // Navigate to the user's profile page
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Profile(userID: userID),
+      ),
+    );
   }
 
   @override
@@ -824,7 +885,7 @@ class _SearchBarUserState extends State<SearchBarUser> {
           final data = doc.data() as Map<String, dynamic>;
           final username = data['username'] ?? '';
           final imageUrl = data['image_urls'][0];
-              
+
           // Wait until image is loaded with precacheImage
           return FutureBuilder<void>(
             future: precacheImage(NetworkImage(imageUrl), context),
@@ -832,21 +893,24 @@ class _SearchBarUserState extends State<SearchBarUser> {
               if (snapshot.connectionState != ConnectionState.done) {
                 return CircularProgressIndicator(); // Display loading indicator while image is loading
               }
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Row(
-                  children: [
-                    ClipOval(
-                      child: Image.network(
-                        imageUrl,
-                        width: GlobalVariables.largeSize,
-                        height: GlobalVariables.largeSize,
-                        fit: BoxFit.cover,
+              return GestureDetector(
+                onTap: () => _navigateToProfile(data['UUID']), // Navigate to the user's profile
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Row(
+                    children: [
+                      ClipOval(
+                        child: Image.network(
+                          imageUrl,
+                          width: GlobalVariables.largeSize,
+                          height: GlobalVariables.largeSize,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: GlobalVariables.smallSpacing),
-                    ProfileText400(text: username, size: 15),
-                  ],
+                      const SizedBox(width: GlobalVariables.smallSpacing),
+                      ProfileText400(text: username, size: 15),
+                    ],
+                  ),
                 ),
               );
             },

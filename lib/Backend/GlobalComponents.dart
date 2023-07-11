@@ -318,7 +318,7 @@ class _SearchSliderMenuState extends State<SearchSliderMenu> {
           ),
         ),
         if (selectedIndex == 0) 
-          SearchBarSong(collectionPath: 'songs'),
+          SearchBarSong(collectionPath: 'songs', type: 1),
         if (selectedIndex == 1)
           SearchBarUser(collectionPath: 'users')
         // Add here the widget to display when selectedIndex == 1 for "Moods" tab

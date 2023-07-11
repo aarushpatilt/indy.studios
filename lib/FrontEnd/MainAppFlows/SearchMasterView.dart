@@ -19,6 +19,9 @@ class SearchMasterView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: GlobalVariables.mediumSpacing),
+              const ProfileText500(text: "More content will be avaliable soon!", size: 12),
+              const ProfileText500(text: "For now, you can search songs and artists", size: 12),
+              const SizedBox(height: GlobalVariables.mediumSpacing),
               SearchSliderMenu(
                 initialIndex: 0, 
                 userID: GlobalVariables.userUUID

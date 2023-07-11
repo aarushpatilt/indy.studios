@@ -3,7 +3,8 @@ import 'package:ndy/FrontEnd/MainAppFlows/MoodDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/SearchMasterView.dart';
 
-  import '../FrontEnd/MainAppFlows/Feed.dart';
+  import '../Backend/GlobalComponents.dart';
+import '../FrontEnd/MainAppFlows/Feed.dart';
   import '../FrontEnd/MainAppFlows/MusicDiscoveryView.dart';
   import '../FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
   import 'TextComponents.dart';
@@ -95,7 +96,7 @@ class _CustomTabPageState extends State<CustomTabPage>
         const MusicDiscoveryView(),
         MoodDiscoveryView(),
         SearchMasterView(),
-        Profile(),
+        Profile(userID: GlobalVariables.userUUID,),
       ],
     );
   }
@@ -104,9 +105,8 @@ class _CustomTabPageState extends State<CustomTabPage>
 
 
 class CustomAppBar extends StatelessWidget {
-  final VoidCallback toggleMoodDiscoveryView;
 
-  CustomAppBar({required this.toggleMoodDiscoveryView});
+  CustomAppBar();
 
   @override
   Widget build(BuildContext context) {
@@ -121,14 +121,14 @@ class CustomAppBar extends StatelessWidget {
               icon: const Icon(
                 Icons.circle_outlined,
                 size: 25.0,
-                color: Colors.white,
+                color: Color.fromARGB(255, 142, 57, 57),
               ),
               padding: const EdgeInsets.all(0),
-              onPressed: toggleMoodDiscoveryView,
+              onPressed: () {},
             ),
-            const ProfileText400(
-              text: 'music',
-              size: 15,
+            const ProfileText500(
+              text: 'DISCOVER',
+              size: 10,
             ),
             IconButton(
               icon: const Icon(

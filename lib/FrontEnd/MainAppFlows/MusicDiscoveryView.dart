@@ -139,12 +139,7 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
             },
           ),
         ),
-        // CustomAppBar(toggleMoodDiscoveryView: _toggleMoodDiscoveryView),
-        
-        // if (_showMoodDiscoveryView)
-        //   Positioned.fill(
-        //     child: MoodDiscoveryView(),
-        //   ),
+        CustomAppBar()
       ],
     );
   }

@@ -7,6 +7,10 @@ import '../../FrontEndComponents/ButtonComponents.dart';
 import '../../FrontEndComponents/TextComponents.dart';
 
 class Profile extends StatefulWidget {
+  final String userID;
+
+  Profile({required this.userID});
+
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -19,7 +23,7 @@ class _ProfileState extends State<Profile> {
     super.initState();
     _futureProfileData = FirebaseFirestore.instance
         .collection('users')
-        .doc(GlobalVariables.userUUID)
+        .doc(widget.userID) // Use the widget.userID parameter
         .get();
   }
 
