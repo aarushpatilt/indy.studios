@@ -1,6 +1,7 @@
   import 'package:flutter/material.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/MoodDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/SearchMasterView.dart';
 
   import '../FrontEnd/MainAppFlows/Feed.dart';
   import '../FrontEnd/MainAppFlows/MusicDiscoveryView.dart';
@@ -68,10 +69,11 @@ import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
     @override
     Widget build(BuildContext context) {
       return CustomTabController(
-        tabs: const ['MUSIC', 'MOOD', 'UPLOAD', 'ACTIVITY', 'PROFILE'],
+        tabs: const ['MUSIC', 'MOOD', 'SEARCH', 'PROFILE'],
         tabViews: [
           const MusicDiscoveryView(),
           MoodDiscoveryView(),
+          SearchMasterView(),
           Profile(),
         ],
       );

@@ -283,6 +283,72 @@ class _TabSliderMenuState extends State<TabSliderMenu> {
   }
 }
 
+class SearchSliderMenu extends StatefulWidget {
+  final int initialIndex;
+  final String userID;  // Assuming that userID is passed from parent to this widget
+
+  SearchSliderMenu({this.initialIndex = 0, required this.userID});
+
+  @override
+  _SearchSliderMenuState createState() => _SearchSliderMenuState();
+}
+
+class _SearchSliderMenuState extends State<SearchSliderMenu> {
+  int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.initialIndex;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          color: Colors.transparent,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              buildTabItem('SONGS', 0),
+              buildTabItem('ARTISTS', 1),
+              buildTabItem('TAGS', 2),
+            ],
+          ),
+        ),
+        if (selectedIndex == 0) 
+          SearchBarSong(collectionPath: 'songs'),
+        if (selectedIndex == 1)
+          SearchBarUser(collectionPath: 'users')
+        // Add here the widget to display when selectedIndex == 1 for "Moods" tab
+        // if (selectedIndex == 1) 
+        //   MoodsSubView(userID: widget.userID),
+      ],
+    );
+  }
+
+  Widget buildTabItem(String title, int index) {
+    final isSelected = index == selectedIndex;
+    return GestureDetector(
+      onTap: () => onTabSelected(index),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: GlobalVariables.smallSpacing),
+        child: ProfileText500(
+          text: title,
+          size: 10,
+        ),
+      ),
+    );
+  }
+
+  void onTabSelected(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+}
+
 class SongImageDisplay extends StatelessWidget {
   final String url;
   final String title;

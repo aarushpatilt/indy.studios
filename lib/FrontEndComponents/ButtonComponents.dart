@@ -605,11 +605,11 @@ class TextClearButton extends StatelessWidget {
 
 class SearchBarSong extends StatefulWidget {
   final String collectionPath;
-  final Function(String) onDocumentSelected;
-  final Function(String) onTitleSelected;
-  final Function(String) onAudioSelected;
+  final Function(String)? onDocumentSelected;
+  final Function(String)? onTitleSelected;
+  final Function(String)? onAudioSelected;
 
-  SearchBarSong({required this.collectionPath, required this.onDocumentSelected, required this.onTitleSelected, required this.onAudioSelected});
+  SearchBarSong({required this.collectionPath, this.onDocumentSelected, this.onTitleSelected, this.onAudioSelected});
 
   @override
   _SearchBarSongState createState() => _SearchBarSongState();
@@ -636,7 +636,7 @@ class _SearchBarSongState extends State<SearchBarSong> {
       _searchResultsSubscription?.cancel();
       _searchResultsSubscription = collectionReference
           .orderBy('title')
-          .startAt([query])
+          .startAt([query.toUpperCase()])
           .endAt([query + '\uf8ff'])
           .snapshots()
           .listen((snapshot) {
@@ -657,9 +657,9 @@ class _SearchBarSongState extends State<SearchBarSong> {
   }
 
   void _onButtonPressed(String image, String title, String audio) {
-    widget.onDocumentSelected(image);
-    widget.onTitleSelected(title);
-    widget.onAudioSelected(audio);
+    widget.onDocumentSelected!(image);
+    widget.onTitleSelected!(title);
+    widget.onAudioSelected!(audio);
   }
 
   @override
@@ -737,6 +737,117 @@ class _SearchBarSongState extends State<SearchBarSong> {
                     ),
                   );
                 },
+              );
+            },
+          );
+        }).toList(),
+      ],
+    );
+  }
+}
+
+class SearchBarUser extends StatefulWidget {
+  final String collectionPath;
+
+  SearchBarUser({required this.collectionPath});
+
+  @override
+  _SearchBarUserState createState() => _SearchBarUserState();
+}
+
+class _SearchBarUserState extends State<SearchBarUser> {
+  final TextEditingController _searchController = TextEditingController();
+  StreamSubscription<QuerySnapshot>? _searchResultsSubscription;
+  String _query = '';
+  List<DocumentSnapshot> _searchResults = [];
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchResultsSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _performSearch(String query) {
+    if (query.isNotEmpty) {
+      final CollectionReference collectionReference =
+          FirebaseFirestore.instance.collection(widget.collectionPath);
+
+      _searchResultsSubscription?.cancel();
+      _searchResultsSubscription = collectionReference
+          .orderBy('username')
+          .startAt([query.toLowerCase()]) // Ignore case
+          .endAt([query.toLowerCase() + '\uf8ff']) // Ignore case
+          .snapshots()
+          .listen((snapshot) {
+        _searchResults = snapshot.docs;
+        setState(() {});  // Update the UI
+      });
+    } else {
+      _searchResults = [];
+      setState(() {});
+    }
+  }
+
+  void _startSearch(String value) {
+    setState(() {
+      _query = value;
+    });
+    _performSearch(_query);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    hintText: 'search...',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: InputBorder.none,
+                  ),
+                  style: const TextStyle(color: Colors.grey),
+                  onChanged: _startSearch,
+                ),
+              ),
+              const Icon(Icons.search, color: Colors.white, size: 15),
+            ],
+          ),
+        ),
+        ..._searchResults.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          final username = data['username'] ?? '';
+          final imageUrl = data['image_urls'][0];
+              
+          // Wait until image is loaded with precacheImage
+          return FutureBuilder<void>(
+            future: precacheImage(NetworkImage(imageUrl), context),
+            builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return CircularProgressIndicator(); // Display loading indicator while image is loading
+              }
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Row(
+                  children: [
+                    ClipOval(
+                      child: Image.network(
+                        imageUrl,
+                        width: GlobalVariables.largeSize,
+                        height: GlobalVariables.largeSize,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: GlobalVariables.smallSpacing),
+                    ProfileText400(text: username, size: 15),
+                  ],
+                ),
               );
             },
           );
