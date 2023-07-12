@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:video_player/video_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../Backend/GlobalComponents.dart';
+import '../../FrontEndComponents/TextComponents.dart';
 
-import 'MoodUploadView.dart'; // Import the MoodUploadView
+import 'MoodUploadView.dart';
 
 class CameraUploadView extends StatefulWidget {
   @override
@@ -74,40 +77,55 @@ class _CameraUploadViewState extends State<CameraUploadView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 100),  // Add padding here
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                child: Text('Take Photo'),
-                onPressed: _pickImage,
-              ),
-              ElevatedButton(
-                child: Text('Record Video'),
-                onPressed: _pickVideo,
-              ),
-              ElevatedButton(
-                child: Text('Select Video'),
-                onPressed: _selectVideo,
-              ),
-            ],
-          ),
-          if (_imageFile != null)
-            CachedNetworkImage(
-              imageUrl: _imageFile!.path,
-              placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+    return Scaffold(
+      appBar: const HeaderPrevious(text: "CAMERA"),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: GlobalVariables.mediumSpacing),
+            const ProfileText400(text: "Choose a media type that you want to upload", size: 12),
+            const SizedBox(height: 5),
+            const ProfileText400(text: "You can only chose one type at the moment", size: 12),
+            const SizedBox(height: GlobalVariables.largeSpacing),
+            InkWell(
+              onTap: _pickImage,
+              child: _buildRow('TAKE A PHOTO'),
             ),
-          if (_videoFile != null)
-            _videoController!.value.isInitialized
-                ? AspectRatio(
-                    aspectRatio: _videoController!.value.aspectRatio,
-                    child: VideoPlayer(_videoController!),
-                  )
-                : CircularProgressIndicator(),
+            const SizedBox(height: GlobalVariables.largeSpacing),
+            InkWell(
+              onTap: _pickVideo,
+              child: _buildRow('RECORD A VIDEO'),
+            ),
+            const SizedBox(height: GlobalVariables.largeSpacing),
+            InkWell(
+              onTap: _selectVideo,
+              child: _buildRow('SELECT A VIDEO'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRow(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 25.0),
+      child: Row(
+        children: [
+          Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white,
+                width: 1,
+              ),
+            ),
+          ),
+          const SizedBox(width: GlobalVariables.smallSpacing),
+          ProfileText400(text: text, size: 10),
         ],
       ),
     );
