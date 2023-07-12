@@ -17,7 +17,7 @@ class _TagFinderViewState extends State<TagFinderView> {
   Widget build(BuildContext context) {
     return Scaffold(
       // No return to previous screen
-      appBar: HeaderPreviousList(text: "tags", list: _addedTags),
+      appBar: HeaderPreviousList(text: "TAGS", list: _addedTags),
       body: Padding(
         padding: const EdgeInsets.only(
           top: GlobalVariables.largeSpacing,

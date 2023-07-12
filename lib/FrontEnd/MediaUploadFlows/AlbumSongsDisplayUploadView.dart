@@ -102,9 +102,9 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
                                 ),
                               ],
                             ),
-                            SizedBox(height: GlobalVariables.largeSpacing),
+                            const SizedBox(height: GlobalVariables.largeSpacing),
                             GenericTextSemi(text: '${(snapshot.data?['tags'] as List<dynamic>).map((tag) => tag.toString().toUpperCase())?.join(', ')}'),
-                            SizedBox(height: GlobalVariables.largeSpacing),
+                            const SizedBox(height: GlobalVariables.largeSpacing),
                             GenericTextRegSmall(text: '${snapshot.data?['description']}'),
                             const SizedBox(height: GlobalVariables.largeSpacing),
                             GestureDetector(

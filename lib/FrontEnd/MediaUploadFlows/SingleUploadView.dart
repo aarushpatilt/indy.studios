@@ -19,7 +19,7 @@ class _SingleUploadViewState extends State<SingleUploadView> {
   Widget build(BuildContext context) {
     return Scaffold(
       // No return to previous screen
-      appBar: HeaderPreviousList(text: "singles", list: _addedTags),
+      appBar: HeaderPreviousList(text: "SINGLE", list: _addedTags),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -47,13 +47,13 @@ class _SingleUploadViewState extends State<SingleUploadView> {
                       Row(
                         children: [
                           for (int i = 0; i < _addedTags!.length; i++) ...[
-                            GenericText(text: "#" + _addedTags![i]),
+                            ProfileText400(text: "#" + _addedTags![i], size: 12),
                             const SizedBox(width: 5),
                           ],
                         ],
                       )
                     else
-                      GenericText(text: "tags"),
+                    const ProfileText400(text: "TAGS", size: 12),
                     GestureDetector(
                       onTap: () async {
                         final List<String>? selectedTags = await Navigator.push(
@@ -83,22 +83,22 @@ class _SingleUploadViewState extends State<SingleUploadView> {
                 ),
                 const SizedBox(height: GlobalVariables.smallSpacing),
                 ClearFilledTextField(
-                  labelText: "title ",
+                  labelText: "TITLE",
                   width: GlobalVariables.properWidth,
                   controller: GlobalVariables.inputOne,
                 ),
                 ClearFilledTextField(
-                  labelText: "artists ",
+                  labelText: "ARTISTS",
                   width: GlobalVariables.properWidth,
                   controller: GlobalVariables.inputTwo,
                 ),
                 ClearFilledTextField(
-                  labelText: "description ",
+                  labelText: "DESCRIPTION",
                   width: GlobalVariables.properWidth,
                   controller: GlobalVariables.inputThree,
                 ),
                 ClearButton(
-                  text: "Complete",
+                  text: "COMPLETE",
                   width: GlobalVariables.properWidth,
                   onPressed: () {
 

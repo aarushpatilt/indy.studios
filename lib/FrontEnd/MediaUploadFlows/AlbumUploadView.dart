@@ -25,7 +25,7 @@ class _AlbumUploadViewState extends State<AlbumUploadView> {
   Widget build(BuildContext context) {
     return Scaffold(
       // No return to previous screen
-      appBar: HeaderPreviousList(text: "albums", list: _addedTags),
+      appBar: HeaderPreviousList(text: "ALBUMS", list: _addedTags),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -53,7 +53,7 @@ class _AlbumUploadViewState extends State<AlbumUploadView> {
                         ],
                       )
                     else
-                      GenericText(text: "tags"),
+                      ProfileText400(text: "tags", size: 12),
                     GestureDetector(
                       onTap: () async {
                         final List<String>? selectedTags = await Navigator.push(
@@ -83,17 +83,17 @@ class _AlbumUploadViewState extends State<AlbumUploadView> {
                 ),
                 const SizedBox(height: GlobalVariables.smallSpacing),
                 ClearFilledTextField(
-                  labelText: "title ",
+                  labelText: "TITLE",
                   width: GlobalVariables.properWidth,
                   controller: GlobalVariables.inputOne,
                 ),
                 ClearFilledTextField(
-                  labelText: "artists ",
+                  labelText: "ARTISTS",
                   width: GlobalVariables.properWidth,
                   controller: GlobalVariables.inputTwo,
                 ),
                 ClearButton(
-                  text: "Complete",
+                  text: "COMPLETE",
                   width: GlobalVariables.properWidth,
                   onPressed: () {
 

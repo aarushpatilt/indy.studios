@@ -31,7 +31,7 @@ class HeaderPrevious extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: GenericTextSmall(text: text),
+      title: ProfileText400(text: text, size: 10),
 
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
@@ -39,7 +39,7 @@ class HeaderPrevious extends StatelessWidget implements PreferredSizeWidget {
           // Navigate back to the previous screen
           Navigator.pop(context);
         },
-        iconSize: 17,
+        iconSize: 15,
       ),
 
       backgroundColor: Colors.transparent,
@@ -139,9 +139,12 @@ class HeaderPreviousList extends StatelessWidget implements PreferredSizeWidget 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: GenericText(text: text),
+      title: ProfileText400(text: text, size: 10),
       leading: IconButton(
-        icon: Icon(Icons.arrow_back),
+      icon: const Icon(
+        Icons.arrow_back,
+        size: 15,
+      ),
         onPressed: () {
           // Navigate back to the previous screen and send the list
           Navigator.pop(context, list);
@@ -218,7 +221,7 @@ class ClearButton extends StatelessWidget {
         ),
       ),
         child: 
-        GenericTextSmall(text: text)
+        ProfileText400(text: text, size: 10)
       ),
     );
   }
@@ -560,8 +563,8 @@ class _AudioUploadButtonState extends State<AudioUploadButton> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _selectedFile != null
-                ? GenericText(text: _selectedFile!.path.split('/').last)
-                : const GenericText(text: "select audio"),
+                ? ProfileText400(text: _selectedFile!.path.split('/').last, size: 12)
+                : const ProfileText400(text: "AUDIO", size: 12),
             GestureDetector(
               onTap: filePicker,
               child: const Icon(
@@ -1016,7 +1019,7 @@ class _SearchBarTagState extends State<SearchBarTag> {
                 child: TextField(
                   controller: _searchController,
                   decoration: const InputDecoration(
-                    hintText: 'search...',
+                    hintText: 'SEARCH...',
                     hintStyle: TextStyle(color: Colors.grey),
                     border: InputBorder.none,
                   ),
@@ -1036,7 +1039,7 @@ class _SearchBarTagState extends State<SearchBarTag> {
             child: Row(
               children: [
                 Expanded(
-                  child: GenericText(text: "# " + result),
+                  child: ProfileText400(text: "# " + result, size: 15),
                 ),
                 GestureDetector(
                   onTap: () => _onButtonPressed(result),
@@ -1053,7 +1056,7 @@ class _SearchBarTagState extends State<SearchBarTag> {
         const SizedBox(height: GlobalVariables.mediumSpacing),
         const Align(
           alignment: Alignment.centerLeft,
-          child: GenericText(text: "added"),
+          child: ProfileText400(text: "added", size: 15),
         ),
         ..._addedTags.map((tag) => Container(
           width: GlobalVariables.properWidth,
@@ -1061,7 +1064,7 @@ class _SearchBarTagState extends State<SearchBarTag> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GenericText(text: "# " + tag),
+              ProfileText400(text: "# " + tag, size: 15),
               GestureDetector(
                 onTap: () {
                   setState(() {

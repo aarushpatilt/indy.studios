@@ -167,19 +167,24 @@ class ProfileText400 extends StatelessWidget {
     required this.size,
   }) : super(key: key);
 
+  static TextStyle textStyle(double size) {
+    return TextStyle(
+      fontFamily: 'Inter',
+      fontWeight: FontWeight.w400,
+      fontSize: size,
+      color: Colors.white,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w400,
-        fontSize: size,
-        color: Colors.white,
-      ),
+      style: textStyle(size),
     );
   }
 }
+
 
 class ProfileText500 extends StatelessWidget {
   final String text;
@@ -359,25 +364,20 @@ class ClearFilledTextField extends StatelessWidget {
         decoration: InputDecoration(
           filled: false,
           helperText: '',
-
           labelText: labelText,
-          labelStyle: const TextStyle(
-            color: Colors.grey,
-            fontSize: 15,
-           
-          ),
+          labelStyle: ProfileText400.textStyle(12), // Use ProfileText400 TextStyle here
 
           enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.white, width: 0.5), // Update this line
           ),
         ),
-        style: const TextStyle(
-          color: Colors.white,
-        ),
+        style: ProfileText400.textStyle(12), // Use ProfileText400 TextStyle for the input text as well
       ),
     );
   }
 }
+
+
 
 
 class ParagraphTextField extends StatelessWidget {
@@ -396,14 +396,10 @@ class ParagraphTextField extends StatelessWidget {
       controller: controller,
       keyboardType: TextInputType.multiline,
       maxLines: null,
-      style: const TextStyle(
-        color: Colors.white,
-      ),
+      style: ProfileText400.textStyle(12), // Use ProfileText400 TextStyle here
       decoration: InputDecoration(
         hintText: text,
-        hintStyle: const TextStyle(
-          color: Colors.white,
-        ),
+        hintStyle: ProfileText400.textStyle(12), // Use ProfileText400 TextStyle here
         border: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.white,
@@ -420,6 +416,7 @@ class ParagraphTextField extends StatelessWidget {
     );
   }
 }
+
 
 class TransparentCircleWithBorder extends StatelessWidget {
 

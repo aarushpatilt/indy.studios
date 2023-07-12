@@ -20,7 +20,7 @@ class _AlbumCoverUploadViewState extends State<AlbumCoverUploadView> {
   Widget build(BuildContext context) {
     return Scaffold(
       // No return to previous screen
-      appBar: const HeaderPrevious(text: "singles"),
+      appBar: const HeaderPrevious(text: "ALBUM"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -54,14 +54,15 @@ class _AlbumCoverUploadViewState extends State<AlbumCoverUploadView> {
 
                 const SizedBox(height: GlobalVariables.mediumSpacing),
                 ClearFilledTextField(
-                  labelText: "title ",
+                  labelText: "TITLE",
                   width: GlobalVariables.properWidth,
                   controller: GlobalVariables.inputOne,
                 ),
                 const SizedBox(height: GlobalVariables.mediumSpacing),
-                ParagraphTextField(text: "type here...", controller: GlobalVariables.inputTwo),
+                ParagraphTextField(text: "TYPE HERE...", controller: GlobalVariables.inputTwo),
+                const SizedBox(height: GlobalVariables.smallSpacing),
                 ClearButton(
-                  text: "Complete",
+                  text: "COMPLETE",
                   width: GlobalVariables.properWidth,
                   onPressed: () {
 

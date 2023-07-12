@@ -181,13 +181,13 @@ class _TagsComponentState extends State<TagsComponent> {
             Row(
               children: [
                 for (int i = 0; i < _addedTags!.length; i++) ...[
-                  GenericText(text: "#" + _addedTags![i]),
+                  ProfileText400(text: "#" + _addedTags![i], size: 12),
                   const SizedBox(width: 5),
                 ],
               ],
             )
           else
-            const GenericText(text: "tags"),
+            const ProfileText400(text: "TAGS", size: 12),
           const Spacer(), // Adds a spacer widget to create space between text and icon
           GestureDetector(
             onTap: () async {
