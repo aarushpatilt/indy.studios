@@ -235,7 +235,7 @@ class _PostUploadViewState extends State<PostUploadView> {
                       FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/posts/$documentID', data).then((result) {
                         if (result) {
 
-                          FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/posts/$documentID', 'threads', 'unk').then((result) {
+                          FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/posts', 'threads', 'unk').then((result) {
 
                             FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/posts', 'users/${GlobalVariables.userUUID}/posts/${documentID}', mediaData).then((result) {
 

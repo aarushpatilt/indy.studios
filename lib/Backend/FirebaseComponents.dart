@@ -249,12 +249,15 @@ if (docSnapshot.exists) {
     Future<bool> addDocumentRef(String documentID, String documentPath, String collectionPath, String title) async {
     // Get a reference to the Firestore instance
     final firestore = FirebaseFirestore.instance;
- 
+
+    print("huh");
     // Add a reference to the document in each tag collection
     await firestore.collection(collectionPath).doc(documentID).set({
       'title' : title,
       'ref': firestore.collection(documentPath).doc(documentID),
     });
+
+    print("yuh");
 
     return true;
   }
