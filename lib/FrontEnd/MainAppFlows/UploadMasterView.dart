@@ -6,6 +6,7 @@ import '../../FrontEndComponents/TextComponents.dart';
 import '../MediaUploadFlows/CameraUploadView.dart';
 import '../MediaUploadFlows/MoodUploadView.dart';
 import '../MediaUploadFlows/SingleUploadView.dart';
+import '../ThoughtUploadView.dart';
 
 class UploadMasterView extends StatelessWidget {
   @override
@@ -64,7 +65,10 @@ class UploadMasterView extends StatelessWidget {
 
               InkWell(
                 onTap: () {
-                  // onTap functionality for the second row.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ThoughtUploadView()),
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 25.0), // Added leading padding.
