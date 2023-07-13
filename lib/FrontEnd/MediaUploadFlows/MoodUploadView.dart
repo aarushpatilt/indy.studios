@@ -47,7 +47,7 @@ class _MoodUploadViewState extends State<MoodUploadView> {
   Widget build(BuildContext context) {
     return Scaffold(
       // No return to previous screen
-      appBar: HeaderPreviousList(text: "moods", list: _addedTags),
+      appBar: HeaderPreviousList(text: "MOODS", list: _addedTags),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -89,7 +89,7 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                         ],
                       )
                     else
-                    const GenericText(text: "tags"),
+                    const ProfileText400(text: "TAGS", size: 12),
                     GestureDetector(
                       onTap: () async {
                         final List<String>? selectedTags = await Navigator.push(
@@ -122,7 +122,7 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                         ],
                       )
                     else
-                        const GenericText(text: "music select"),
+                        const ProfileText400(text: "MUSIC SELECT", size: 12),
                         GestureDetector(
                           onTap: () async {
                             final List<String> title = await Navigator.push(
@@ -149,12 +149,12 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                 ),
                 const SizedBox(height: GlobalVariables.smallSpacing),
                 ClearFilledTextField(
-                  labelText: "caption",
+                  labelText: "CAPTION",
                   width: GlobalVariables.properWidth,
                   controller: GlobalVariables.inputOne,
                 ),
                 ClearButton(
-                  text: "Complete",
+                  text: "COMPLETE",
                   width: GlobalVariables.properWidth,
                   onPressed: () {
 

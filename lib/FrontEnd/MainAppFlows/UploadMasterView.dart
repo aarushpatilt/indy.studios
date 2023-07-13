@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/CameraMultiUploadView.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumCoverUploadView.dart';
 import '../../Backend/GlobalComponents.dart';
 import '../../FrontEndComponents/TextComponents.dart';
@@ -32,6 +33,10 @@ class UploadMasterView extends StatelessWidget {
               InkWell(
                 onTap: () {
                   // onTap functionality for the first row.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CameraMultiUploadView()),
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 25.0), // Added leading padding.
@@ -77,7 +82,7 @@ class UploadMasterView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: GlobalVariables.smallSpacing), // Added spacing between circle and text.
-                      const ProfileText400(text: "CREATE A THREAD", size: 10),
+                      const ProfileText400(text: "CREATE A THOUGHT", size: 10),
                     ],
                   ),
                 ),

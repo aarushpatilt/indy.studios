@@ -6,7 +6,6 @@ import 'package:video_player/video_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../Backend/GlobalComponents.dart';
 import '../../FrontEndComponents/TextComponents.dart';
-
 import 'MoodUploadView.dart';
 
 class CameraUploadView extends StatefulWidget {
@@ -51,6 +50,19 @@ class _CameraUploadViewState extends State<CameraUploadView> {
     ));
   }
 
+  Future<void> _selectImage() async {
+    final XFile? selectedImage = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _imageFile = selectedImage;
+    });
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MoodUploadView(
+        mediaFile: File(_imageFile!.path),
+        isVideo: false,
+      ),
+    ));
+  }
+
   Future<void> _selectVideo() async {
     final XFile? selectedVideo = await _picker.pickVideo(source: ImageSource.gallery);
     setState(() {
@@ -80,7 +92,7 @@ class _CameraUploadViewState extends State<CameraUploadView> {
     return Scaffold(
       appBar: const HeaderPrevious(text: "CAMERA"),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+        padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
         child: Column(
           children: <Widget>[
             const SizedBox(height: GlobalVariables.mediumSpacing),
@@ -101,6 +113,11 @@ class _CameraUploadViewState extends State<CameraUploadView> {
             InkWell(
               onTap: _selectVideo,
               child: _buildRow('SELECT A VIDEO'),
+            ),
+            const SizedBox(height: GlobalVariables.largeSpacing),
+            InkWell(
+              onTap: _selectImage,
+              child: _buildRow('SELECT A PHOTO'),
             ),
           ],
         ),
