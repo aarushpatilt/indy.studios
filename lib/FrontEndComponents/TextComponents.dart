@@ -160,11 +160,13 @@ class GenericTextReg extends StatelessWidget {
 class ProfileText400 extends StatelessWidget {
   final String text;
   final double size;
+  final TextOverflow? overflow;
 
-  const ProfileText400 ({
+  const ProfileText400({
     Key? key,
     required this.text,
     required this.size,
+    this.overflow,
   }) : super(key: key);
 
   static TextStyle textStyle(double size) {
@@ -181,9 +183,12 @@ class ProfileText400 extends StatelessWidget {
     return Text(
       text,
       style: textStyle(size),
+      overflow: overflow ?? TextOverflow.visible,
     );
   }
 }
+
+
 
 
 class ProfileText500 extends StatelessWidget {

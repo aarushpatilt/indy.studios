@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter/rendering.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
@@ -75,7 +76,8 @@ class DefaultFirebaseOptions {
 
 
 void main() async {
-
+  // Disable the debug painting of overflow errors
+  debugPaintSizeEnabled = false;
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
@@ -85,7 +87,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:  ThreadDiscoveryView(),
+      home: ThreadDiscoveryView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
