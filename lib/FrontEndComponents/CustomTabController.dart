@@ -2,6 +2,7 @@
 import 'package:ndy/FrontEnd/MainAppFlows/MoodDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/SearchMasterView.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
 
   import '../Backend/GlobalComponents.dart';
@@ -92,10 +93,10 @@ class _CustomTabPageState extends State<CustomTabPage>
   @override
   Widget build(BuildContext context) {
     return CustomTabController(
-      tabs: const ['MUSIC', 'MOOD', 'UPLOAD', 'SEARCH', 'PROFILE'],
+      tabs: const ['MUSIC', 'THREAD', 'UPLOAD', 'SEARCH', 'PROFILE'],
       tabViews: [
         const MusicDiscoveryView(),
-        MoodDiscoveryView(),
+        ThreadDiscoveryView(),
         UploadMasterView(),
         SearchMasterView(),
         Profile(userID: GlobalVariables.userUUID,),

@@ -87,7 +87,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ThreadDiscoveryView(),
+      home: CustomTabPage(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

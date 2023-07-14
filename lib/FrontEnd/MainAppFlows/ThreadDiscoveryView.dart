@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
 
+import 'package:flutter/material.dart';
+import 'package:ndy/Backend/FirebaseComponents.dart';
+import 'package:ndy/Backend/GlobalComponents.dart';
+
+import '../../FrontEndComponents/VideoComponent.dart';
+
+import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+
 class ThreadDiscoveryView extends StatefulWidget {
   ThreadDiscoveryView({Key? key}) : super(key: key);
 
@@ -15,7 +24,7 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
   @override
   void initState() {
     super.initState();
-    _threadData = FirebaseComponents().getReferencedData(collectionPath: 'threads', limit: 8);
+    _threadData = FirebaseComponents().getReferencedData(collectionPath: 'threads', limit: 5);
   }
 
   @override
@@ -87,7 +96,7 @@ class _PostDisplayState extends State<PostDisplay> {
     return Container(
       width: GlobalVariables.properWidth,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+        padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -111,7 +120,7 @@ class _PostDisplayState extends State<PostDisplay> {
                 const SizedBox(width: 10),
                 Text(
                   username,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Colors.white,
                   ),
@@ -121,12 +130,28 @@ class _PostDisplayState extends State<PostDisplay> {
             const SizedBox(height: 10),
             Text(
               data['caption'],
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 12,
                 color: Colors.white,
               ),
             ),
             const SizedBox(height: GlobalVariables.smallSpacing),
+            const Row(
+              children: [
+                Icon(
+                  Icons.favorite_border,
+                  color: Colors.white,
+                  size: 15,
+                ),
+                SizedBox(width: 10),
+                Icon(
+                  Icons.circle_outlined,
+                  color: Colors.white,
+                  size: 15,
+                ),
+              ],
+            ),
+            const SizedBox(height: GlobalVariables.mediumSpacing),
           ],
         ),
       ),
@@ -171,7 +196,7 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
     return Container(
       width: GlobalVariables.properWidth,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+        padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -190,7 +215,7 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
                 const SizedBox(width: 10),
                 Text(
                   username,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Colors.white,
                   ),
@@ -200,12 +225,28 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
             const SizedBox(height: 10),
             Text(
               data['caption'],
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 12,
                 color: Colors.white,
               ),
             ),
             const SizedBox(height: GlobalVariables.smallSpacing),
+            const Row(
+              children: [
+                Icon(
+                  Icons.favorite_border,
+                  color: Colors.white,
+                  size: 15,
+                ),
+                SizedBox(width: 10),
+                Icon(
+                  Icons.circle_outlined,
+                  color: Colors.white,
+                  size: 15,
+                ),
+              ],
+            ),
+            const SizedBox(height: GlobalVariables.mediumSpacing),
           ],
         ),
       ),
@@ -232,17 +273,92 @@ class _MediaFilesDisplayState extends State<MediaFilesDisplay> {
       itemCount: widget.mediaFiles.length,
       itemBuilder: (context, index) {
         String filePath = widget.mediaFiles[index];
-        String extension = filePath.split('.').last.toLowerCase();
-        return Padding(
-          padding: EdgeInsets.only(right: (index != widget.mediaFiles.length - 1) ? 15 : 0),
-          child: Image.network(
-            filePath,
-            width: GlobalVariables.properWidth,
-            height: GlobalVariables.properWidth,
-            fit: BoxFit.cover,
-          ),
-        );
+        String extension = _extractFileExtension(filePath);
+        print(extension);
+        if (extension == 'mp4' || extension == 'mov') {
+          return Padding(
+            padding: EdgeInsets.only(right: (index != widget.mediaFiles.length - 1) ? 15 : 0),
+            child: ThreadPlayer(videoUrl: filePath),
+          );
+        } else {
+          return Padding(
+            padding: EdgeInsets.only(right: (index != widget.mediaFiles.length - 1) ? 15 : 0),
+            child: Image.network(
+              filePath,
+              width: GlobalVariables.properWidth,
+              height: GlobalVariables.properWidth,
+              fit: BoxFit.cover,
+            ),
+          );
+        }
       },
     );
+  }
+
+    String _extractFileExtension(String filePath) {
+    String extension = filePath.split('.').last;
+    if (extension.contains('?')) {
+      extension = extension.substring(0, extension.indexOf('?'));
+    }
+    return extension.toLowerCase();
+  }
+}
+
+
+
+class ThreadPlayer extends StatefulWidget {
+  final String videoUrl;
+
+  ThreadPlayer({required this.videoUrl});
+
+  @override
+  _ThreadPlayerState createState() => _ThreadPlayerState();
+}
+
+class _ThreadPlayerState extends State<ThreadPlayer> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _controller.value.isInitialized
+        ? AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                VideoPlayer(_controller),
+                FloatingActionButton(
+                  onPressed: () {
+                    setState(() {
+                      _controller.value.isPlaying
+                          ? _controller.pause()
+                          : _controller.play();
+                    });
+                  },
+                  child: Icon(
+                    _controller.value.isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                  ),
+                ),
+              ],
+            ),
+          )
+        : Container();
   }
 }
