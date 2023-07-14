@@ -121,12 +121,18 @@ if (docSnapshot.exists) {
     return allData;
   }
 
-  Future<List<Map<String, dynamic>>> getReferencedData( {required String collectionPath, required List<String> fields}) async {
+Future<List<Map<String, dynamic>>> getReferencedData(
+    {required String collectionPath, List<String>? fields, int? limit}) async {
   List<Map<String, dynamic>> dataList = [];
 
-
   CollectionReference colRef = firebaseFirestore.collection(collectionPath);
-  QuerySnapshot snapshot = await colRef.get();
+
+  QuerySnapshot snapshot;
+  if (limit != null) {
+    snapshot = await colRef.limit(limit).get();
+  } else {
+    snapshot = await colRef.get();
+  }
 
   for (var doc in snapshot.docs) {
     print("test 2");
@@ -136,10 +142,12 @@ if (docSnapshot.exists) {
 
     // Now we have the data, but we only want to keep the fields you're interested in
     Map<String, dynamic> filteredData = {};
-    for (String field in fields) {
-      
-  
-      filteredData[field] = data[field];
+    if (fields != null) {
+      for (String field in fields) {
+        filteredData[field] = data[field];
+      }
+    } else {
+      filteredData = data;
     }
 
     dataList.add(filteredData);
@@ -149,6 +157,8 @@ if (docSnapshot.exists) {
 
   return dataList;
 }
+
+
 
 
 

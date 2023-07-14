@@ -7,8 +7,10 @@ import 'package:flutter/foundation.dart'
 import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
+import 'package:ndy/FrontEnd/ThoughtUploadView.dart';
 
 import 'FrontEnd/MainAppFlows/Feed.dart';
+import 'FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'FrontEndComponents/CustomTabController.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
@@ -83,7 +85,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:  CustomTabPage(),
+      home:  ThreadDiscoveryView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
