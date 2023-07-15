@@ -145,7 +145,6 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
             },
           ),
         ),
-        CustomAppBar(),
       ],
     );
   }

@@ -62,12 +62,6 @@ class _MoodDiscoveryViewState extends State<MoodDiscoveryView> {
               );
             },
           ),
-          Positioned(
-            top: 0, // Position 30 pixels below the top
-            left: 0,
-            right: 0,
-            child: CustomAppBar(), // Replace CustomAppBar with your custom app bar widget
-          ),
         ],
       ),
     );

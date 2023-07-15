@@ -95,7 +95,7 @@ class _CustomTabPageState extends State<CustomTabPage>
     return CustomTabController(
       tabs: const ['MUSIC', 'THREAD', 'UPLOAD', 'SEARCH', 'PROFILE'],
       tabViews: [
-        const MusicDiscoveryView(),
+        const CustomSliderBar(),
         ThreadDiscoveryView(),
         UploadMasterView(),
         SearchMasterView(),
@@ -143,6 +143,65 @@ class CustomAppBar extends StatelessWidget {
               onPressed: () {
                 // TODO: Add implementation
               },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomSliderBar extends StatelessWidget {
+  const CustomSliderBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      initialIndex: 1,  // The 'RUNNER' tab is now the default tab
+      child: Scaffold(
+        backgroundColor: Colors.transparent, // Making Scaffold background transparent
+        body: Stack(
+          children: [
+            TabBarView(
+              children: [
+                MoodDiscoveryView(),
+                const MusicDiscoveryView(),
+                // You need to replace the Container with the widget you want to show for the 'RUNNER' tab.
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 50.0, left: 16.0, right: 16.0), // Top and horizontal padding
+              child: Material(
+                color: Colors.transparent,  // Making Material background transparent
+                child: Row(
+                  children: [
+                    Icon(Icons.circle_outlined, size: 25, color: Colors.white), // Leading Icon
+                    Expanded(
+                      child: TabBar(
+                        indicator: BoxDecoration(), // Removes the blue underline
+                        unselectedLabelColor: Colors.grey, // Unselected tab text color
+                        labelColor: Colors.white, // Selected tab text color
+                        tabs: [
+                          Tab(
+                            child: Text(
+                              'DISCOVER',
+                              style: TextStyle(fontSize: 10),
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              'RUNNER',
+                              style: TextStyle(fontSize: 10),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.circle_outlined, size: 25, color: Colors.white), // Trailing Icon
+                  ],
+                ),
+              ),
             ),
           ],
         ),
