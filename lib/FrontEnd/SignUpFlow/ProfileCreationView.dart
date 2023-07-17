@@ -63,11 +63,9 @@ class ProfileCreationView extends StatelessWidget {
                     GlobalVariables().generateUUID().toString() : GlobalVariables.mediaOne!,
                     GlobalVariables().generateUUID().toString() : GlobalVariables.mediaTwo!,
                   };
-                  print(GlobalVariables.userUUID);
                   FirebaseComponents().updateEachDataToFirestore('users/${GlobalVariables.userUUID}', data).then( (result) {
 
                     if (result) {
-                      print("BRUH" + GlobalVariables.userUUID);
 
                       FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/profile', 'users/${GlobalVariables.userUUID}', mediaSet).then( (result) {
 

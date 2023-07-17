@@ -48,7 +48,7 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
     if (documents[currentPage]['image_urls'][1].contains('%2Falbums%2F')) {
       Map<String, dynamic> data = await FirebaseComponents()
           .getSpecificData(documentPath: documents[currentPage]['ref'], fields: ['album_id']);
-
+          
       return data['album_id'];
     }
     return null;

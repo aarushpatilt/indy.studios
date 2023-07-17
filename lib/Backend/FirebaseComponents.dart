@@ -62,7 +62,6 @@ Future<Map<String, dynamic>> getSpecificData(
   {required String documentPath, List<String>? fields}) async {
 // Get a DocumentReference
 DocumentReference docRef = firebaseFirestore.doc(documentPath);
-print(docRef);
 
 // Get the document
 DocumentSnapshot docSnapshot = await docRef.get();
@@ -547,9 +546,10 @@ class _MusicTileState extends State<MusicTile> {
     playNotifier.dispose();
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
+    print('albumId: ${widget.albumId}');
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -654,12 +654,13 @@ class _MusicTileState extends State<MusicTile> {
                       },
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      // Add logic for heart button here
-                    },
-                    child: const Icon(Icons.favorite_border, size: 30, color: Colors.white),
-                  ),
+                  LikeDislikeWidget(
+                    type: widget.albumId != null ? "albums" : "singles", 
+                    uniqueID: widget.uniqueID, 
+                    userID: widget.userID, 
+                    albumId: widget.albumId,
+                    size: 30
+                  )
                 ],
               ),
               const SizedBox(height: GlobalVariables.mediumSpacing),
@@ -711,7 +712,7 @@ class _AlbumListDisplayState extends State<AlbumListDisplay> {
     FirebaseComponents().getCollectionData(collectionPath: widget.collectionPath).then((data) {
       setState(() {
         albums = data;
-        print(albums);
+  
       });
     });
   }
@@ -857,3 +858,167 @@ class _ProfileUsernameState extends State<ProfileUsername> {
   }
 }
 
+
+Future<void> likedFunction(String type, String uniqueID, String likedUser, String? albumID) async {
+
+  var path1 = "";
+  var set2 = "";
+  var path2 = "";
+
+  if(albumID != null){
+    path1 = 'users/$likedUser/$type/$albumID/collections/$uniqueID/likes/${GlobalVariables.userUUID}';
+    set2 = 'users/$likedUser/$type/$albumID/collections/$uniqueID';
+  } else {
+    path1 = 'users/$likedUser/$type/$uniqueID/likes/${GlobalVariables.userUUID}';
+  }
+  
+  if(type == "albums" || type == "singles"){
+
+    path2 = 'users/${GlobalVariables.userUUID}/liked_songs/$uniqueID';
+  } else {
+
+    path2 = 'users/${GlobalVariables.userUUID}/liked_$type/$uniqueID';
+  }
+
+
+  await Future.wait([
+    FirebaseComponents.firebaseFirestore.doc(path1).set({
+      'ref': '/users/${GlobalVariables.userUUID}'
+    }),
+    // placement of like under the media
+    
+    FirebaseComponents.firebaseFirestore.doc(path2).set({
+      'ref': set2
+    }),
+  ]);
+
+  print("done");
+}
+
+// This function is the opposite of likedFunction, it undoes a like action.
+Future<bool> dislikedFunction(String type, String uniqueID, String likedUser, String? albumID) async {
+  // Initialize paths
+  var path1 = "";
+  var path2 = "";
+
+  // If albumID is not null, the media is part of an album, and paths are set accordingly.
+  if(albumID != null){
+    path1 = 'users/$likedUser/$type/$albumID/collections/$uniqueID/likes/${GlobalVariables.userUUID}';
+  } 
+  // If albumID is null, the media is not part of an album, and paths are set accordingly.
+  else {
+    path1 = 'users/$likedUser/$type/$uniqueID/likes/${GlobalVariables.userUUID}';
+  }
+
+  // Adjust path2 based on the type of media.
+  if(type == "albums" || type == "singles"){
+    path2 = 'users/${GlobalVariables.userUUID}/liked_songs/$uniqueID';
+  } else {
+    path2 = 'users/${GlobalVariables.userUUID}/liked_$type/$uniqueID';
+  }
+
+  // We use a try-catch to handle any potential exceptions from Firestore operations.
+  try {
+    await Future.wait([
+      // The first operation deletes the document in Firestore at the path defined by 'path1'.
+      FirebaseComponents.firebaseFirestore.doc(path1).delete(),
+      // The second operation deletes the document in Firestore at the path defined by 'path2'.
+      FirebaseComponents.firebaseFirestore.doc(path2).delete(),
+    ]);
+  } catch(e) {
+    // If an exception is caught, print the error and return false.
+    print('Error in dislikedFunction: $e');
+    return false;
+  }
+
+  // If no exception is caught, print "done" and return true to indicate success.
+  print("done");
+  return true;
+}
+
+Future<bool> checkLikeExists(String type, String uniqueID, String likedUser, String? albumID) async {
+  // Initialize paths
+  var path1 = "";
+  var path2 = "";
+
+  // If albumID is not null, the media is part of an album, and paths are set accordingly.
+  if(albumID != null){
+    path1 = 'users/$likedUser/$type/$albumID/collections/$uniqueID/likes/${GlobalVariables.userUUID}';
+  } 
+  // If albumID is null, the media is not part of an album, and paths are set accordingly.
+  else {
+    path1 = 'users/$likedUser/$type/$uniqueID/likes/${GlobalVariables.userUUID}';
+  }
+  print(albumID);
+  print(path1);
+
+  // Adjust path2 based on the type of media.
+  if(type == "albums" || type == "singles"){
+    path2 = 'users/${GlobalVariables.userUUID}/liked_songs/$uniqueID';
+  } else {
+    path2 = 'users/${GlobalVariables.userUUID}/liked_$type/$uniqueID';
+  }
+
+  // Retrieve documents from Firestore for both paths.
+  var doc1 = FirebaseComponents.firebaseFirestore.doc(path1).get();
+  var doc2 = FirebaseComponents.firebaseFirestore.doc(path2).get();
+
+  // Await the results from both Firestore operations.
+  var results = await Future.wait([doc1, doc2]);
+  print("HEY");
+  print(results[0].exists);
+  print(results[1].exists);
+
+
+  // Return true if both documents exist, false otherwise.
+  return results[0].exists && results[1].exists;
+}
+
+class LikeDislikeWidget extends StatefulWidget {
+  final String type;
+  final String uniqueID;
+  final String userID;
+  final String? albumId;
+  final double size;
+
+  LikeDislikeWidget({required this.type, required this.uniqueID, required this.userID, required this.size, this.albumId});
+
+  @override
+  _LikeDislikeWidgetState createState() => _LikeDislikeWidgetState();
+}
+
+class _LikeDislikeWidgetState extends State<LikeDislikeWidget> {
+  late bool isLiked;
+
+  Future<void> likeDislikeHandler() async {
+    if (isLiked) {
+      await dislikedFunction(widget.type, widget.uniqueID, widget.userID, widget.albumId);
+    } else {
+      await likedFunction(widget.type, widget.uniqueID, widget.userID, widget.albumId);
+    }
+    setState(() {
+      isLiked = !isLiked;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: checkLikeExists(widget.type, widget.uniqueID, widget.userID, widget.albumId), // this will fetch the albumId and then check if it exists
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasError)
+            return Icon(Icons.error_outline, size: 30, color: Colors.red);
+          else
+            isLiked = snapshot.data ?? false; // If snapshot.data is null then default to false
+            return GestureDetector(
+              onTap: likeDislikeHandler,
+              child: Icon(
+                isLiked ? Icons.favorite : Icons.favorite_border,
+                size: widget.size,
+                color: Colors.white,
+              ),
+            );
+      },
+    );
+  }
+}

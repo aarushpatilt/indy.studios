@@ -38,7 +38,6 @@ class _SingleCoverDisplayState extends State<SingleCoverDisplay> {
           return Text('Error: ${snapshot.error}');
         } else {
           var data = snapshot.data!;
-          print(data);
           return Scaffold(
             backgroundColor: Colors.black,
             body: CustomScrollView(

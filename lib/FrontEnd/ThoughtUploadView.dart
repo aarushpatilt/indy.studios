@@ -51,10 +51,10 @@ class _ThoughtUploadViewState extends State<ThoughtUploadView> {
                       };
 
                       // Loop through the media files and generate the Map
-                      FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/posts/$documentID', data).then((result) {
+                      FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/threads/$documentID', data).then((result) {
                         if (result) {
 
-                          FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/posts', 'threads', 'thought').then((result) {
+                          FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/threads', 'threads', 'threads').then((result) {
 
                           });
                         }

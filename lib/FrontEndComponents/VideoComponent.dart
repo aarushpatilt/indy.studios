@@ -73,6 +73,8 @@ class MoodTile extends StatefulWidget {
   final String caption;
   final String title;
   final String imageUrl;
+  final String uniqueID;
+  final String userID;
 
   const MoodTile({
     required this.mediaUrl,
@@ -83,6 +85,8 @@ class MoodTile extends StatefulWidget {
     required this.caption,
     required this.title,
     required this.imageUrl,
+    required this.uniqueID,
+    required this.userID
   });
 
   @override
@@ -155,12 +159,8 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                   Row(
                                     children: [
                                       ProfileText600(text: widget.tags.map((tag) => tag.toString().toUpperCase()).join(', '), size: 10),
-                                      const Spacer(),
-                                      const Icon(
-                                        Icons.favorite_border,
-                                        color: Color.fromARGB(255, 90, 90, 90),
-                                        size: 20.0,
-                                      ),
+                                      const Spacer(), 
+                                      LikeDislikeWidget(type: "moods", uniqueID: widget.uniqueID, userID: widget.userID, size: 20),
                                       const SizedBox(width: GlobalVariables.smallSpacing),
                                       const Icon(
                                         Icons.repeat,

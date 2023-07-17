@@ -112,7 +112,6 @@ class _AlbumUploadViewState extends State<AlbumUploadView> {
                       GlobalVariables().generateUUID().toString(): GlobalVariables.mediaTwo!,
                     };
 
-                    print(widget.albumImageRef);
                     FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections/${documentID}', data).then((result) {
                         
                         if (result) {

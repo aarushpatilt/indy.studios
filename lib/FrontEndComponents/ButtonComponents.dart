@@ -751,8 +751,6 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
               final imageUrl = imageUrls[1];
               final songArtist = songData['artists'];
 
-              print(songData);
-              
               // Wait until image is loaded with precacheImage
               return FutureBuilder<void>(
                 future: precacheImage(NetworkImage(imageUrl), context),

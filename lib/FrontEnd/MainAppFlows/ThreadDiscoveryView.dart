@@ -150,13 +150,9 @@ class _PostDisplayState extends State<PostDisplay> {
               ),
             ),
             const SizedBox(height: GlobalVariables.smallSpacing),
-            const Row(
+            Row(
               children: [
-                Icon(
-                  Icons.favorite_border,
-                  color: Colors.white,
-                  size: 15,
-                ),
+                LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15),
                 SizedBox(width: 10),
                 Icon(
                   Icons.circle_outlined,
@@ -245,13 +241,9 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
               ),
             ),
             const SizedBox(height: GlobalVariables.smallSpacing),
-            const Row(
+            Row(
               children: [
-                Icon(
-                  Icons.favorite_border,
-                  color: Colors.white,
-                  size: 15,
-                ),
+                LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15),
                 SizedBox(width: 10),
                 Icon(
                   Icons.circle_outlined,
@@ -267,8 +259,6 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
     );
   }
 }
-
-
 
 class MediaFilesDisplay extends StatefulWidget {
   final List<String> mediaFiles;

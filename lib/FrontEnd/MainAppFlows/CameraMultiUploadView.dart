@@ -232,12 +232,12 @@ class _PostUploadViewState extends State<PostUploadView> {
                         mediaData[GlobalVariables().generateUUID().toString()] = file;
                       }
 
-                      FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/posts/$documentID', data).then((result) {
+                      FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/threads/$documentID', data).then((result) {
                         if (result) {
 
-                          FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/posts', 'threads', 'unk').then((result) {
+                          FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/threads', 'threads', 'threads').then((result) {
 
-                            FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/posts', 'users/${GlobalVariables.userUUID}/posts/${documentID}', mediaData).then((result) {
+                            FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/threads', 'users/${GlobalVariables.userUUID}/threads/${documentID}', mediaData).then((result) {
 
                               print("done");
                             });
