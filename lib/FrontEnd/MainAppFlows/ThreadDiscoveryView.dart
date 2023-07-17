@@ -28,19 +28,21 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
     _threadData = FirebaseComponents().getReferencedData(collectionPath: 'threads', limit: 5);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const Drawer(
-        child: MenuSideBar(),
-      ),
-      body: Stack(
-        children: [
-          FutureBuilder<List<Map<String, dynamic>>>(
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    drawer: const Drawer(
+      child: MenuSideBar(),
+    ),
+    body: Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 50), // Add top padding of 50
+          child: FutureBuilder<List<Map<String, dynamic>>>(
             future: _threadData,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Text("");
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -61,17 +63,19 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
               }
             },
           ),
-          const Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: CustomAppBar(),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+        const Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: CustomAppBar(),
+        ),
+      ],
+    ),
+  );
 }
+}
+
 
 class PostDisplay extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -153,8 +157,8 @@ class _PostDisplayState extends State<PostDisplay> {
             Row(
               children: [
                 LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15),
-                SizedBox(width: 10),
-                Icon(
+                const SizedBox(width: 10),
+                const Icon(
                   Icons.circle_outlined,
                   color: Colors.white,
                   size: 15,
@@ -244,8 +248,8 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
             Row(
               children: [
                 LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15),
-                SizedBox(width: 10),
-                Icon(
+                const SizedBox(width: 10),
+                const Icon(
                   Icons.circle_outlined,
                   color: Colors.white,
                   size: 15,
@@ -278,7 +282,6 @@ class _MediaFilesDisplayState extends State<MediaFilesDisplay> {
       itemBuilder: (context, index) {
         String filePath = widget.mediaFiles[index];
         String extension = _extractFileExtension(filePath);
-        print(extension);
         if (extension == 'mp4' || extension == 'mov') {
           return Padding(
             padding: EdgeInsets.only(right: (index != widget.mediaFiles.length - 1) ? 15 : 0),

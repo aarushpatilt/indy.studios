@@ -182,7 +182,6 @@ class _PostUploadViewState extends State<PostUploadView> {
                         String extension = filePath.split('.').last.toLowerCase();
 
                         // Debug: Print extension of the file
-                        print("File extension: $extension");
 
                         // Add padding between media items
                         return Padding(
@@ -191,7 +190,6 @@ class _PostUploadViewState extends State<PostUploadView> {
                               // Display image
                               ? () {
                                   // Debug: Print file path of the image
-                                  print("Image file path: ${widget.mediaFiles[index].path}");
                                   return Image.file(
                                     widget.mediaFiles[index],
                                     width: GlobalVariables.properWidth,
@@ -239,7 +237,6 @@ class _PostUploadViewState extends State<PostUploadView> {
 
                             FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/threads', 'users/${GlobalVariables.userUUID}/threads/${documentID}', mediaData).then((result) {
 
-                              print("done");
                             });
                           });
                         }

@@ -183,7 +183,6 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                             if (result) {
                               
                               FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/moods', 'users/${GlobalVariables.userUUID}/moods/${documentID}', mediaData).then((result) {
-                                  print("done");
                               });
                             }
                           });

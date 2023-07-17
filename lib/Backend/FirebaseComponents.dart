@@ -134,7 +134,6 @@ Future<List<Map<String, dynamic>>> getReferencedData(
   }
 
   for (var doc in snapshot.docs) {
-    print("test 2");
     String ref = doc['ref'].path;
     DocumentSnapshot refDocSnapshot = await FirebaseFirestore.instance.doc(ref).get();
     Map<String, dynamic> data = refDocSnapshot.data() as Map<String, dynamic>;
@@ -151,8 +150,6 @@ Future<List<Map<String, dynamic>>> getReferencedData(
 
     dataList.add(filteredData);
   }
-
-  print("test 3");
 
   return dataList;
 }
@@ -259,14 +256,12 @@ Future<List<Map<String, dynamic>>> getReferencedData(
     // Get a reference to the Firestore instance
     final firestore = FirebaseFirestore.instance;
 
-    print("huh");
     // Add a reference to the document in each tag collection
     await firestore.collection(collectionPath).doc(documentID).set({
       'title' : title,
       'ref': firestore.collection(documentPath).doc(documentID),
     });
 
-    print("yuh");
 
     return true;
   }
@@ -286,7 +281,6 @@ Future<List<Map<String, dynamic>>> getReferencedData(
           .child(filePath)
           .putFile(entry.value)
           .then((TaskSnapshot snapshot) async {
-            print('Image upload complete.');
 
             // Retrieve the download URL
             final String downloadURL = await snapshot.ref.getDownloadURL();
@@ -304,11 +298,9 @@ Future<List<Map<String, dynamic>>> getReferencedData(
           'image_urls': FieldValue.arrayUnion(downloadURLs),
       });
 
-      print('Image URLs stored in Firestore.');
 
       return true;
     } catch (e) {
-      print("Breh");
       print(e);
       return false;
     }
@@ -549,7 +541,6 @@ class _MusicTileState extends State<MusicTile> {
   
   @override
   Widget build(BuildContext context) {
-    print('albumId: ${widget.albumId}');
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -594,7 +585,6 @@ class _MusicTileState extends State<MusicTile> {
                       ),
                     );
                   } else {
-                    print("HEY");
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -891,8 +881,6 @@ Future<void> likedFunction(String type, String uniqueID, String likedUser, Strin
       'ref': set2
     }),
   ]);
-
-  print("done");
 }
 
 // This function is the opposite of likedFunction, it undoes a like action.
@@ -932,7 +920,6 @@ Future<bool> dislikedFunction(String type, String uniqueID, String likedUser, St
   }
 
   // If no exception is caught, print "done" and return true to indicate success.
-  print("done");
   return true;
 }
 
@@ -949,8 +936,6 @@ Future<bool> checkLikeExists(String type, String uniqueID, String likedUser, Str
   else {
     path1 = 'users/$likedUser/$type/$uniqueID/likes/${GlobalVariables.userUUID}';
   }
-  print(albumID);
-  print(path1);
 
   // Adjust path2 based on the type of media.
   if(type == "albums" || type == "singles"){
@@ -965,9 +950,7 @@ Future<bool> checkLikeExists(String type, String uniqueID, String likedUser, Str
 
   // Await the results from both Firestore operations.
   var results = await Future.wait([doc1, doc2]);
-  print("HEY");
-  print(results[0].exists);
-  print(results[1].exists);
+
 
 
   // Return true if both documents exist, false otherwise.

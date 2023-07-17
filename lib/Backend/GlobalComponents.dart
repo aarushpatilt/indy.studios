@@ -153,7 +153,6 @@ class GlobalVariables {
         //     Navigator.push(context, MaterialPageRoute(builder: (context) => nextView),);
         //   }
         // });
-        print("lol");
       }
     });
   }

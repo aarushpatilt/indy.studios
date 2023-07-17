@@ -551,7 +551,6 @@ class _AudioUploadButtonState extends State<AudioUploadButton> {
       });
       widget.onFileSelected(file);
     } else {
-      print("User cancelled file picker");
     }
   }
 
