@@ -340,32 +340,49 @@ class _ThreadPlayerState extends State<ThreadPlayer> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return _controller.value.isInitialized
-        ? AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
+@override
+Widget build(BuildContext context) {
+  return _controller.value.isInitialized
+      ? Container(
+          width: GlobalVariables.properWidth - 50,
+          height: GlobalVariables.properWidth - 50,
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _controller.value.isPlaying
+                    ? _controller.pause()
+                    : _controller.play();
+              });
+            },
             child: Stack(
-              alignment: Alignment.bottomCenter,
               children: [
-                VideoPlayer(_controller),
-                FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(5.0),
+                  child: VideoPlayer(_controller),
+                ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        _controller.value.isPlaying
+                            ? _controller.pause()
+                            : _controller.play();
+                      });
+                    },
+                    backgroundColor: Colors.transparent,
+                    child: Icon(
                       _controller.value.isPlaying
-                          ? _controller.pause()
-                          : _controller.play();
-                    });
-                  },
-                  child: Icon(
-                    _controller.value.isPlaying
-                        ? Icons.pause
-                        : Icons.play_arrow,
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                    ),
                   ),
                 ),
               ],
             ),
-          )
-        : Container();
-  }
+          ),
+        )
+      : Container();
+}
+
 }
