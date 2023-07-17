@@ -759,3 +759,101 @@ class _AlbumListDisplayState extends State<AlbumListDisplay> {
     );
   }
 }
+
+class ProfilePicture extends StatefulWidget {
+  final double size;
+
+  ProfilePicture({required this.size});
+
+  @override
+  _ProfilePictureState createState() => _ProfilePictureState();
+}
+
+class _ProfilePictureState extends State<ProfilePicture> {
+  String? imageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    loadProfilePicture();
+  }
+
+  void loadProfilePicture() async {
+    try {
+      Map<String, dynamic> data = await FirebaseComponents().getSpecificData(
+          documentPath: 'users/${GlobalVariables.userUUID}',
+          fields: ['image_urls']);
+
+      if (data['image_urls'] != null && data['image_urls'].length > 0) {
+        setState(() {
+          imageUrl = data['image_urls'][0];
+        });
+      }
+    } catch (e) {
+      print('Failed to load profile picture: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipOval(
+      child: imageUrl != null
+          ? Image.network(
+              imageUrl!,
+              width: widget.size,
+              height: widget.size,
+              fit: BoxFit.cover,
+            )
+          : Container(
+              width: widget.size,
+              height: widget.size,
+              color: Colors.grey,
+            ),  // Placeholder for when image is not loaded
+    );
+  }
+}
+class ProfileUsername extends StatefulWidget {
+  final double size;
+
+  ProfileUsername({required this.size});
+
+  @override
+  _ProfileUsernameState createState() => _ProfileUsernameState();
+}
+
+class _ProfileUsernameState extends State<ProfileUsername> {
+  String? username;
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsername();
+  }
+
+  void loadUsername() async {
+    try {
+      Map<String, dynamic> data = await FirebaseComponents().getSpecificData(
+          documentPath: 'users/${GlobalVariables.userUUID}',
+          fields: ['username']);
+
+      if (data['username'] != null) {
+        setState(() {
+          username = data['username'];
+        });
+      }
+    } catch (e) {
+      print('Failed to load username: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return username != null
+        ? ProfileText600(
+            text: username!,
+            size: widget.size,
+          )
+        : Container();  // Placeholder for when username is not loaded
+  }
+}
+

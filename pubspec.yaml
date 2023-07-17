@@ -29,6 +29,7 @@ fonts:
       - asset: fonts/Inter-Black.ttf
         weight: 900
 dependencies:
+  flutter_slidable: ^0.3.0
   visibility_detector: ^0.4.0
   provider: ^6.0.5
   video_player: ^2.2.6
