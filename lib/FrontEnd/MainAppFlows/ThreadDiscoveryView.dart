@@ -297,11 +297,14 @@ class _MediaFilesDisplayState extends State<MediaFilesDisplay> {
         } else {
           return Padding(
             padding: EdgeInsets.only(right: (index != widget.mediaFiles.length - 1) ? 15 : 0),
-            child: Image.network(
-              filePath,
-              width: GlobalVariables.properWidth,
-              height: GlobalVariables.properWidth,
-              fit: BoxFit.cover,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5.0), // Adjust the value as needed
+              child: Image.network(
+                filePath,
+                width: (widget.mediaFiles.length == 1) ? GlobalVariables.properWidth - 30 : GlobalVariables.properWidth - 50,
+                height: (widget.mediaFiles.length == 1) ? GlobalVariables.properWidth - 30 : GlobalVariables.properWidth - 50,
+                fit: BoxFit.cover,
+              ),
             ),
           );
         }
