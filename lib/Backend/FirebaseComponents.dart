@@ -858,6 +858,7 @@ Future<void> likedFunction(String type, String uniqueID, String likedUser, Strin
     set2 = 'users/$likedUser/$type/$albumID/collections/$uniqueID';
   } else {
     path1 = 'users/$likedUser/$type/$uniqueID/likes/${GlobalVariables.userUUID}';
+    set2 = 'users/$likedUser/$type/$uniqueID';
   }
   
   if(type == "albums" || type == "singles"){

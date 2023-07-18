@@ -8,6 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
+import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedSongsView.dart';
 import 'package:ndy/FrontEnd/ThoughtUploadView.dart';
 
@@ -88,7 +89,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CustomTabPage(),
+      home: LikedMoodsView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
