@@ -10,7 +10,8 @@ import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
 import '../FrontEnd/MainAppFlows/Feed.dart';
   import '../FrontEnd/MainAppFlows/MusicDiscoveryView.dart';
   import '../FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
-  import 'TextComponents.dart';
+  import '../FrontEnd/MenuFlow/LikedSongsView.dart';
+import 'TextComponents.dart';
 
 class CustomTabController extends StatefulWidget {
   final List<Widget> tabs;  // Type changed from List<String> to List<Widget>
@@ -222,13 +223,13 @@ class CustomSliderBar extends StatelessWidget {
                         tabs: [
                           Tab(
                             child: Text(
-                              'DISCOVER',
+                              'MOOD',
                               style: TextStyle(fontSize: 10),
                             ),
                           ),
                           Tab(
                             child: Text(
-                              'RUNNER',
+                              'MUSIC',
                               style: TextStyle(fontSize: 10),
                             ),
                           ),
@@ -270,7 +271,17 @@ class MenuSideBar extends StatelessWidget {
                       const SizedBox(height: GlobalVariables.mediumSpacing),
                       const ProfileText500(text: "activity", size: 20),                      
                       const SizedBox(height: GlobalVariables.smallSpacing),
-                      const ProfileText500(text: "songs", size: 20),                      
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => LikedSongView(),
+                            ),
+                          );
+                        },
+                        child: const ProfileText500(text: "songs", size: 20),
+                      ),
+                     
                       const SizedBox(height: GlobalVariables.smallSpacing),
                       const ProfileText500(text: "moods", size: 20),                      
                       const SizedBox(height: GlobalVariables.smallSpacing),

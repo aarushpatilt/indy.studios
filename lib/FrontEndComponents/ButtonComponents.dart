@@ -674,7 +674,7 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
     isScrollControlled: true,
     builder: (BuildContext context) {
       return DraggableScrollableSheet(
-        initialChildSize: 1,
+        initialChildSize: 0.9,
         expand: false,
         builder: (BuildContext context, ScrollController scrollController) {
           return ListView(
@@ -683,24 +683,29 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
             children: [
               Container(
                 color: Colors.black,
-                child: MusicTile(
-                  title: data['title'],
-                  artist: data['artists'],
-                  timestamp: (data['timestamp'] as Timestamp).toDate(),
-                  imageUrl: data['image_urls'][1],
-                  audioUrl: data['image_urls'][0],
-                  albumId: data['album_id'],
-                  userID: data['user_id'],
-                  tags: data['tags'],
-                  barColor: Colors.black,
-                  uniqueID: data['unique_id'],
-              ),)
+                child: Transform.translate(
+                  offset: Offset(0, -100),
+                  child: MusicTile(
+                    title: data['title'],
+                    artist: data['artists'],
+                    timestamp: (data['timestamp'] as Timestamp).toDate(),
+                    imageUrl: data['image_urls'][1],
+                    audioUrl: data['image_urls'][0],
+                    albumId: data['album_id'],
+                    userID: data['user_id'],
+                    tags: data['tags'],
+                    barColor: Colors.black,
+                    uniqueID: data['unique_id'],
+                  ),
+                ),
+              ),
             ],
           );
         },
       );
     },
   );
+
 }
 
 

@@ -33,11 +33,7 @@ class _ProfileState extends State<Profile> {
       body: FutureBuilder<DocumentSnapshot>(
         future: _futureProfileData,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (!snapshot.hasData) {
+          if (!snapshot.hasData) {
             return Text('No data found');
           } else {
             final profileData = snapshot.data!.data() as Map<String, dynamic>;

@@ -125,16 +125,14 @@ Future<List<Map<String, dynamic>>> getReferencedData(
   List<Map<String, dynamic>> dataList = [];
 
   CollectionReference colRef = firebaseFirestore.collection(collectionPath);
-
   QuerySnapshot snapshot;
   if (limit != null) {
     snapshot = await colRef.limit(limit).get();
   } else {
     snapshot = await colRef.get();
   }
-
   for (var doc in snapshot.docs) {
-    String ref = doc['ref'].path;
+    String ref = doc['ref'];
     DocumentSnapshot refDocSnapshot = await FirebaseFirestore.instance.doc(ref).get();
     Map<String, dynamic> data = refDocSnapshot.data() as Map<String, dynamic>;
 
