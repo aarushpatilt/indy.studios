@@ -80,12 +80,35 @@ if (docSnapshot.exists) {
     }
     return filteredData;
   } else {
+    print("HEY");
     // If fields is null, return all data
     return data;
   }
 } else {
   throw Exception('Document does not exist');
 }
+}
+
+Future<Map<String, dynamic>> getSpecialData(
+  {required String documentPath}) async {
+// Get a DocumentReference
+DocumentReference docRef = firebaseFirestore.doc(documentPath);
+print(documentPath);
+// Get the document
+DocumentSnapshot docSnapshot = await docRef.get();
+print(docSnapshot);
+
+if (docSnapshot.exists) {
+  // Get the document data
+  Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+
+
+    // If fields is null, return all data
+  return data;
+  } else {
+
+    return {};
+  }
 }
 
 

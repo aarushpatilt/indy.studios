@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
-
-import 'package:flutter/material.dart';
-import 'package:ndy/Backend/FirebaseComponents.dart';
-import 'package:ndy/Backend/GlobalComponents.dart';
-
 import '../../FrontEndComponents/CustomTabController.dart';
-import '../../FrontEndComponents/VideoComponent.dart';
-
-import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class ThreadDiscoveryView extends StatefulWidget {

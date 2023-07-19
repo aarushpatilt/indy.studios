@@ -10,8 +10,10 @@ import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/SongMoodView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
+import 'package:ndy/FrontEnd/MenuFlow/CommentView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedSongsView.dart';
+import 'package:ndy/FrontEnd/MenuFlow/LikedThreadsView.dart';
 import 'package:ndy/FrontEnd/ThoughtUploadView.dart';
 
 import 'FrontEnd/MainAppFlows/Feed.dart';
@@ -91,7 +93,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CustomTabPage(),
+      home: CommentIcon(size: 15, userID: GlobalVariables.userUUID, type: 'threads', uniqueID: '4359fe92-763c-424c-86fc-2dade62ec11e',),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

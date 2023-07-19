@@ -5,6 +5,7 @@ import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/SearchMasterView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
+import 'package:ndy/FrontEnd/MenuFlow/LikedThreadsView.dart';
 
   import '../Backend/GlobalComponents.dart';
 import '../FrontEnd/MainAppFlows/Feed.dart';
@@ -124,61 +125,48 @@ class _CustomTabPageState extends State<CustomTabPage>
 
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar();
+  final String? title;
 
-@override
-Widget build(BuildContext context) {
-  return Container(
-    color: Colors.black,
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(15, 50, 5, 15),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Builder(
-              builder: (context) => GestureDetector(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.all(0),
-                    child: ProfilePicture(size: 30),
+  const CustomAppBar({this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 50, 5, 15),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Builder(
+                builder: (context) => GestureDetector(
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.all(0),
+                      child: ProfilePicture(size: 30),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          const ProfileText500(
-            text: 'DISCOVER',
-            size: 10,
-          ),
-          Expanded(
-            child: Text(""),
-          ),
-          // Expanded(
-          //   child: Builder(
-          //     builder: (context) => IconButton(
-          //       icon: const Icon(
-          //         Icons.circle_outlined,
-          //         size: 30.0,
-          //         color: Color.fromARGB(255, 142, 57, 57),
-          //       ),
-          //       onPressed: () {
-          //         Scaffold.of(context).openDrawer();
-          //       },
-          //     ),
-          //   ),
-          // ),
-        ],
+            ProfileText500(
+              text: title ?? 'DISCOVER',
+              size: 10,
+            ),
+            Expanded(
+              child: Text(""),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
-
-}
 
 
 class CustomSliderBar extends StatelessWidget {
@@ -295,7 +283,16 @@ class MenuSideBar extends StatelessWidget {
                         child: const ProfileText500(text: "moods", size: 20),
                       ),                      
                       const SizedBox(height: GlobalVariables.smallSpacing),
-                      const ProfileText500(text: "thoughts", size: 20),                      
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => LikedThreadView(),
+                            ),
+                          );
+                        },
+                        child: const ProfileText500(text: "thoughts", size: 20),
+                      ),                    
                       SizedBox(height:  MediaQuery.of(context).size.height * 0.35),
                       const ProfileText400(text: "edit", size: 15),  
                       const SizedBox(height: GlobalVariables.smallSpacing), 

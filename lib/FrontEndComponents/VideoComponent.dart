@@ -109,7 +109,6 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
     var uri = Uri.parse(widget.mediaUrl);
     var path = uri.path;
     isVideo = path.toLowerCase().endsWith('.mp4') || path.toLowerCase().endsWith('.mov');
-    print(path);
     if(isVideo) {
       _controller = VideoPlayerController.network(widget.mediaUrl)
         ..initialize().then((_) {
