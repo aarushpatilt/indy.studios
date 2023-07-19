@@ -200,9 +200,6 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                         if (_selectedList!['album_id']!= null) {
                           data["albumID"] = _selectedList!['album_id'];
                         }
-                        print(_selectedList);
-                        print(_title);
-                        print(_selectedList!['image_urls'][0]);
                         Map<String, File> mediaData = {
                           GlobalVariables().generateUUID().toString():
                               widget.mediaFile!,

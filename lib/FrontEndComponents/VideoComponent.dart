@@ -105,6 +105,7 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
   @override
   void initState() {
     super.initState();
+    print(widget.albumID);
     _controller = VideoPlayerController.network(widget.mediaUrl)
       ..initialize().then((_) {
         setState(() {});

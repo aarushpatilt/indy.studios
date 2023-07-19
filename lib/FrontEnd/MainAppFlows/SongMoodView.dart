@@ -31,6 +31,7 @@ class _SongMoodsViewState extends State<SongMoodsView> {
     _SongMoodsProvider = LikedMoodsProvider('songs/${widget.musicId}/moods');
     _SongMoodsProvider.fetchLikedMoodsData();
     fetchBackgroundImageUrl();
+    print(widget.albumID);
   }
 
   Future<void> fetchBackgroundImageUrl() async {

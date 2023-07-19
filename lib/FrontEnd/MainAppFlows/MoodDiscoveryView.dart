@@ -61,7 +61,7 @@ class _MoodDiscoveryViewState extends State<MoodDiscoveryView> {
                 imageUrl: docData['image_urls'][1],
                 uniqueID: docData['unique_id'],
                 userID: docData['user_id'],
-                albumID: docData['album_id'] ?? "null",
+                albumID: docData['albumID'] ?? "null",
                 musicID: docData['music_id']
               );
             },

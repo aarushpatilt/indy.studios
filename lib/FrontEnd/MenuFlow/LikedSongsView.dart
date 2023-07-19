@@ -31,7 +31,6 @@ class _LikedSongViewState extends State<LikedSongView> {
     if (imageUrls.isNotEmpty) {
       setState(() {
         backgroundImageUrl = imageUrls[1];
-        print(backgroundImageUrl);
       });
     }
   }

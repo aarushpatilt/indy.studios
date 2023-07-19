@@ -159,7 +159,6 @@ Future<Map<String, dynamic>> getReferencedDocumentData({required String document
 
   // Get reference to another document
   String refPath = data['ref'].path;
-  print(refPath);
   DocumentReference refDocRef = FirebaseFirestore.instance.doc(refPath);
   DocumentSnapshot refSnapshot = await refDocRef.get();
   Map<String, dynamic> refData = refSnapshot.data() as Map<String, dynamic>;
