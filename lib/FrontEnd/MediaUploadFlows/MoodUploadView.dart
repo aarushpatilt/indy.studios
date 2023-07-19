@@ -192,8 +192,9 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                           "caption": GlobalVariables.inputOne.text,
                           "tags": _addedTags,
                           "user_id": GlobalVariables.userUUID,
-                          "image_urls": [_selectedList!['image_urls'][0], _selectedList!['image_urls'][0]],
+                          "image_urls": [_selectedList!['image_urls'][0], _selectedList!['image_urls'][1]],
                           "title": _title,
+                          "music_id" : _selectedList!['unique_id']
                         };
 
                         if (_selectedList!['album_id']!= null) {
@@ -228,7 +229,7 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                                     mediaData)
                                 .then((result) {
                               FirebaseComponents().addDocumentToCollection(
-                                  'songs/$_musicID/moods',
+                                  'songs/${_selectedList!['unique_id']}/moods',
                                   {'ref': 'users/${GlobalVariables.userUUID}/moods/$documentID'},
                                   documentID);
                             });

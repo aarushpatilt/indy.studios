@@ -91,7 +91,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: UploadMasterView(),
+      home: CustomTabPage(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

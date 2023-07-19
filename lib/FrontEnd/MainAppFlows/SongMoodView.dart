@@ -4,14 +4,17 @@ import 'package:provider/provider.dart';
 import '../../Backend/FirebaseComponents.dart';
 import '../../Backend/GlobalComponents.dart';
 import '../../FrontEndComponents/TextComponents.dart';
+import '../MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
+import '../MediaUploadFlows/SinglesCoverDisplay.dart';
 import '../MenuFlow/LikedMoodView.dart';
 
 class SongMoodsView extends StatefulWidget {
   final String albumID;
   final String musicId;
   final bool isAlbum;
+  final String userID;
 
-  SongMoodsView({required this.albumID, required this.musicId, required this.isAlbum});
+  SongMoodsView({required this.albumID, required this.musicId, required this.isAlbum, required this.userID});
 
   @override
   _SongMoodsViewState createState() => _SongMoodsViewState();
@@ -63,9 +66,27 @@ class _SongMoodsViewState extends State<SongMoodsView> {
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            
-                            Row(
+                          children: [                           
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  if (widget.albumID != "null") {
+                                    return AlbumSongDisplayUploadView(
+                                      albumID: widget.albumID,
+                                      userID: widget.userID,
+                                    );
+                                  } else {
+                                    return SingleCoverDisplay(
+                                      userID: widget.userID,
+                                      singleID: widget.musicId,
+                                    );
+                                  }
+                                }),
+                              );
+                            },
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 ClipRRect(
@@ -81,16 +102,18 @@ class _SongMoodsViewState extends State<SongMoodsView> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  ProfileText600(
-                                    text: musicData['title'],
-                                    size: 35,
-                                  ),
-                                  const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                  ProfileText400(text: musicData['artists'], size: 15)
+                                    ProfileText600(
+                                      text: musicData['title'],
+                                      size: 35,
+                                    ),
+                                    const SizedBox(height: GlobalVariables.smallSpacing - 10),
+                                    ProfileText400(text: musicData['artists'], size: 15),
                                   ],
                                 ),
                               ],
                             ),
+                          ),
+
                             const SizedBox(height: GlobalVariables.mediumSpacing),
                             Consumer<LikedMoodsProvider>(
                               builder: (context, provider, _) {

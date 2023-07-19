@@ -160,6 +160,7 @@ class MoodContainersRow extends StatelessWidget {
           imageUrl: moodList[i]['image_urls'][1],
           uniqueID: moodList[i]['unique_id'],
           userID: moodList[i]['user_id'],
+          musicID: moodList[i]['music_id']
         ),
       ));
 
@@ -188,6 +189,7 @@ class MoodContainer extends StatefulWidget {
   final String imageUrl;
   final String uniqueID;
   final String userID;
+  final String musicID;
 
   MoodContainer({
     required this.mediaUrl,
@@ -198,6 +200,7 @@ class MoodContainer extends StatefulWidget {
     required this.imageUrl,
     required this.uniqueID,
     required this.userID,
+    required this.musicID,
   });
 
   @override
@@ -310,6 +313,9 @@ Widget _buildMediaWidget() {
                         imageUrl: widget.imageUrl,
                         uniqueID: widget.uniqueID,
                         userID: widget.userID,
+                        albumID: "",
+                        musicID: widget.musicID,
+
                       ),
                     ),
                   ],

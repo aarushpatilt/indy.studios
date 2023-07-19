@@ -10,7 +10,8 @@ import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
 import '../FrontEnd/MainAppFlows/Feed.dart';
   import '../FrontEnd/MainAppFlows/MusicDiscoveryView.dart';
   import '../FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
-  import '../FrontEnd/MenuFlow/LikedSongsView.dart';
+  import '../FrontEnd/MenuFlow/LikedMoodView.dart';
+import '../FrontEnd/MenuFlow/LikedSongsView.dart';
 import 'TextComponents.dart';
 
 class CustomTabController extends StatefulWidget {
@@ -283,7 +284,16 @@ class MenuSideBar extends StatelessWidget {
                       ),
                      
                       const SizedBox(height: GlobalVariables.smallSpacing),
-                      const ProfileText500(text: "moods", size: 20),                      
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => LikedMoodsView(),
+                            ),
+                          );
+                        },
+                        child: const ProfileText500(text: "moods", size: 20),
+                      ),                      
                       const SizedBox(height: GlobalVariables.smallSpacing),
                       const ProfileText500(text: "thoughts", size: 20),                      
                       SizedBox(height:  MediaQuery.of(context).size.height * 0.35),

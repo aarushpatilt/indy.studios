@@ -77,6 +77,8 @@ class MoodTile extends StatefulWidget {
   final String imageUrl;
   final String uniqueID;
   final String userID;
+  final String albumID;
+  final String musicID;
 
   const MoodTile({
     required this.mediaUrl,
@@ -88,7 +90,9 @@ class MoodTile extends StatefulWidget {
     required this.title,
     required this.imageUrl,
     required this.uniqueID,
-    required this.userID
+    required this.userID,
+    required this.albumID,
+    required this.musicID
   });
 
   @override
@@ -230,12 +234,12 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) => 
-                                                CustomTabPage(),
-                                                // SongMoodsView(
-                                                                        
-                                                //                         musicId: widget.uniqueID, 
-                                                //                         isAlbum: widget.imageUrl.contains('%2Falbums%2F'),
-                                                //                       ),
+                                                SongMoodsView(
+                                                  albumID: widget.albumID,
+                                                  musicId: widget.musicID, 
+                                                  isAlbum: widget.imageUrl.contains('%2Falbums%2F'),
+                                                  userID: widget.userID
+                                                ),
                                               ),
                                             );
                                           },
