@@ -20,7 +20,8 @@ class _LikedMoodsViewState extends State<LikedMoodsView> {
   @override
   void initState() {
     super.initState();
-    _likedMoodsProvider = LikedMoodsProvider();
+    _likedMoodsProvider = LikedMoodsProvider('users/${GlobalVariables.userUUID}/liked_moods');
+;
     _likedMoodsProvider.fetchLikedMoodsData();
     fetchBackgroundImageUrl();
   }
@@ -95,7 +96,7 @@ class _LikedMoodsViewState extends State<LikedMoodsView> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 16), // Add additional spacing if needed
+                        const SizedBox(height: GlobalVariables.mediumSpacing), // Add additional spacing if needed
                         Consumer<LikedMoodsProvider>(
                           builder: (context, provider, _) {
                             if (provider.isLoading) {
@@ -325,10 +326,13 @@ Widget _buildMediaWidget() {
 
 
 class LikedMoodsProvider with ChangeNotifier {
+  final String _collectionPath;
   final List<Map<String, dynamic>> _moodList = [];
   bool _isLoading = false;
   bool _hasError = false;
   String _error = '';
+
+  LikedMoodsProvider(this._collectionPath); // Add this constructor
 
   List<Map<String, dynamic>> get moodList => _moodList;
   bool get isLoading => _isLoading;
@@ -341,10 +345,9 @@ class LikedMoodsProvider with ChangeNotifier {
       notifyListeners();
 
       final data = await FirebaseComponents().getReferencedData(
-        collectionPath: 'users/${GlobalVariables.userUUID}/liked_moods',
+        collectionPath: _collectionPath,
         limit: 9,
       );
-      print(data);
       _moodList.addAll(data);
       
       _isLoading = false;

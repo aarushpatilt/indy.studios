@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
@@ -7,23 +5,30 @@ import 'package:ndy/FrontEndComponents/TextComponents.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MusicFinderView extends StatefulWidget {
+  final Function(Map<String, dynamic>)? onListSelected;
+
+  MusicFinderView({this.onListSelected});
+
   @override
   _MusicFinderViewState createState() => _MusicFinderViewState();
 }
 
 class _MusicFinderViewState extends State<MusicFinderView> {
-  String? _selectedSongImage;
-  String? _selectedTitle;
-  String? _selectedAudio;
+  Map<String, dynamic>? _selectedList;
+
+  void _selectList(Map<String, dynamic> list) {
+    setState(() {
+      _selectedList = list;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // No return to previous screen
-      appBar: HeaderPreviousList(text: "music", list: [_selectedTitle ?? "", _selectedSongImage ?? "", _selectedAudio ?? ""]),
+      appBar: HeaderPreviousMap(text: "music", list: _selectedList ?? {}),
       body: Padding(
         padding: const EdgeInsets.only(
-          top: GlobalVariables.largeSpacing,
+          top: GlobalVariables.smallSpacing,
           left: GlobalVariables.horizontalSpacing,
           right: GlobalVariables.horizontalSpacing,
         ),
@@ -33,22 +38,8 @@ class _MusicFinderViewState extends State<MusicFinderView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SearchBarSong(
-                collectionPath: 'songs', 
-                onDocumentSelected: (String imageUrl) {
-                  setState(() {
-                    _selectedSongImage = imageUrl;
-                  });
-                },
-                onTitleSelected: (String title) {
-                  setState(() {
-                    _selectedTitle = title;
-                  });
-                },
-                onAudioSelected: (String audio) {
-                  setState(() {
-                    _selectedAudio = audio;
-                  });
-                },
+                collectionPath: 'songs',
+                onListSelected: widget.onListSelected,
               ),
             ],
           ),

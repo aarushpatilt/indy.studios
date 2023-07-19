@@ -151,6 +151,23 @@ Future<List<Map<String, dynamic>>> getReferencedData(
 
   return dataList;
 }
+Future<Map<String, dynamic>> getReferencedDocumentData({required String documentPath}) async {
+  // Get initial document reference
+  DocumentReference docRef = FirebaseFirestore.instance.doc(documentPath);
+  DocumentSnapshot snapshot = await docRef.get();
+  Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+  // Get reference to another document
+  String refPath = data['ref'].path;
+  print(refPath);
+  DocumentReference refDocRef = FirebaseFirestore.instance.doc(refPath);
+  DocumentSnapshot refSnapshot = await refDocRef.get();
+  Map<String, dynamic> refData = refSnapshot.data() as Map<String, dynamic>;
+
+  return refData;
+}
+
+
 
 
 
@@ -223,6 +240,23 @@ Future<List<Map<String, dynamic>>> getReferencedData(
 
       print(e);
       return false;
+    }
+  }
+
+    Future<void> addDocumentToCollection(String collectionPath, Map<String, dynamic> data,String? documentId) async {
+    CollectionReference collectionReference = firebaseFirestore.collection(collectionPath);
+    if (documentId != null) {
+      await collectionReference.doc(documentId).set(data).then((_) {
+        print("Document added with ID: $documentId");
+      }).catchError((error) {
+        print("Failed to add document: $error");
+      });
+    } else {
+      await collectionReference.add(data).then((docRef) {
+        print("Document added with ID: ${docRef.id}");
+      }).catchError((error) {
+        print("Failed to add document: $error");
+      });
     }
   }
 

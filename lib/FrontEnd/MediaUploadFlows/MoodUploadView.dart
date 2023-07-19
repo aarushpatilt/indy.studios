@@ -20,11 +20,14 @@ class MoodUploadView extends StatefulWidget {
 }
 
 class _MoodUploadViewState extends State<MoodUploadView> {
+  Map<String, dynamic>? _selectedList;
   List<String>? _addedTags;
   VideoPlayerController? _videoController;
   String? _title;
   String? _audioRef;
   String? _imageRef;
+  String? _musicID;
+  String? _albumID = null;
 
   @override
   void initState() {
@@ -35,6 +38,15 @@ class _MoodUploadViewState extends State<MoodUploadView> {
           setState(() {});
         });
     }
+  }
+
+  void _handleListSelected(Map<String, dynamic>? list) {
+    setState(() {
+      _selectedList = list;
+      if (list != null && list.containsKey('title')) {
+        _title = list['title'] as String?;
+      }
+    });
   }
 
   @override
@@ -89,12 +101,15 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                         ],
                       )
                     else
-                    const ProfileText400(text: "TAGS", size: 12),
+                      const ProfileText400(text: "TAGS", size: 12),
                     GestureDetector(
                       onTap: () async {
-                        final List<String>? selectedTags = await Navigator.push(
+                        final List<String>? selectedTags =
+                            await Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => TagFinderView()),
+                          MaterialPageRoute(
+                            builder: (context) => TagFinderView(),
+                          ),
                         );
                         setState(() {
                           _addedTags = selectedTags;
@@ -118,34 +133,45 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                     if (_title != null)
                       Row(
                         children: [
-                            GenericText(text: _title!),
+                          GenericText(text: _title!),
                         ],
                       )
                     else
-                        const ProfileText400(text: "MUSIC SELECT", size: 12),
-                        GestureDetector(
-                          onTap: () async {
-                            final List<String> title = await Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => MusicFinderView()),
-                            );
-                            setState(() {
-                              _title = title[0];
-                              _imageRef = title[1];
-                              _audioRef = title[2];
-                              
-                            });
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: Icon(
-                              Icons.search,
-                              size: 15,
-                              color: Colors.white,
+                      const ProfileText400(text: "MUSIC SELECT", size: 12),
+                    GestureDetector(
+                      onTap: () async {
+                        final Map<String, dynamic>? list =
+                            await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MusicFinderView(
+                              onListSelected: _handleListSelected,
                             ),
                           ),
+                        );
+                        setState(() {
+                          if (list != null) {
+                            _selectedList = list;
+                            _title = list['title'] as String?;
+                            _audioRef = list['image_urls'][0] as String?;
+                            _imageRef = list['image_urls'][1] as String?;
+                            _musicID= list['unique_id']as String?;
+                            if(list['album_id'] != null){
+                              _albumID = list['album_id'] as String?;
+                            }
+                          }
+                        });
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: Icon(
+                          Icons.search,
+                          size: 15,
+                          color: Colors.white,
                         ),
-                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: GlobalVariables.smallSpacing),
                 ClearFilledTextField(
@@ -157,38 +183,59 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                   text: "COMPLETE",
                   width: GlobalVariables.properWidth,
                   onPressed: () {
+                    // Your code for completing the upload
 
-                    String documentID = GlobalVariables().generateUUID().toString();
-                    Map<String, dynamic> data = {
-                      "unique_id": documentID,
-                      "caption": GlobalVariables.inputOne.text,
-                      "tags": _addedTags,
-                      "user_id": GlobalVariables.userUUID,
-                      "image_urls": [_audioRef, _imageRef],
-                      "title": _title
-                    };
+                    String documentID =
+                        GlobalVariables().generateUUID().toString();
+                        Map<String, dynamic> data = {
+                          "unique_id": documentID,
+                          "caption": GlobalVariables.inputOne.text,
+                          "tags": _addedTags,
+                          "user_id": GlobalVariables.userUUID,
+                          "image_urls": [_selectedList!['image_urls'][0], _selectedList!['image_urls'][0]],
+                          "title": _title,
+                        };
 
-
-                    Map<String, File> mediaData = {
-                    
-                      GlobalVariables().generateUUID().toString(): widget.mediaFile!,
-                    };
-
-                    FirebaseComponents().setEachDataToFirestore('users/${GlobalVariables.userUUID}/moods/${documentID}', data).then((result) {
-                        
-                        if (result) {
-
-                          FirebaseComponents().addDocumentWithTags(documentID, 'users/${GlobalVariables.userUUID}/moods', 'moods', _addedTags ?? []).then((result) {
-
-                            if (result) {
-                              
-                              FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/moods', 'users/${GlobalVariables.userUUID}/moods/${documentID}', mediaData).then((result) {
-                              });
-                            }
-                          });
+                        if (_selectedList!['album_id']!= null) {
+                          data["albumID"] = _selectedList!['album_id'];
                         }
-                    });
+                        print(_selectedList);
+                        print(_title);
+                        print(_selectedList!['image_urls'][0]);
+                        Map<String, File> mediaData = {
+                          GlobalVariables().generateUUID().toString():
+                              widget.mediaFile!,
+                        };
 
+                    FirebaseComponents()
+                        .setEachDataToFirestore(
+                            'users/${GlobalVariables.userUUID}/moods/$documentID',
+                            data)
+                        .then((result) {
+                      if (result) {
+                        FirebaseComponents()
+                            .addDocumentWithTags(
+                                documentID,
+                                'users/${GlobalVariables.userUUID}/moods',
+                                'moods',
+                                _addedTags ?? [])
+                            .then((result) {
+                          if (result) {
+                            FirebaseComponents()
+                                .setEachMediaToStorage(
+                                    'users/${GlobalVariables.userUUID}/moods',
+                                    'users/${GlobalVariables.userUUID}/moods/$documentID',
+                                    mediaData)
+                                .then((result) {
+                              FirebaseComponents().addDocumentToCollection(
+                                  'songs/$_musicID/moods',
+                                  {'ref': 'users/${GlobalVariables.userUUID}/moods/$documentID'},
+                                  documentID);
+                            });
+                          }
+                        });
+                      }
+                    });
                   },
                 ),
                 const SizedBox(height: GlobalVariables.mediumSpacing),

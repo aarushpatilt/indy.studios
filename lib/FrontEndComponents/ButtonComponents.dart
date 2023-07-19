@@ -31,7 +31,7 @@ class HeaderPrevious extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: ProfileText400(text: text, size: 10),
+      title: ProfileText400(text: text, size: 12),
 
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
@@ -131,6 +131,38 @@ class HeaderPreviousList extends StatelessWidget implements PreferredSizeWidget 
     Key? key,
     required this.text,
     this.list,
+  }) : super(key: key);
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: ProfileText400(text: text, size: 10),
+      leading: IconButton(
+      icon: const Icon(
+        Icons.arrow_back,
+        size: 15,
+      ),
+        onPressed: () {
+          // Navigate back to the previous screen and send the list
+          Navigator.pop(context, list);
+        },
+      ),
+      backgroundColor: Colors.black,
+    );
+  }
+}
+
+class HeaderPreviousMap extends StatelessWidget implements PreferredSizeWidget {
+  final String text;
+  final Map<String, dynamic> list;
+
+  const HeaderPreviousMap({
+    Key? key,
+    required this.text,
+    required this.list,
   }) : super(key: key);
 
   @override
@@ -610,12 +642,10 @@ class TextClearButton extends StatelessWidget {
 
 class SearchBarSong extends StatefulWidget {
   final String collectionPath;
-  final Function(String)? onDocumentSelected;
-  final Function(String)? onTitleSelected;
-  final Function(String)? onAudioSelected;
+  final Function(Map<String, dynamic>)? onListSelected;
   final int? type;
 
-  SearchBarSong({required this.collectionPath, this.onDocumentSelected, this.onTitleSelected, this.onAudioSelected, this.type});
+  SearchBarSong({required this.collectionPath, this.onListSelected, this.type});
 
   @override
   _SearchBarSongState createState() => _SearchBarSongState();
@@ -662,10 +692,9 @@ class _SearchBarSongState extends State<SearchBarSong> {
     _performSearch(_query);
   }
 
-  void _onButtonPressed(String image, String title, String audio) {
-    widget.onDocumentSelected!(image);
-    widget.onTitleSelected!(title);
-    widget.onAudioSelected!(audio);
+  void _onButtonPressed(Map<String, dynamic> list) {
+    widget.onListSelected!(list);
+    Navigator.pop(context);
   }
 
 void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
@@ -707,9 +736,6 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
   );
 
 }
-
-
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -768,7 +794,7 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
                       if(widget.type != null){
                         _onButtonMusic(context, songData)
                       } else {
-                        _onButtonPressed(songData['image_urls'][1], songTitle, songData['image_urls'][0])
+                        _onButtonPressed(songData)
                       }
                     },
                     child: Padding(

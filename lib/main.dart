@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart'
 import 'package:flutter/rendering.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/SongMoodView.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedSongsView.dart';
@@ -89,7 +91,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LikedMoodsView(),
+      home: UploadMasterView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

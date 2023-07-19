@@ -4,6 +4,8 @@ import 'package:video_player/video_player.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import '../../Backend/FirebaseComponents.dart';
 import '../Backend/GlobalComponents.dart';
+import '../FrontEnd/MainAppFlows/SongMoodView.dart';
+import 'CustomTabController.dart';
 import 'TextComponents.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -222,17 +224,33 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                       const Spacer(),
                                       Align(
                                         alignment: Alignment.bottomRight,
-                                        child: Container(
-                                          width: 35,
-                                          height: 35,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.white,
-                                              width: 1,
-                                            ),
-                                            image: DecorationImage(
-                                              image: NetworkImage(widget.imageUrl),
-                                              fit: BoxFit.cover,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => 
+                                                CustomTabPage(),
+                                                // SongMoodsView(
+                                                                        
+                                                //                         musicId: widget.uniqueID, 
+                                                //                         isAlbum: widget.imageUrl.contains('%2Falbums%2F'),
+                                                //                       ),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 35,
+                                            height: 35,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.white,
+                                                width: 1,
+                                              ),
+                                              image: DecorationImage(
+                                                image: NetworkImage(widget.imageUrl),
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ),
                                         ),
