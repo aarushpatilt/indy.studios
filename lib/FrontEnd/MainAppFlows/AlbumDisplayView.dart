@@ -107,6 +107,7 @@ class _AlbumDisplayViewState extends State<AlbumDisplayView> {
                             const SizedBox(height: GlobalVariables.largeSpacing),
                             GenericTextRegSmall(text: '${snapshot.data?['description']}'),
                             const SizedBox(height: GlobalVariables.largeSpacing),
+
                           ],
                         ),
                       );

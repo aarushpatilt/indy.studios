@@ -25,7 +25,7 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
   @override
   void initState() {
     super.initState();
-    _threadData = FirebaseComponents().getReferencedData(collectionPath: 'threads', limit: 5);
+    _threadData = FirebaseComponents().getReferencedData(collectionPath: 'threads', limit: 5, T: "yes");
   }
 
  @override

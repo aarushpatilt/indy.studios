@@ -120,9 +120,14 @@ if (docSnapshot.exists) {
     return allData;
   }
 
-Future<List<Map<String, dynamic>>> getReferencedData(
-    {required String collectionPath, List<String>? fields, int? limit}) async {
+Future<List<Map<String, dynamic>>> getReferencedData({
+  required String collectionPath,
+  List<String>? fields,
+  int? limit,
+  String? T, // Optional string value T
+}) async {
   List<Map<String, dynamic>> dataList = [];
+  String ref;
 
   CollectionReference colRef = firebaseFirestore.collection(collectionPath);
   QuerySnapshot snapshot;
@@ -132,7 +137,11 @@ Future<List<Map<String, dynamic>>> getReferencedData(
     snapshot = await colRef.get();
   }
   for (var doc in snapshot.docs) {
-    String ref = doc['ref'];
+    if(T != null){
+      ref = doc['ref'].path;
+    } else {
+      ref = doc['ref'];
+    }
     DocumentSnapshot refDocSnapshot = await FirebaseFirestore.instance.doc(ref).get();
     Map<String, dynamic> data = refDocSnapshot.data() as Map<String, dynamic>;
 
@@ -151,6 +160,7 @@ Future<List<Map<String, dynamic>>> getReferencedData(
 
   return dataList;
 }
+
 Future<Map<String, dynamic>> getReferencedDocumentData({required String documentPath}) async {
   // Get initial document reference
   DocumentReference docRef = FirebaseFirestore.instance.doc(documentPath);
