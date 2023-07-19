@@ -101,20 +101,28 @@ class MoodTile extends StatefulWidget {
 
 class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<MoodTile> {
   late VideoPlayerController _controller;
+  late bool isVideo;
 
   @override
   void initState() {
     super.initState();
-    print(widget.albumID);
-    _controller = VideoPlayerController.network(widget.mediaUrl)
-      ..initialize().then((_) {
-        setState(() {});
-      });
+    var uri = Uri.parse(widget.mediaUrl);
+    var path = uri.path;
+    isVideo = path.toLowerCase().endsWith('.mp4') || path.toLowerCase().endsWith('.mov');
+    print(path);
+    if(isVideo) {
+      _controller = VideoPlayerController.network(widget.mediaUrl)
+        ..initialize().then((_) {
+          setState(() {});
+        });
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    if(isVideo) {
+      _controller.dispose();
+    }
     super.dispose();
   }
 
@@ -130,10 +138,12 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
           VisibilityDetector(
             key: Key(widget.mediaUrl),
             onVisibilityChanged: (VisibilityInfo info) {
-              if (info.visibleFraction == 1) {
-                _controller.play();
-              } else {
-                _controller.pause();
+              if(isVideo) {
+                if (info.visibleFraction == 1) {
+                  _controller.play();
+                } else {
+                  _controller.pause();
+                }
               }
             },
             child: ConstrainedBox(
@@ -144,12 +154,23 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                   children: <Widget>[
                     Align(
                       alignment: Alignment.center,
-                      child: _controller.value.isInitialized
+                      child: isVideo ? 
+                        (_controller.value.isInitialized
                           ? AspectRatio(
                               aspectRatio: _controller.value.aspectRatio,
                               child: VideoPlayer(_controller),
                             )
-                          : Container(),
+                          : Container()) : 
+                        Container(
+                          constraints: BoxConstraints(
+                            maxWidth: GlobalVariables.properWidth,
+                            maxHeight: GlobalVariables.properHeight,
+                          ),
+                          child: Image.network(
+                            widget.mediaUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                     ),
                     Positioned(
                       bottom: 0,
@@ -213,7 +234,7 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                                   size: 15,
                                                   color: Colors.white,
                                                 ),
-                                                const SizedBox(width: 8), // Adjust the width as needed
+                                                const SizedBox(width: 8), 
                                                 Text(
                                                   widget.title,
                                                   style: const TextStyle(
@@ -282,4 +303,3 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
   @override
   bool get wantKeepAlive => true;
 }
-
