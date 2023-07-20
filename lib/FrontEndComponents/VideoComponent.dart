@@ -251,7 +251,7 @@ class _MoodTileState extends State<MoodTile>
                                           uniqueID: widget.uniqueID)
                                     ],
                                   ),
-                                  const SizedBox(height: 17),
+                                  const SizedBox(height: 10),
                                   Row(
                                     children: [
                                       ClipOval(
@@ -267,7 +267,7 @@ class _MoodTileState extends State<MoodTile>
                                           text: widget.username, size: 15),
                                     ],
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 15),
                                   Row(
                                     children: [
                                       Align(
@@ -337,19 +337,13 @@ class _MoodTileState extends State<MoodTile>
                                       ),
                                     ],
                                   ),
-                                  GestureDetector( 
-                                  onTap: () { 
-                                    print("hey");
-                                    playNotifier.value = !playNotifier.value; 
-                                    print(playNotifier);
-                                    },
-                                  child: AudioPlayerUI(
+                                  const SizedBox(height: GlobalVariables.smallSpacing - 5),
+                                  AudioPlayerUI(
                                       url: widget.audioUrl,
                                       playNotifier: playNotifier,
                                       barColor: Colors.yellow
-                                    )
-                                  ),
-
+                                  )
+                              
                                 ],
                               ),
                             ),
