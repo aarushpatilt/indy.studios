@@ -35,17 +35,13 @@ class CommentIcon extends StatelessWidget {
       child: Container(
         width: size,
         height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.pink),
-        ),
-        child: const Icon(Icons.comment, color: Colors.pink),
+        child: const Icon(Icons.circle_outlined, color: Color.fromARGB(255, 237, 213, 139)),
       ),
     );
   }
 }
 
-class CommentSection extends StatelessWidget {
+class CommentSection extends StatefulWidget {
   final String userID;
   final String uniqueID;
   final String type;
@@ -57,6 +53,34 @@ class CommentSection extends StatelessWidget {
   });
 
   @override
+  _CommentSectionState createState() => _CommentSectionState();
+}
+
+class _CommentSectionState extends State<CommentSection> {
+  List<Map<String, dynamic>> comments = [];
+  bool isCommenting = false;
+
+  void addComment() async {
+    String documentID = GlobalVariables().generateUUID().toString();
+    final comment = {
+      'ref': GlobalVariables.userUUID,
+      'text': GlobalVariables.inputOne.text,
+    };
+    setState(() {
+      comments.add(comment);
+      isCommenting = true;
+    });
+    await FirebaseComponents().setEachDataToFirestore(
+      'users/${widget.userID}/${widget.type}/${widget.uniqueID}/comments/$documentID',
+      comment,
+    );
+    setState(() {
+      isCommenting = false;
+    });
+    GlobalVariables.inputOne.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -65,13 +89,13 @@ class CommentSection extends StatelessWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: CustomAppBar(),
+            child: CustomBackBar(),
           ),
           Positioned(
             top: 90,
             left: 0,
             right: 0,
-            bottom: 0, // Adjust bottom value according to your needs
+            bottom: 0,
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: GlobalVariables.horizontalSpacing,
@@ -79,7 +103,8 @@ class CommentSection extends StatelessWidget {
               ),
               child: FutureBuilder<List<Map<String, dynamic>>>(
                 future: FirebaseComponents().getCollectionData(
-                  collectionPath: '/users/$userID/$type/$uniqueID/comments',
+                  collectionPath:
+                      '/users/${widget.userID}/${widget.type}/${widget.uniqueID}/comments',
                 ),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -93,14 +118,19 @@ class CommentSection extends StatelessWidget {
                       ),
                     );
                   }
+                  comments = snapshot.data!;
                   return ListView.builder(
-                    itemCount: snapshot.data!.length,
+                    itemCount: comments.length,
                     itemBuilder: (context, index) {
-                      final commentData = snapshot.data![index];
-                      print(commentData);
-                      return CommentDisplay(
-                        userID: commentData['ref'],
-                        text: commentData['text'],
+                      final commentData = comments[index];
+                      return Column(children: [
+
+                        CommentDisplay(
+                          userID: commentData['ref'],
+                          text: commentData['text'],
+                        ),
+                        const SizedBox(height: GlobalVariables.mediumSpacing)
+                      ],
                       );
                     },
                   );
@@ -111,7 +141,7 @@ class CommentSection extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 35,
+            bottom: 25,
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: GlobalVariables.horizontalSpacing,
@@ -122,10 +152,17 @@ class CommentSection extends StatelessWidget {
                   const SizedBox(width: GlobalVariables.smallSpacing),
                   Expanded(
                     child: ClearFilledTextField(
-                      labelText: "Type",
+                      labelText: "comment",
                       width: 75,
                       controller: GlobalVariables.inputOne,
                     ),
+                  ),
+                  const SizedBox(width: GlobalVariables.smallSpacing),
+                  GestureDetector(
+                    onTap: addComment,
+                    child: isCommenting
+                        ? const CircularProgressIndicator()
+                        : const ProfileText400(text: "ENTER", size: 10),
                   ),
                 ],
               ),
@@ -136,6 +173,7 @@ class CommentSection extends StatelessWidget {
     );
   }
 }
+
 
 
 class CommentDisplay extends StatelessWidget {

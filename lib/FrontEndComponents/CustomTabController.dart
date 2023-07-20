@@ -105,10 +105,10 @@ class _CustomTabPageState extends State<CustomTabPage>
   Widget build(BuildContext context) {
     return CustomTabController(
       tabs: [
-        ProfileText400(text: 'MUSIC', size: 10), 
-        ProfileText400(text: 'THREAD', size: 10),
-        ProfileText400(text: 'UPLOAD', size: 10),
-        ProfileText400(text: 'EXPLORE', size: 10),
+        const ProfileText400(text: 'MUSIC', size: 10), 
+        const ProfileText400(text: 'THREAD', size: 10),
+        const ProfileText400(text: 'UPLOAD', size: 10),
+        const ProfileText400(text: 'EXPLORE', size: 10),
         ProfilePicture(size: 25)
       ],
       tabViews: [
@@ -146,7 +146,7 @@ class CustomAppBar extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: EdgeInsets.all(0),
+                      padding: const EdgeInsets.all(0),
                       child: ProfilePicture(size: 30),
                     ),
                   ),
@@ -157,7 +157,7 @@ class CustomAppBar extends StatelessWidget {
               text: title ?? 'DISCOVER',
               size: 10,
             ),
-            Expanded(
+            const Expanded(
               child: Text(""),
             ),
           ],
@@ -166,6 +166,61 @@ class CustomAppBar extends StatelessWidget {
     );
   }
 }
+
+
+class CustomBackBar extends StatelessWidget {
+  final String? title;
+
+  const CustomBackBar({this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 50, 5, 15),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+  color: Colors.transparent,
+  child: Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      GestureDetector(
+        onTap: () {
+          Navigator.of(context).pop(); // Pops current view off the navigation stack
+        },
+        child: const SizedBox(
+          height: 48, // these dimensions can be changed based on your needs
+          width: 48,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Icon(Icons.arrow_back, size: 15, color: Colors.white), // Back button icon
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
+            ),
+            ProfileText500(
+              text: title ?? 'DISCOVER',
+              size: 10,
+            ),
+            const Expanded(
+              child: Text(""),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
 
 
 

@@ -242,7 +242,7 @@ Future<Map<String, dynamic>> getReferencedDocumentData({required String document
   // Set array of data inside of a document, replaces ( firestore )
   Future<bool> setEachDataToFirestore(String path, Map<String, dynamic> data) async {
 
-    data['timestamp'] = timeStampData;
+    data['timestamp'] =  DateTime.now().toString();
     
     try {
 
