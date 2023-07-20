@@ -4,6 +4,8 @@ import 'package:ndy/Backend/GlobalComponents.dart';
 import '../../FrontEndComponents/CustomTabController.dart';
 import 'package:video_player/video_player.dart';
 
+import '../MenuFlow/CommentView.dart';
+
 class ThreadDiscoveryView extends StatefulWidget {
   ThreadDiscoveryView({Key? key}) : super(key: key);
 
@@ -150,11 +152,7 @@ class _PostDisplayState extends State<PostDisplay> {
               children: [
                 LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15),
                 const SizedBox(width: 10),
-                const Icon(
-                  Icons.circle_outlined,
-                  color: Colors.white,
-                  size: 15,
-                ),
+                CommentIcon(size: 15, userID: data['user_id'], type: 'threads', uniqueID: data['unique_id'])
               ],
             ),
             const SizedBox(height: GlobalVariables.mediumSpacing),
@@ -241,11 +239,7 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
               children: [
                 LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15),
                 const SizedBox(width: 10),
-                const Icon(
-                  Icons.circle_outlined,
-                  color: Colors.white,
-                  size: 15,
-                ),
+                CommentIcon(size: 15, userID: data['user_id'], type: 'threads', uniqueID: data['unique_id'])
               ],
             ),
             const SizedBox(height: GlobalVariables.mediumSpacing),

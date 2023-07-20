@@ -5,6 +5,7 @@ import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import '../../Backend/FirebaseComponents.dart';
 import '../Backend/GlobalComponents.dart';
 import '../FrontEnd/MainAppFlows/SongMoodView.dart';
+import '../FrontEnd/MenuFlow/CommentView.dart';
 import 'CustomTabController.dart';
 import 'TextComponents.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -195,11 +196,7 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                         size: 20.0,
                                       ),
                                       const SizedBox(width: GlobalVariables.smallSpacing),
-                                      const Icon(
-                                        Icons.circle_outlined,
-                                        color: Color.fromARGB(255, 90, 90, 90),
-                                        size: 20.0,
-                                      ),
+                                      CommentIcon(size: 20, userID: widget.userID, type: 'moods', uniqueID: widget.uniqueID)
                                     ],
                                   ),
                                   const SizedBox(height: 17),

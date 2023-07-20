@@ -93,7 +93,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CommentIcon(size: 15, userID: GlobalVariables.userUUID, type: 'threads', uniqueID: '4359fe92-763c-424c-86fc-2dade62ec11e',),
+      home: CustomTabPage(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
