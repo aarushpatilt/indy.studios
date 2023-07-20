@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ndy/FrontEndComponents/AudioComponents.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
@@ -93,24 +94,29 @@ class MoodTile extends StatefulWidget {
     required this.uniqueID,
     required this.userID,
     required this.albumID,
-    required this.musicID
+    required this.musicID,
   });
 
   @override
   _MoodTileState createState() => _MoodTileState();
 }
 
-class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<MoodTile> {
+class _MoodTileState extends State<MoodTile>
+  with AutomaticKeepAliveClientMixin<MoodTile> {
   late VideoPlayerController _controller;
   late bool isVideo;
+  final playNotifier = ValueNotifier<bool>(false);
+  final isFirst = false;
+
 
   @override
   void initState() {
     super.initState();
     var uri = Uri.parse(widget.mediaUrl);
     var path = uri.path;
-    isVideo = path.toLowerCase().endsWith('.mp4') || path.toLowerCase().endsWith('.mov');
-    if(isVideo) {
+    isVideo = path.toLowerCase().endsWith('.mp4') ||
+        path.toLowerCase().endsWith('.mov');
+    if (isVideo) {
       _controller = VideoPlayerController.network(widget.mediaUrl)
         ..initialize().then((_) {
           setState(() {});
@@ -120,7 +126,7 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
 
   @override
   void dispose() {
-    if(isVideo) {
+    if (isVideo) {
       _controller.dispose();
     }
     super.dispose();
@@ -128,6 +134,7 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SafeArea(
       top: false,
       bottom: false,
@@ -138,12 +145,19 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
           VisibilityDetector(
             key: Key(widget.mediaUrl),
             onVisibilityChanged: (VisibilityInfo info) {
-              if(isVideo) {
+              if (isVideo) {
                 if (info.visibleFraction == 1) {
                   _controller.play();
+                  playNotifier.value = true; // Update playNotifier value
                 } else {
                   _controller.pause();
+                  playNotifier.value = false; // Update playNotifier value
                 }
+              }
+              if (!isVideo && info.visibleFraction > 0) {
+                playNotifier.value = true; // Update playNotifier value for audio URL
+              } else {
+                playNotifier.value = false; // Update playNotifier value for audio URL
               }
             },
             child: ConstrainedBox(
@@ -152,32 +166,55 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                 color: Colors.transparent,
                 child: Stack(
                   children: <Widget>[
+                   GestureDetector( 
+                    onTap: () { 
+                      if(isVideo){
+                        if (playNotifier.value){
+                            _controller.pause();
+                            playNotifier.value = false; 
+                        } else {
+                            _controller.play();
+                            playNotifier.value = true; 
+                        }
+                      } else {
+                        if (playNotifier.value){
+                            playNotifier.value = false; 
+                        } else {
+                            playNotifier.value = true; 
+                        }
+                      }
+                      print(playNotifier.value);
+                    },
+                    child:
                     Align(
                       alignment: Alignment.center,
-                      child: isVideo ? 
-                        (_controller.value.isInitialized
+                      child: isVideo
+                          ? (_controller.value.isInitialized
                           ? AspectRatio(
-                              aspectRatio: _controller.value.aspectRatio,
-                              child: VideoPlayer(_controller),
-                            )
-                          : Container()) : 
-                        Container(
-                          constraints: BoxConstraints(
-                            maxWidth: GlobalVariables.properWidth,
-                            maxHeight: GlobalVariables.properHeight,
-                          ),
-                          child: Image.network(
-                            widget.mediaUrl,
-                            fit: BoxFit.cover,
-                          ),
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      )
+                          : Container())
+                          : Container(
+                        constraints: BoxConstraints(
+                          maxWidth: GlobalVariables.properWidth,
+                          maxHeight: GlobalVariables.properHeight,
                         ),
+                        child: Image.network(
+                          widget.mediaUrl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
+                  ),
+                    // AUDIO CLICKABLE
                     Positioned(
                       bottom: 0,
                       left: 0,
                       right: 0,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: GlobalVariables.horizontalSpacing),
                         child: Row(
                           children: [
                             Expanded(
@@ -186,17 +223,32 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                 children: [
                                   Row(
                                     children: [
-                                      ProfileText600(text: widget.tags.map((tag) => tag.toString().toUpperCase()).join(', '), size: 10),
-                                      const Spacer(), 
-                                      LikeDislikeWidget(type: "moods", uniqueID: widget.uniqueID, userID: widget.userID, size: 20),
-                                      const SizedBox(width: GlobalVariables.smallSpacing),
+                                      ProfileText600(
+                                          text: widget.tags
+                                              .map((tag) =>
+                                              tag.toString().toUpperCase())
+                                              .join(', '),
+                                          size: 10),
+                                      const Spacer(),
+                                      LikeDislikeWidget(
+                                          type: "moods",
+                                          uniqueID: widget.uniqueID,
+                                          userID: widget.userID,
+                                          size: 20),
+                                      const SizedBox(
+                                          width: GlobalVariables.smallSpacing),
                                       const Icon(
                                         Icons.repeat,
                                         color: Color.fromARGB(255, 90, 90, 90),
                                         size: 20.0,
                                       ),
-                                      const SizedBox(width: GlobalVariables.smallSpacing),
-                                      CommentIcon(size: 20, userID: widget.userID, type: 'moods', uniqueID: widget.uniqueID)
+                                      const SizedBox(
+                                          width: GlobalVariables.smallSpacing),
+                                      CommentIcon(
+                                          size: 20,
+                                          userID: widget.userID,
+                                          type: 'moods',
+                                          uniqueID: widget.uniqueID)
                                     ],
                                   ),
                                   const SizedBox(height: 17),
@@ -206,11 +258,13 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                         child: Container(
                                           width: 25.0,
                                           height: 25.0,
-                                          child: Image.network(widget.profileUrl),
+                                          child: Image.network(
+                                              widget.profileUrl),
                                         ),
                                       ),
                                       const SizedBox(width: 10),
-                                      ProfileText400(text: widget.username, size: 15),
+                                      ProfileText400(
+                                          text: widget.username, size: 15),
                                     ],
                                   ),
                                   const SizedBox(height: 20),
@@ -219,10 +273,13 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                           children: [
-                                            ProfileText400(text: widget.caption, size: 15),
-                                            const SizedBox(height: GlobalVariables.smallSpacing - 10),
+                                            ProfileText400(
+                                                text: widget.caption, size: 15),
+                                            const SizedBox(
+                                                height: GlobalVariables.smallSpacing - 10),
                                             Row(
                                               children: [
                                                 const Icon(
@@ -230,7 +287,7 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                                   size: 15,
                                                   color: Colors.white,
                                                 ),
-                                                const SizedBox(width: 8), 
+                                                const SizedBox(width: 8),
                                                 Text(
                                                   widget.title,
                                                   style: const TextStyle(
@@ -251,13 +308,13 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => 
-                                                SongMoodsView(
-                                                  albumID: widget.albumID,
-                                                  musicId: widget.musicID, 
-                                                  isAlbum: widget.imageUrl.contains('%2Falbums%2F'),
-                                                  userID: widget.userID
-                                                ),
+                                                builder: (context) =>
+                                                    SongMoodsView(
+                                                        albumID: widget.albumID,
+                                                        musicId: widget.musicID,
+                                                        isAlbum: widget.imageUrl
+                                                            .contains('%2Falbums%2F'),
+                                                        userID: widget.userID),
                                               ),
                                             );
                                           },
@@ -270,7 +327,8 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                                 width: 1,
                                               ),
                                               image: DecorationImage(
-                                                image: NetworkImage(widget.imageUrl),
+                                                image:
+                                                NetworkImage(widget.imageUrl),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -279,6 +337,19 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
                                       ),
                                     ],
                                   ),
+                                  GestureDetector( 
+                                  onTap: () { 
+                                    print("hey");
+                                    playNotifier.value = !playNotifier.value; 
+                                    print(playNotifier);
+                                    },
+                                  child: AudioPlayerUI(
+                                      url: widget.audioUrl,
+                                      playNotifier: playNotifier,
+                                      barColor: Colors.yellow
+                                    )
+                                  ),
+
                                 ],
                               ),
                             ),
@@ -299,3 +370,4 @@ class _MoodTileState extends State<MoodTile> with AutomaticKeepAliveClientMixin<
   @override
   bool get wantKeepAlive => true;
 }
+

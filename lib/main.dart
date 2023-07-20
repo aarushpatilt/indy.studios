@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter/rendering.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/MoodDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/SongMoodView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
@@ -93,7 +94,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CustomTabPage(),
+      home: MoodDiscoveryView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
