@@ -5,6 +5,7 @@ import 'package:video_player/video_player.dart';
 import '../../Backend/FirebaseComponents.dart';
 import '../../Backend/GlobalComponents.dart';
 import '../../FrontEndComponents/ButtonComponents.dart';
+import '../../FrontEndComponents/CustomTabController.dart';
 import '../../FrontEndComponents/TextComponents.dart';
 import '../MediaUploadFlows/MusicFinderView.dart';
 import '../MediaUploadFlows/TagFinderView.dart';
@@ -236,7 +237,7 @@ class _PostUploadViewState extends State<PostUploadView> {
                           FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/threads', 'threads', 'threads').then((result) {
 
                             FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/threads', 'users/${GlobalVariables.userUUID}/threads/${documentID}', mediaData).then((result) {
-
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => CustomTabPage()));
                             });
                           });
                         }
