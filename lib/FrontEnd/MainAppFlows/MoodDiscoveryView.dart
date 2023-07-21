@@ -7,6 +7,8 @@ import '../../FrontEndComponents/CustomTabController.dart';
 import '../../FrontEndComponents/VideoComponent.dart';
 
 class MoodDiscoveryView extends StatefulWidget {
+  const MoodDiscoveryView({Key? key}) : super(key: key);
+
   @override
   _MoodDiscoveryViewState createState() => _MoodDiscoveryViewState();
 }

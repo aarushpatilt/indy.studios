@@ -19,56 +19,64 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
   @override
   void initState() {
     super.initState();
-    _threadData = FirebaseComponents().getReferencedData(collectionPath: 'threads', limit: 5, T: "yes");
+    _refreshData();
   }
 
- @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    drawer: const Drawer(
-      child: MenuSideBar(),
-    ),
-    body: Stack(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 50), // Add top padding of 50
-          child: FutureBuilder<List<Map<String, dynamic>>>(
-            future: _threadData,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text("");
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    var data = snapshot.data![index];
-                    if (data.containsKey('image_urls')) {
-                      return Container(
-                        child: PostDisplay(data: data),
-                      );
-                    }
-                    return Container(
-                      child: ThoughtDisplay(data: data)
-                    );
-                  },
-                );
-              }
-            },
+  Future<void> _refreshData() async {
+    setState(() {
+      _threadData = FirebaseComponents().getReferencedData(collectionPath: 'threads', limit: 5, T: "yes");
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: const Drawer(
+        child: MenuSideBar(),
+      ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 50), // Add top padding of 50
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: _threadData,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return RefreshIndicator(
+                    onRefresh: _refreshData,
+                    child: ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        var data = snapshot.data![index];
+                        if (data.containsKey('image_urls')) {
+                          return Container(
+                            child: PostDisplay(data: data),
+                          );
+                        }
+                        return Container(
+                          child: ThoughtDisplay(data: data)
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
+            ),
           ),
-        ),
-        const Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: CustomAppBar(),
-        ),
-      ],
-    ),
-  );
+          const Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: CustomAppBar(),
+          ),
+        ],
+      ),
+    );
+  }
 }
-}
+
 
 
 class PostDisplay extends StatefulWidget {

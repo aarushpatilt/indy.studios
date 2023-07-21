@@ -220,73 +220,100 @@ class CustomBackBar extends StatelessWidget {
 }
 
 
+class CustomSliderBar extends StatefulWidget {
+  const CustomSliderBar({Key? key}) : super(key: key);
 
+  @override
+  _CustomSliderBarState createState() => _CustomSliderBarState();
+}
 
+class _CustomSliderBarState extends State<CustomSliderBar>
+    with SingleTickerProviderStateMixin {
+  Key keyOne = UniqueKey();
+  Key keyTwo = UniqueKey();
 
+  late TabController _tabController;
 
-class CustomSliderBar extends StatelessWidget {
-  const CustomSliderBar();
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      initialIndex: 1,  
-      child: Scaffold(
-        backgroundColor: Colors.transparent, 
-        drawer: const Drawer(
-          child: MenuSideBar(),
-        ),
-        body: Stack(
-          children: [
-            TabBarView(
-              children: [
-                MoodDiscoveryView(),
-                const MusicDiscoveryView(),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 50.0, left: 16.0, right: 16.0),
-              child: Material(
-                color: Colors.transparent,  
-                child: Row(
-                  children: [
-                    Builder(
-                      builder: (context) => GestureDetector(
-                        onTap: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                        child: ProfilePicture(size: 30),
-                      ),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      drawer: const Drawer(
+        child: MenuSideBar(),
+      ),
+      body: Stack(
+        children: [
+          TabBarView(
+            controller: _tabController,
+            children: [
+              MoodDiscoveryView(key: keyOne),
+              MusicDiscoveryView(key: keyTwo),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0, left: 16.0, right: 16.0),
+            child: Material(
+              color: Colors.transparent,
+              child: Row(
+                children: [
+                  Builder(
+                    builder: (context) => GestureDetector(
+                      onTap: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                      child: ProfilePicture(size: 30),
                     ),
-                    const Expanded(
-                      child: TabBar(
-                        indicator: BoxDecoration(),
-                        unselectedLabelColor: Colors.grey,
-                        labelColor: Colors.white,
-                        tabs: [
-                          Tab(
-                            child: Text(
+                  ),
+                  Expanded(
+                    child: TabBar(
+                      controller: _tabController,
+                      indicator: const BoxDecoration(),
+                      unselectedLabelColor: Colors.grey,
+                      labelColor: Colors.white,
+                      tabs: [
+                        Tab(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                keyOne = UniqueKey();
+                              });
+                              _tabController.animateTo(0);
+                            },
+                            child: const Text(
                               'MOOD',
                               style: TextStyle(fontSize: 10),
                             ),
                           ),
-                          Tab(
-                            child: Text(
+                        ),
+                        Tab(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                keyTwo = UniqueKey();
+                              });
+                              _tabController.animateTo(1);
+                            },
+                            child: const Text(
                               'MUSIC',
                               style: TextStyle(fontSize: 10),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    const Icon(Icons.circle_outlined, size: 30, color: Colors.white),
-                  ],
-                ),
+                  ),
+                  const Icon(Icons.circle_outlined, size: 30, color: Colors.white),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
