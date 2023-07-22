@@ -11,12 +11,12 @@ import 'package:ndy/FrontEnd/MenuFlow/LikedThreadsView.dart';
 import '../FrontEnd/MainAppFlows/Feed.dart';
   import '../FrontEnd/MainAppFlows/MusicDiscoveryView.dart';
   import '../FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
-  import '../FrontEnd/MenuFlow/LikedMoodView.dart';
+import '../FrontEnd/MenuFlow/LikedMoodView.dart';
 import '../FrontEnd/MenuFlow/LikedSongsView.dart';
 import 'TextComponents.dart';
 
 class CustomTabController extends StatefulWidget {
-  final List<Widget> tabs;  // Type changed from List<String> to List<Widget>
+  final List<Widget> tabs;
   final List<Widget> tabViews;
 
   CustomTabController({required this.tabs, required this.tabViews});
@@ -28,16 +28,19 @@ class CustomTabController extends StatefulWidget {
 class _CustomTabControllerState extends State<CustomTabController>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: widget.tabs.length, vsync: this);
+    _pageController = PageController();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -47,8 +50,12 @@ class _CustomTabControllerState extends State<CustomTabController>
       body: Column(
         children: [
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                _tabController.animateTo(index);
+              },
+              physics: NeverScrollableScrollPhysics(), // this will disable swipe
               children: widget.tabViews,
             ),
           ),
@@ -58,21 +65,29 @@ class _CustomTabControllerState extends State<CustomTabController>
         height: 70,
         color: Colors.black,
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 20.0), // Adjust the bottom padding value as needed
+          padding: const EdgeInsets.only(bottom: 20.0),
           child: TabBar(
             controller: _tabController,
-            tabs: widget.tabs.map((tab) => Container(
-              height: 70, 
-              child: Align(
-                alignment: Alignment.center,
-                child: tab,
-              ),
-            )).toList(),
+            onTap: (index) {
+              _pageController.animateToPage(
+                index,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
+            tabs: widget.tabs
+                .map((tab) => Container(
+                      height: 85,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: tab,
+                      ),
+                    ))
+                .toList(),
             indicatorColor: Colors.transparent,
           ),
         ),
       ),
-
     );
   }
 }

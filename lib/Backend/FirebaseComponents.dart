@@ -276,6 +276,55 @@ Future<List<Map<String, dynamic>>> getReferencedData({
   return dataList;
 }
 
+Future<List<Map<String, dynamic>>> getPaginatedReferencedData({
+  required String collectionPath,
+  List<String>? fields,
+  int? limit,
+  DocumentSnapshot? startAfter,
+  String? T, // Optional string value T
+}) async {
+  List<Map<String, dynamic>> dataList = [];
+  String ref;
+
+  CollectionReference colRef = firebaseFirestore.collection(collectionPath);
+  QuerySnapshot snapshot;
+
+  Query query = colRef;
+  if (limit != null) {
+    query = query.limit(limit);
+  }
+  if (startAfter != null && startAfter.exists) {  // ensure the document snapshot exists before using it
+    query = query.startAfterDocument(startAfter);
+  }
+
+  snapshot = await query.get();
+
+  for (var doc in snapshot.docs) {
+    if(T != null){
+      ref = doc['ref'].path;
+    } else {
+      ref = doc['ref'];
+    }
+    DocumentSnapshot refDocSnapshot = await FirebaseFirestore.instance.doc(ref).get();
+    Map<String, dynamic> data = refDocSnapshot.data() as Map<String, dynamic>;
+
+    // Now we have the data, but we only want to keep the fields you're interested in
+    Map<String, dynamic> filteredData = {};
+    if (fields != null) {
+      for (String field in fields) {
+        filteredData[field] = data[field];
+      }
+    } else {
+      filteredData = data;
+    }
+
+    dataList.add(filteredData);
+  }
+
+  return dataList;
+}
+
+
 Future<Map<String, dynamic>> getReferencedDocumentData({required String documentPath}) async {
   // Get initial document reference
   DocumentReference docRef = FirebaseFirestore.instance.doc(documentPath);

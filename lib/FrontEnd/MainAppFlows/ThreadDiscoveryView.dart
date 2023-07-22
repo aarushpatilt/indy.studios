@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
@@ -7,6 +8,7 @@ import 'package:video_player/video_player.dart';
 import '../../FrontEndComponents/TextComponents.dart';
 import '../MenuFlow/CommentView.dart';
 
+
 class ThreadDiscoveryView extends StatefulWidget {
   ThreadDiscoveryView({Key? key}) : super(key: key);
 
@@ -15,7 +17,8 @@ class ThreadDiscoveryView extends StatefulWidget {
 }
 
 class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
-  late Future<List<Map<String, dynamic>>> _threadData;
+  List<Map<String, dynamic>> _threadData = [];
+  DocumentSnapshot? _lastDocument;
 
   @override
   void initState() {
@@ -25,8 +28,23 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
 
   Future<void> _refreshData() async {
     setState(() {
-      _threadData = FirebaseComponents().getReferencedData(collectionPath: 'threads', limit: 5, T: "yes");
+      _threadData = [];
+      _lastDocument = null;
     });
+    _loadMoreData();
+  }
+
+  Future<void> _loadMoreData() async {
+    List<Map<String, dynamic>> newItems = await FirebaseComponents().getPaginatedReferencedData(collectionPath: 'threads', limit: 5, T: "yes", startAfter: _lastDocument);
+
+    if (newItems.isNotEmpty) {
+      // Updating the _lastDocument from the Firebase Firestore reference
+      _lastDocument = await FirebaseFirestore.instance.collection('threads').doc(newItems.last['unique_id']).get();
+
+      setState(() {
+        _threadData.addAll(newItems);
+      });
+    }
   }
 
   @override
@@ -39,39 +57,37 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 50), // Add top padding of 50
-            child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: _threadData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Container();
-                } else if (snapshot.hasError) {
-                  return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
-                } else {
-                  return RefreshIndicator(
-                    onRefresh: _refreshData,
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        var data = snapshot.data![index];
-                        if (data.containsKey('image_urls')) {
-                        return Container(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
-                            child: PostDisplay(data: data),
-                        )
-                        );
-                        }
-                        return Container(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
-                            child: ThoughtDisplay(data: data),
-                        )
-                        );
-                      },
-                    ),
-                  );
-                }
-              },
+            child: RefreshIndicator(
+              onRefresh: _refreshData,
+              child: ListView.builder(
+                itemCount: _threadData.length + 1,
+                itemBuilder: (context, index) {
+                  if (index < _threadData.length) {
+                    var data = _threadData[index];
+                    if (data.containsKey('image_urls')) {
+                      return Container(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+                          child: PostDisplay(data: data),
+                        ),
+                      );
+                    }
+                    return Container(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+                        child: ThoughtDisplay(data: data),
+                      ),
+                    );
+                  } else if (_lastDocument != null) {
+                    // Loading more data when reach the end of the list
+                    _loadMoreData();
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    // All data loaded
+                    return Container();
+                  }
+                },
+              ),
             ),
           ),
           const Positioned(
@@ -465,67 +481,72 @@ class CreatedThreadView extends StatefulWidget {
 }
 
 class _CreatedThreadViewState extends State<CreatedThreadView> {
-  late Future<List<Map<String, dynamic>>> _threadData;
+  List<Map<String, dynamic>> _threadData = [];
+  DocumentSnapshot? _lastDocument;
 
   @override
   void initState() {
     super.initState();
-    _refreshData();
+    _loadMoreData();
   }
 
-  Future<void> _refreshData() async {
-    setState(() {
-      _threadData = FirebaseComponents().getCollectionData(collectionPath: 'users/${GlobalVariables.userUUID}/threads', limit: 5);
-    });
+  Future<void> _loadMoreData() async {
+    List<Map<String, dynamic>> newItems = await FirebaseComponents().getPaginatedCollectionData(
+      collectionPath: 'users/${GlobalVariables.userUUID}/threads', 
+      limit: 5, 
+      startAfterDocument: _lastDocument
+    );
+
+    if (newItems.isNotEmpty) {
+      // Updating the _lastDocument from the Firebase Firestore reference
+      _lastDocument = await FirebaseFirestore.instance.collection('users/${GlobalVariables.userUUID}/threads').doc(newItems.last['unique_id']).get();
+
+      setState(() {
+        _threadData.addAll(newItems);
+      });
+    }
   }
 
   @override
-Widget build(BuildContext context) {
-return Container(
-  width: MediaQuery.of(context).size.width,
-  height: MediaQuery.of(context).size.height,
-  child: Stack(
-    alignment: Alignment.topCenter, // Align children to the top
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(top: 0), // Add top padding of 50
-        child: FutureBuilder<List<Map<String, dynamic>>>(
-          future: _threadData,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container();
-            } else if (snapshot.hasError) {
-              return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
-            } else {
-              return RefreshIndicator(
-                onRefresh: _refreshData,
-                child: ListView.builder(
-                  padding: EdgeInsets.zero, // Remove default padding
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    var data = snapshot.data![index];
-                    if (data.containsKey('image_urls')) {
-                      return Container(
-                        color: Colors.red,
-                        child: PostDisplay(data: data),
-                      );
-                    }
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 0),
+            child: ListView.builder(
+              padding: EdgeInsets.zero, // Remove default padding
+              itemCount: _threadData.length + 1,
+              itemBuilder: (context, index) {
+                if (index < _threadData.length) {
+                  var data = _threadData[index];
+                  if (data.containsKey('image_urls')) {
                     return Container(
-                      child: ThoughtDisplay(data: data),
+                      child: PostDisplay(data: data),
                     );
-                  },
-                ),
-              );
-            }
-          },
-        ),
+                  }
+                  return Container(
+                    child: ThoughtDisplay(data: data),
+                  );
+                } else if (_lastDocument != null) {
+                  // Loading more data when reach the end of the list
+                  _loadMoreData();
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  // All data loaded
+                  return Container();
+                }
+              },
+            ),
+          ),
+        ],
       ),
-    ],
-  ),
-);
-
-
+    );
+  }
 }
 
-}
+
 
