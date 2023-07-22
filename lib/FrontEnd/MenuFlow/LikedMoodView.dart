@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'dart:typed_data';
 import '../../Backend/FirebaseComponents.dart';
 import '../../Backend/GlobalComponents.dart';
 import '../../FrontEndComponents/TextComponents.dart';
@@ -98,6 +99,45 @@ class _LikedMoodsViewState extends State<LikedMoodsView> {
   }
 }
 
+class LikedMoodsProvider with ChangeNotifier {
+  final String _collectionPath;
+  final List<Map<String, dynamic>> _moodList = [];
+  bool _isLoading = false;
+  bool _hasError = false;
+  String _error = '';
+
+  LikedMoodsProvider(this._collectionPath); // Add this constructor
+
+  List<Map<String, dynamic>> get moodList => _moodList;
+  bool get isLoading => _isLoading;
+  bool get hasError => _hasError;
+  String get error => _error;
+
+  Future<void> fetchLikedMoodsData() async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      final data = await FirebaseComponents().getReferencedData(
+        collectionPath: _collectionPath,
+        limit: 9,
+      );
+      _moodList.addAll(data);
+      
+      _isLoading = false;
+      _hasError = false;
+      _error = '';
+    } catch (error) {
+      _isLoading = false;
+      _hasError = true;
+      _error = error.toString();
+    } finally {
+      notifyListeners();
+    }
+  }
+}
+
+
 class MoodContainersRow extends StatelessWidget {
   final List<Map<String, dynamic>> moodList;
 
@@ -144,10 +184,6 @@ class MoodContainersRow extends StatelessWidget {
   }
 }
 
-
-
-
-
 class MoodContainer extends StatefulWidget {
   final String mediaUrl;
   final String audioUrl;
@@ -176,29 +212,18 @@ class MoodContainer extends StatefulWidget {
 }
 
 class _MoodContainerState extends State<MoodContainer> {
-  String? profileUrl;
-  String? username;
 
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-  }
-
-  void fetchData() async {
+  Future<Map<String, dynamic>> fetchData() async {
+    Map<String, dynamic> result = {'image_urls': [null], 'username': null};
     try {
-      final result = await FirebaseComponents().getSpecificData(
+      result = await FirebaseComponents().getSpecificData(
         documentPath: 'users/${widget.userID}',
         fields: ['image_urls', 'username'],
       );
-
-      setState(() {
-        profileUrl = result['image_urls'][0];
-        username = result['username'];
-      });
     } catch (error) {
       print('Error fetching data: $error');
     }
+    return result;
   }
 
   @override
@@ -225,28 +250,49 @@ class _MoodContainerState extends State<MoodContainer> {
     );
   }
 
-Widget _buildMediaWidget() {
-  if (widget.mediaUrl.contains('.MOV') || widget.mediaUrl.contains('.mp4')) {
-    return AspectRatio(
-      aspectRatio: 16 / 9, // You can adjust the aspect ratio to match your video's aspect ratio
-      child: FittedBox(
+
+  Widget _buildMediaWidget() {
+    if (widget.mediaUrl.contains('.MOV') || widget.mediaUrl.contains('.mp4')) {
+      return FutureBuilder(
+        future: _generateVideoThumbnail(widget.mediaUrl),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            print("BEE");
+            print('${snapshot.error}');
+            return Text('Error: ${snapshot.error}');
+          } else {
+            print("Hey");
+            print(snapshot.data);
+            return Image.memory(
+              snapshot.data as Uint8List,
+              fit: BoxFit.cover,
+            );
+          }
+        },
+      );
+    } else if (widget.mediaUrl.contains('.jpg') ||
+        widget.mediaUrl.contains('.jpeg') ||
+        widget.mediaUrl.contains('.png')) {
+      return Image.network(
+        widget.mediaUrl,
         fit: BoxFit.cover,
-        child: MoodPlayer(videoUrl: widget.mediaUrl),
-      ),
-    );
-  } else if (widget.mediaUrl.contains('.jpg') ||
-      widget.mediaUrl.contains('.jpeg') ||
-      widget.mediaUrl.contains('.png')) {
-    return Image.network(
-      widget.mediaUrl,
-      fit: BoxFit.cover,
-    );
-  } else {
-    return Container();
+      );
+    } else {
+      return Container();
+    }
   }
-}
 
-
+  Future<Uint8List?> _generateVideoThumbnail(String videoUrl) async {
+    print(videoUrl);
+    return await VideoThumbnail.thumbnailData(
+      video: videoUrl,
+      imageFormat: ImageFormat.PNG,
+      maxWidth: 300, // you can set the max width as you need
+      quality: 25,
+    );
+  }
 
   void _showMoodTile(BuildContext context) {
     showModalBottomSheet(
@@ -254,88 +300,59 @@ Widget _buildMediaWidget() {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.9,
-          minChildSize: 0.5,
-          maxChildSize: 0.9,
-          builder: (BuildContext context, ScrollController scrollController) {
-            return ClipRect(
-              child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
-                  color: Colors.black,
-                ),
-                child: ListView(
-                  controller: scrollController,
-                  children: [
-                    Transform.translate(
-                      offset: Offset(0, -50),
-                      child: MoodTile(
-                        mediaUrl: widget.mediaUrl,
-                        audioUrl: widget.audioUrl,
-                        username: username!,
-                        profileUrl: profileUrl!,
-                        tags: widget.tags,
-                        caption: widget.caption,
-                        title: widget.title,
-                        imageUrl: widget.imageUrl,
-                        uniqueID: widget.uniqueID,
-                        userID: widget.userID,
-                        albumID: "",
-                        musicID: widget.musicID,
-
+        return FutureBuilder(
+          future: fetchData(),
+          builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return DraggableScrollableSheet(
+                initialChildSize: 0.9,
+                minChildSize: 0.5,
+                maxChildSize: 0.9,
+                builder: (BuildContext context, ScrollController scrollController) {
+                  return ClipRect(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+                        color: Colors.black,
+                      ),
+                      child: ListView(
+                        controller: scrollController,
+                        children: [
+                          Transform.translate(
+                            offset: Offset(0, -50),
+                            child: MoodTile(
+                              mediaUrl: widget.mediaUrl,
+                              audioUrl: widget.audioUrl,
+                              username: snapshot.data!['username']!,
+                              profileUrl: snapshot.data!['image_urls'][0]!,
+                              tags: widget.tags,
+                              caption: widget.caption,
+                              title: widget.title,
+                              imageUrl: widget.imageUrl,
+                              uniqueID: widget.uniqueID,
+                              userID: widget.userID,
+                              albumID: "",
+                              musicID: widget.musicID,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            );
-          },
+                  );
+                },
+              );
+            }
+          }
         );
       },
     );
   }
 }
 
-
-
-class LikedMoodsProvider with ChangeNotifier {
-  final String _collectionPath;
-  final List<Map<String, dynamic>> _moodList = [];
-  bool _isLoading = false;
-  bool _hasError = false;
-  String _error = '';
-
-  LikedMoodsProvider(this._collectionPath); // Add this constructor
-
-  List<Map<String, dynamic>> get moodList => _moodList;
-  bool get isLoading => _isLoading;
-  bool get hasError => _hasError;
-  String get error => _error;
-
-  Future<void> fetchLikedMoodsData() async {
-    try {
-      _isLoading = true;
-      notifyListeners();
-
-      final data = await FirebaseComponents().getReferencedData(
-        collectionPath: _collectionPath,
-        limit: 9,
-      );
-      _moodList.addAll(data);
-      
-      _isLoading = false;
-      _hasError = false;
-      _error = '';
-    } catch (error) {
-      _isLoading = false;
-      _hasError = true;
-      _error = error.toString();
-    } finally {
-      notifyListeners();
-    }
-  }
-}
 
 class CreatedMoodsProvider with ChangeNotifier {
   final String _collectionPath;
