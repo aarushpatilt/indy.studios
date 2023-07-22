@@ -4,6 +4,7 @@ import 'package:ndy/Backend/GlobalComponents.dart';
 import '../../FrontEndComponents/CustomTabController.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../FrontEndComponents/TextComponents.dart';
 import '../MenuFlow/CommentView.dart';
 
 class ThreadDiscoveryView extends StatefulWidget {
@@ -41,8 +42,10 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
             child: FutureBuilder<List<Map<String, dynamic>>>(
               future: _threadData,
               builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container();
+                } else if (snapshot.hasError) {
+                  return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
                 } else {
                   return RefreshIndicator(
                     onRefresh: _refreshData,
