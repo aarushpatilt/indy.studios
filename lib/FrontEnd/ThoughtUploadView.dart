@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:ndy/FrontEndComponents/CustomTabController.dart';
 import 'package:video_player/video_player.dart';
 import '../../Backend/FirebaseComponents.dart';
 import '../../Backend/GlobalComponents.dart';
@@ -56,6 +57,11 @@ class _ThoughtUploadViewState extends State<ThoughtUploadView> {
 
                           FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/threads', 'threads', 'threads').then((result) {
 
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => CustomTabPage()),
+                              (Route<dynamic> route) => false,
+                            );
                           });
                         }
                       });

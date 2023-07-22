@@ -4,6 +4,7 @@ import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:ndy/FrontEndComponents/TextComponents.dart';
+import '../../FrontEndComponents/CustomTabController.dart';
 import '../SignUpFlow/UpgradeView.dart';
 import 'MusicFinderView.dart';
 import 'TagFinderView.dart';
@@ -225,10 +226,18 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                                     'users/${GlobalVariables.userUUID}/moods/$documentID',
                                     mediaData)
                                 .then((result) {
-                              FirebaseComponents().addDocumentToCollection(
-                                  'songs/${_selectedList!['unique_id']}/moods',
-                                  {'ref': 'users/${GlobalVariables.userUUID}/moods/$documentID'},
-                                  documentID);
+                                  FirebaseComponents().addDocumentToCollection(
+                                      'songs/${_selectedList!['unique_id']}/moods',
+                                      {'ref': 'users/${GlobalVariables.userUUID}/moods/$documentID'},
+                                      documentID).then(((result) {
+
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => CustomTabPage()),
+                                          (Route<dynamic> route) => false,
+                                        );
+
+                              }));
                             });
                           }
                         });

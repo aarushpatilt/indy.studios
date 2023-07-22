@@ -237,7 +237,11 @@ class _PostUploadViewState extends State<PostUploadView> {
                           FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/threads', 'threads', 'threads').then((result) {
 
                             FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/threads', 'users/${GlobalVariables.userUUID}/threads/${documentID}', mediaData).then((result) {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => CustomTabPage()));
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (context) => CustomTabPage()),
+                                (Route<dynamic> route) => false,
+                              );
                             });
                           });
                         }

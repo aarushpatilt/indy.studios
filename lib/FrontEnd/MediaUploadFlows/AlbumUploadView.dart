@@ -53,7 +53,7 @@ class _AlbumUploadViewState extends State<AlbumUploadView> {
                         ],
                       )
                     else
-                      ProfileText400(text: "tags", size: 12),
+                      ProfileText400(text: "TAGS", size: 12),
                     GestureDetector(
                       onTap: () async {
                         final List<String>? selectedTags = await Navigator.push(
