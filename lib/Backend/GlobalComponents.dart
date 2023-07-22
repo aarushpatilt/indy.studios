@@ -7,6 +7,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
+import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:ndy/FrontEnd/SignUpFlow/SignUpView.dart';
 import 'package:uuid/uuid.dart';
@@ -245,15 +247,22 @@ class _TabSliderMenuState extends State<TabSliderMenu> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              buildTabItem('Profile', 0),
+              buildTabItem('PROFILE', 0),
               const SizedBox(width: 15),
-              buildTabItem('Moods', 1),
+              buildTabItem('MOODS', 1),
+              const SizedBox(width: 15),
+              buildTabItem('THREADS', 2),
             ],
           ),
         ),
         if (selectedIndex == 0) 
           ProfileSubView(userID: widget.userID),
           const SizedBox(height: GlobalVariables.smallSpacing),
+        if (selectedIndex == 1)
+          CreatedMoodsView(userId: widget.userID,),
+        if (selectedIndex == 2)
+          CreatedThreadView()
+        
         // Add here the widget to display when selectedIndex == 1 for "Moods" tab
         // if (selectedIndex == 1) 
         //   MoodsSubView(userID: widget.userID),
@@ -269,7 +278,7 @@ class _TabSliderMenuState extends State<TabSliderMenu> {
         padding: const EdgeInsets.symmetric(vertical: GlobalVariables.smallSpacing),
         child: ProfileText400(
           text: title,
-          size: 15,
+          size: 12,
         ),
       ),
     );

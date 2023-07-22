@@ -20,6 +20,7 @@ import 'package:ndy/FrontEnd/ThoughtUploadView.dart';
 import 'FrontEnd/MainAppFlows/Feed.dart';
 import 'FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'FrontEndComponents/CustomTabController.dart';
+import 'FrontEndComponents/TextComponents.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -113,6 +114,22 @@ class MainApp extends StatelessWidget {
           child: Text('Hello'),
         ),
       ),
+    );
+  }
+}
+
+class MyColumnWithCreatedMoodsView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(height: 100),
+        ProfileText400(text: "HEY", size: 15),
+        CreatedThreadView(),
+      
+      ],
     );
   }
 }

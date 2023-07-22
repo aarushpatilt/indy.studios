@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -21,7 +22,6 @@ class _LikedMoodsViewState extends State<LikedMoodsView> {
   void initState() {
     super.initState();
     _likedMoodsProvider = LikedMoodsProvider('users/${GlobalVariables.userUUID}/liked_moods');
-;
     _likedMoodsProvider.fetchLikedMoodsData();
     fetchBackgroundImageUrl();
   }
@@ -45,86 +45,54 @@ class _LikedMoodsViewState extends State<LikedMoodsView> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: ChangeNotifierProvider<LikedMoodsProvider>.value(
-        value: _likedMoodsProvider,
-        builder: (context, child) {
-          return CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                expandedHeight: screenHeight * 0.4,
-                backgroundColor: Colors.black,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      if (backgroundImageUrl.isNotEmpty)
-                        Image.network(
-                          backgroundImageUrl,
-                          width: screenWidth,
-                          height: screenHeight * 0.4,
-                          fit: BoxFit.cover,
-                        ),
-                      Container(
-                        color: Colors.black.withOpacity(0.3),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 50),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: GlobalVariables.horizontalSpacing,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: screenHeight * 0.4,
+            backgroundColor: Colors.black,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (backgroundImageUrl.isNotEmpty)
+                    Image.network(
+                      backgroundImageUrl,
+                      width: screenWidth,
+                      height: screenHeight * 0.4,
+                      fit: BoxFit.cover,
                     ),
-                    height: screenHeight,
-                    width: screenWidth,
-                    color: Colors.transparent,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const ProfileText600(
-                              text: 'Liked Moods',
-                              size: 35,
-                            ),
-                            ProfilePicture(
-                              size: 70,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: GlobalVariables.mediumSpacing), // Add additional spacing if needed
-                        Consumer<LikedMoodsProvider>(
-                          builder: (context, provider, _) {
-                            if (provider.isLoading) {
-                              return CircularProgressIndicator();
-                            } else if (provider.hasError) {
-                              return Text('Error: ${provider.error}');
-                            } else {
-                              final moodList = provider.moodList;
-                              return Column(
-                                children: [
-                                  for (int i = 0; i < moodList.length; i += 3)
-                                    MoodContainersRow(
-                                      moodList: moodList.sublist(i, i + 3 < moodList.length ? i + 3 : moodList.length),
-                                    ),
-                                ],
-                              );
-                            }
-                          },
-                        ),
-
-                      ],
-                    ),
+                  Container(
+                    color: Colors.black.withOpacity(0.3),
                   ),
-                ),
+                ],
               ),
-            ],
-          );
-        },
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsetsDirectional.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+              child: Column(
+                children: [
+                SizedBox(height: GlobalVariables.mediumSpacing),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const ProfileText600(
+                      text: 'Liked Moods',
+                      size: 35,
+                    ),
+                    ProfilePicture(
+                      size: 70,
+                    ),
+                  ],
+                ),
+                SizedBox(height: GlobalVariables.mediumSpacing),
+                CreatedMoodsView(userId: GlobalVariables.userUUID,),
+                ],
+              ),
+            ), // Use the CreatedMoodsView widget instead of duplicating the same logic
+          ),
+        ],
       ),
     );
   }
@@ -150,7 +118,7 @@ class MoodContainersRow extends StatelessWidget {
   List<Widget> _buildMoodContainersWithSpacing() {
     List<Widget> list = [];
     for (int i = 0; i < moodList.length; i++) {
-      list.add(Expanded(
+      list.add(Container(
         child: MoodContainer(
           mediaUrl: moodList[i]['image_urls'][2],
           audioUrl: moodList[i]['image_urls'][0],
@@ -165,7 +133,7 @@ class MoodContainersRow extends StatelessWidget {
       ));
 
       if (i < moodList.length - 1) {
-        list.add(SizedBox(width: GlobalVariables.properWidth * 0.02));  // Adds an adjustable, empty space between each MoodContainer
+        list.add(SizedBox(width:10));  // Adds an adjustable, empty space between each MoodContainer
       }
     }
     return list;
@@ -245,7 +213,7 @@ class _MoodContainerState extends State<MoodContainer> {
           children: [
             Container(
               height: 200,
-              width: largeSize,
+              width: (GlobalVariables.properWidth / 3.4) - (0.01 * GlobalVariables.properWidth) ,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
                 child: _buildMediaWidget(),
@@ -369,6 +337,59 @@ class LikedMoodsProvider with ChangeNotifier {
   }
 }
 
+class CreatedMoodsProvider with ChangeNotifier {
+  final String _collectionPath;
+  final List<Map<String, dynamic>> _moodList = [];
+  bool _isLoading = false;
+  bool _hasError = false;
+  String _error = '';
+  DocumentSnapshot? _lastDocument;
+
+  CreatedMoodsProvider(this._collectionPath);
+
+  List<Map<String, dynamic>> get moodList => _moodList;
+  bool get isLoading => _isLoading;
+  bool get hasError => _hasError;
+  String get error => _error;
+
+  Future<void> fetchCreatedMoodsData() async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      List<Map<String, dynamic>> data;
+      if (_lastDocument == null) {
+        data = await FirebaseComponents().getPaginatedCollectionData(
+          collectionPath: _collectionPath,
+          limit: 9,
+        );
+      } else {
+        data = await FirebaseComponents().getPaginatedCollectionData(
+          collectionPath: _collectionPath,
+          limit: 9,
+          startAfterDocument: _lastDocument,
+        );
+      }
+
+      if (data.isNotEmpty) {
+        _lastDocument = _lastDocument != null ? data.last['_docSnapshot'] : null;
+        _moodList.addAll(data.map((map) => map..remove('_docSnapshot')));
+      }
+
+      _isLoading = false;
+      _hasError = false;
+      _error = '';
+    } catch (error) {
+      _isLoading = false;
+      _hasError = true;
+      _error = error.toString();
+    } finally {
+      notifyListeners();
+    }
+  }
+}
+
+
 
 class MoodPlayer extends StatefulWidget {
   final String videoUrl;
@@ -409,5 +430,84 @@ class _MoodPlayerState extends State<MoodPlayer> {
             ),
           )
         : Container();
+  }
+}
+
+
+class CreatedMoodsView extends StatefulWidget {
+  final String userId;
+
+  CreatedMoodsView({required this.userId});
+
+  @override
+  _CreatedMoodsViewState createState() => _CreatedMoodsViewState();
+}
+
+class _CreatedMoodsViewState extends State<CreatedMoodsView> {
+  late CreatedMoodsProvider _createdMoodsProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _createdMoodsProvider = CreatedMoodsProvider('users/${widget.userId}/moods');
+    _createdMoodsProvider.fetchCreatedMoodsData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return ChangeNotifierProvider<CreatedMoodsProvider>.value(
+      value: _createdMoodsProvider,
+      builder: (context, child) {
+        return Padding(
+          padding: EdgeInsets.only(top: 0),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 0,
+            ),
+            height: screenHeight,
+            width: screenWidth,
+            color: Colors.transparent,
+            child: Consumer<CreatedMoodsProvider>(
+              builder: (context, provider, _) {
+                if (provider.isLoading) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (provider.hasError) {
+                  return Center(child: Text('Error: ${provider.error}'));
+                } else {
+                  final moodList = provider.moodList;
+                  return NotificationListener<ScrollNotification>(
+                    onNotification: (scrollNotification) {
+                      if (scrollNotification.metrics.pixels == scrollNotification.metrics.maxScrollExtent) {
+                        _createdMoodsProvider.fetchCreatedMoodsData();
+                      }
+                      return true;
+                    },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Add additional spacing if needed
+                          Column(
+                            children: [
+                              for (int i = 0; i < moodList.length; i += 3)
+                                MoodContainersRow(
+                                  moodList: moodList.sublist(i, i + 3 < moodList.length ? i + 3 : moodList.length),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 }

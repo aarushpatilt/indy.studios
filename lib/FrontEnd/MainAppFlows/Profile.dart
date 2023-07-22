@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 
 import '../../Backend/FirebaseComponents.dart';
 import '../../Backend/GlobalComponents.dart';
@@ -182,9 +183,10 @@ class _ProfileSubViewState extends State<ProfileSubView> {
           const SizedBox(height: GlobalVariables.smallSpacing),
           BioPreview(userID: widget.userID),
           const SizedBox(height: GlobalVariables.mediumSpacing),
-          AlbumListDisplay(userID: GlobalVariables.userUUID, collectionPath: '/users/${widget.userID}/albums', title: 'Albums'),
+          LatestThreadDisplay(userId: widget.userID),
+          AlbumListDisplay(userID: widget.userID, collectionPath: '/users/${widget.userID}/albums', title: 'ALBUMS'),
           const SizedBox(height: GlobalVariables.mediumSpacing),
-          AlbumListDisplay(userID: GlobalVariables.userUUID, collectionPath: '/users/${widget.userID}/singles', title: 'Singles', type: 1)
+          AlbumListDisplay(userID: widget.userID, collectionPath: '/users/${widget.userID}/singles', title: 'SINGLES', type: 1)
         ],
       ),
     );

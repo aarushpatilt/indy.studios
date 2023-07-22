@@ -56,6 +56,32 @@ class FirebaseComponents {
       return null;
     }
   }
+Future<List<Map<String, dynamic>>> getLatestTextAndPostFromCollection({required String collectionPath}) async {
+    print("hey");
+    var textDocSnapshot = await firebaseFirestore.collection(collectionPath)
+        .orderBy('timestamp', descending: true)
+        .where('type', isEqualTo: 'thought') // Use type field
+        .limit(1)
+        .get();
+
+    var postDocSnapshot = await firebaseFirestore.collection(collectionPath)
+        .orderBy('timestamp', descending: true)
+        .where('type', isEqualTo: 'post') // Use type field
+        .limit(1)
+        .get();
+
+    print(textDocSnapshot);
+    print(postDocSnapshot);
+
+    var latestDocuments = [
+      {"text": textDocSnapshot.docs.isNotEmpty ? textDocSnapshot.docs.first.data() : null},
+      {"post": postDocSnapshot.docs.isNotEmpty ? postDocSnapshot.docs.first.data() : null},
+    ];
+
+    return latestDocuments;
+}
+
+
 
   // Get data 
 Future<Map<String, dynamic>> getSpecificData(
@@ -112,37 +138,103 @@ if (docSnapshot.exists) {
 }
 
 
-  Future<List<Map<String, dynamic>>> getCollectionData( 
-  {required String collectionPath, List<String>? fields}) async {
-    // Get a CollectionReference
-    CollectionReference colRef = firebaseFirestore.collection(collectionPath);
+Future<List<Map<String, dynamic>>> getCollectionData({ 
+  required String collectionPath, 
+  List<String>? fields,
+  int? limit
+}) async {
+  // Get a CollectionReference
+  CollectionReference colRef = firebaseFirestore.collection(collectionPath);
 
-    // Get the documents in the collection
-    QuerySnapshot querySnapshot = await colRef.get();
-
-    // Get the data for each document in the collection
-    List<Map<String, dynamic>> allData = [];
-    for (DocumentSnapshot docSnapshot in querySnapshot.docs) {
-      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
-
-      // If fields are not null then filter the data to only include the required fields
-      // Else add the entire data
-      if (fields != null) {
-        Map<String, dynamic> filteredData = {};
-        for (String field in fields) {
-          if (data.containsKey(field)) {
-            filteredData[field] = data[field];
-          }
-        }
-        allData.add(filteredData);
-      } else {
-        allData.add(data);
-      }
-    }
-
-    return allData;
+  // If a limit has been set, then limit the number of documents to be retrieved.
+  QuerySnapshot querySnapshot;
+  if(limit != null){
+    querySnapshot = await colRef.limit(limit).get();
+  } else {
+    querySnapshot = await colRef.get();
   }
 
+  // Get the data for each document in the collection
+  List<Map<String, dynamic>> allData = [];
+  for (DocumentSnapshot docSnapshot in querySnapshot.docs) {
+    Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+
+    // If fields are not null then filter the data to only include the required fields
+    // Else add the entire data
+    if (fields != null) {
+      Map<String, dynamic> filteredData = {};
+      for (String field in fields) {
+        if (data.containsKey(field)) {
+          filteredData[field] = data[field];
+        }
+      }
+      allData.add(filteredData);
+    } else {
+      allData.add(data);
+    }
+  }
+
+  return allData;
+}
+
+Future<List<Map<String, dynamic>>> getPaginatedCollectionData({ 
+  required String collectionPath, 
+  List<String>? fields,
+  int? limit,
+  DocumentSnapshot? startAfterDocument,
+}) async {
+  // Get a CollectionReference
+  CollectionReference colRef = firebaseFirestore.collection(collectionPath);
+
+  // Apply optional pagination parameters if provided
+  Query query = colRef;
+  if (limit != null) {
+    query = query.limit(limit);
+  }
+  if (startAfterDocument != null) {
+    query = query.startAfterDocument(startAfterDocument);
+  }
+
+  // Execute the query to get the data
+  QuerySnapshot querySnapshot = await query.get();
+
+  // Get the data for each document in the collection
+  List<Map<String, dynamic>> allData = [];
+  for (DocumentSnapshot docSnapshot in querySnapshot.docs) {
+    Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+
+    // If fields are not null then filter the data to only include the required fields
+    // Else add the entire data
+    if (fields != null) {
+      Map<String, dynamic> filteredData = {};
+      for (String field in fields) {
+        if (data.containsKey(field)) {
+          filteredData[field] = data[field];
+        }
+      }
+      allData.add(filteredData);
+    } else {
+      allData.add(data);
+    }
+  }
+
+  return allData;
+}
+
+
+  
+  Future<Map<String, dynamic>> getLatestDocumentFromCollection({required String collectionPath}) async {
+    var docSnapshot = await firebaseFirestore.collection(collectionPath)
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+
+    if (docSnapshot.docs.isNotEmpty) {
+      return docSnapshot.docs.first.data();
+    } else {
+      throw Exception('No documents found in collection $collectionPath');
+    }
+  }
 Future<List<Map<String, dynamic>>> getReferencedData({
   required String collectionPath,
   List<String>? fields,
@@ -776,7 +868,7 @@ class _AlbumListDisplayState extends State<AlbumListDisplay> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProfileText400(text: widget.title, size: 15), // The text above the scroll
+        ProfileText400(text: widget.title, size: 12), // The text above the scroll
         const SizedBox(height: GlobalVariables.smallSpacing), // Optional: To give some spacing between the text and the horizontal scroll
         SizedBox(
           height: 150, // Adjusted the height to match the image size

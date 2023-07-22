@@ -54,12 +54,18 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
                       itemBuilder: (context, index) {
                         var data = snapshot.data![index];
                         if (data.containsKey('image_urls')) {
-                          return Container(
+                        return Container(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
                             child: PostDisplay(data: data),
-                          );
+                        )
+                        );
                         }
                         return Container(
-                          child: ThoughtDisplay(data: data)
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+                            child: ThoughtDisplay(data: data),
+                        )
                         );
                       },
                     ),
@@ -119,7 +125,7 @@ class _PostDisplayState extends State<PostDisplay> {
     return Container(
       width: GlobalVariables.properWidth,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+        padding: const EdgeInsets.symmetric(horizontal: 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -209,9 +215,9 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
     final data = widget.data;
 
     return Container(
-      width: GlobalVariables.properWidth,
+
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+        padding: const EdgeInsets.symmetric(horizontal: 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -386,3 +392,140 @@ Widget build(BuildContext context) {
 }
 
 }
+
+class LatestThreadDisplay extends StatefulWidget {
+  final String userId;
+
+  LatestThreadDisplay({Key? key, required this.userId}) : super(key: key);
+
+  @override
+  _LatestThreadDisplayState createState() => _LatestThreadDisplayState();
+}
+
+class _LatestThreadDisplayState extends State<LatestThreadDisplay> {
+  late Future<Map<String, dynamic>> _latestThreadData;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshData();
+  }
+
+  Future<void> _refreshData() async {
+    setState(() {
+      _latestThreadData = FirebaseComponents().getLatestDocumentFromCollection(collectionPath: 'users/${widget.userId}/threads');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: _latestThreadData,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container();
+        } else if (snapshot.hasError) {
+          return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
+        } else {
+          var data = snapshot.data;
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              return Container(
+                child: RefreshIndicator(
+                  onRefresh: _refreshData,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: data!.containsKey('image_urls') ? [
+                        const ProfileText400(text: "RECENT", size: 12),
+                        const SizedBox(height: GlobalVariables.smallSpacing),
+                        PostDisplay(data: data),
+                      ] : [
+                        const ProfileText400(text: "RECENT", size: 12),
+                        const SizedBox(height: GlobalVariables.smallSpacing),
+                        ThoughtDisplay(data: data),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
+class CreatedThreadView extends StatefulWidget {
+  CreatedThreadView({Key? key}) : super(key: key);
+
+  @override
+  _CreatedThreadViewState createState() => _CreatedThreadViewState();
+}
+
+class _CreatedThreadViewState extends State<CreatedThreadView> {
+  late Future<List<Map<String, dynamic>>> _threadData;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshData();
+  }
+
+  Future<void> _refreshData() async {
+    setState(() {
+      _threadData = FirebaseComponents().getCollectionData(collectionPath: 'users/${GlobalVariables.userUUID}/threads', limit: 5);
+    });
+  }
+
+  @override
+Widget build(BuildContext context) {
+return Container(
+  width: MediaQuery.of(context).size.width,
+  height: MediaQuery.of(context).size.height,
+  child: Stack(
+    alignment: Alignment.topCenter, // Align children to the top
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(top: 0), // Add top padding of 50
+        child: FutureBuilder<List<Map<String, dynamic>>>(
+          future: _threadData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container();
+            } else if (snapshot.hasError) {
+              return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
+            } else {
+              return RefreshIndicator(
+                onRefresh: _refreshData,
+                child: ListView.builder(
+                  padding: EdgeInsets.zero, // Remove default padding
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    var data = snapshot.data![index];
+                    if (data.containsKey('image_urls')) {
+                      return Container(
+                        color: Colors.red,
+                        child: PostDisplay(data: data),
+                      );
+                    }
+                    return Container(
+                      child: ThoughtDisplay(data: data),
+                    );
+                  },
+                ),
+              );
+            }
+          },
+        ),
+      ),
+    ],
+  ),
+);
+
+
+}
+
+}
+
