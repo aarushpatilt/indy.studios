@@ -27,9 +27,9 @@ class UserAuthView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GenericTextReg(text: "INDY"),
+                    GenericTextReg(text: "UNDR"),
                     SizedBox(height: GlobalVariables.smallSpacing),
-                    GenericTextReg(text: "Take your photography"),
+                    GenericTextReg(text: "Take your platform"),
                     GenericTextReg(text: "to the next level"),
                   ],
                 ),

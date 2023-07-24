@@ -717,7 +717,7 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
                   child: MusicTile(
                     title: data['title'],
                     artist: data['artists'],
-                    timestamp: (data['timestamp'] as Timestamp).toDate(),
+                    timestamp: data['timestamp'],
                     imageUrl: data['image_urls'][1],
                     audioUrl: data['image_urls'][0],
                     albumId: data['album_id'],

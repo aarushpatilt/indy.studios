@@ -15,6 +15,7 @@ import 'package:ndy/FrontEnd/MenuFlow/CommentView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedSongsView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedThreadsView.dart';
+import 'package:ndy/FrontEnd/SignUpFlow/UserAuthView.dart';
 import 'package:ndy/FrontEnd/ThoughtUploadView.dart';
 
 import 'FrontEnd/MainAppFlows/Feed.dart';

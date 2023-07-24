@@ -259,12 +259,10 @@ class _MoodContainerState extends State<MoodContainer> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            print("BEE");
             print('${snapshot.error}');
             return Text('Error: ${snapshot.error}');
           } else {
-            print("Hey");
-            print(snapshot.data);
+
             return Image.memory(
               snapshot.data as Uint8List,
               fit: BoxFit.cover,
@@ -285,7 +283,6 @@ class _MoodContainerState extends State<MoodContainer> {
   }
 
   Future<Uint8List?> _generateVideoThumbnail(String videoUrl) async {
-    print(videoUrl);
     return await VideoThumbnail.thumbnailData(
       video: videoUrl,
       imageFormat: ImageFormat.PNG,

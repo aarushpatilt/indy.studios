@@ -47,7 +47,6 @@ class FirebaseComponents {
         return data;
       } else {
         // If snapshot does not exist
-        print("error");
         return null;
       }
     } catch (e) {
@@ -70,8 +69,6 @@ Future<List<Map<String, dynamic>>> getLatestTextAndPostFromCollection({required 
         .limit(1)
         .get();
 
-    print(textDocSnapshot);
-    print(postDocSnapshot);
 
     var latestDocuments = [
       {"text": textDocSnapshot.docs.isNotEmpty ? textDocSnapshot.docs.first.data() : null},
@@ -88,6 +85,7 @@ Future<Map<String, dynamic>> getSpecificData(
   {required String documentPath, List<String>? fields}) async {
 // Get a DocumentReference
 DocumentReference docRef = firebaseFirestore.doc(documentPath);
+print(docRef);
 
 // Get the document
 DocumentSnapshot docSnapshot = await docRef.get();
@@ -106,7 +104,6 @@ if (docSnapshot.exists) {
     }
     return filteredData;
   } else {
-    print("HEY");
     // If fields is null, return all data
     return data;
   }
@@ -119,10 +116,8 @@ Future<Map<String, dynamic>> getSpecialData(
   {required String documentPath}) async {
 // Get a DocumentReference
 DocumentReference docRef = firebaseFirestore.doc(documentPath);
-print(documentPath);
 // Get the document
 DocumentSnapshot docSnapshot = await docRef.get();
-print(docSnapshot);
 
 if (docSnapshot.exists) {
   // Get the document data
@@ -309,7 +304,6 @@ Future<List<Map<String, dynamic>>> getPaginatedReferencedData({
 
     if(T == 'R'){
       text = doc['text'];
-      print(text);
     }
     DocumentSnapshot refDocSnapshot = await FirebaseFirestore.instance.doc(ref).get();
     Map<String, dynamic> data = refDocSnapshot.data() as Map<String, dynamic>;
@@ -695,11 +689,12 @@ class FirestoreService {
 
     List<Map<String, dynamic>> fetchedData = [];
     for (var doc in snapshots.docs) {
-      final DocumentReference ref = doc['ref'];
-      final data = await ref.get();
-      
-      Map<String, dynamic> documentData = data.data() as Map<String, dynamic>;
-      documentData['ref'] = ref.path; // Add 'ref' parameter to the document data
+      final String ref = doc['ref'].path;
+
+      final data = await FirebaseComponents().getSpecialData(documentPath: ref);
+      print(ref);
+      Map<String, dynamic> documentData = data;
+      documentData['ref'] = ref; // Add 'ref' parameter to the document data
       Map<String, dynamic> temp = await FirebaseComponents().getSpecificData(documentPath: 'users/${documentData['user_id']}', fields: ['username', 'image_urls']);
       documentData['username'] = temp['username'];
       documentData['profile'] = temp['image_urls'][0];
@@ -720,7 +715,7 @@ class FirestoreService {
 class MusicTile extends StatefulWidget {
   final String title;
   final String artist;
-  final DateTime timestamp;
+  final String timestamp;
   final String imageUrl;
   final String audioUrl;
   final String? albumId;
@@ -817,7 +812,7 @@ class _MusicTileState extends State<MusicTile> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SubTitleText(text: widget.title),
+                          ProfileText600(text: widget.title, size: 30),
                           const SizedBox(height: GlobalVariables.smallSpacing - 15),
                           InformationText(text: widget.artist),
                         ],

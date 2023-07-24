@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:provider/provider.dart';
@@ -126,7 +127,7 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
                             return MusicTile(
                               title: docData['title'],
                               artist: docData['artists'],
-                              timestamp: docData['timestamp'].toDate(),
+                              timestamp: docData['timestamp'],
                               imageUrl: docData['image_urls'][1],
                               audioUrl: docData['image_urls'][0],
                               albumId: snapshot.data,

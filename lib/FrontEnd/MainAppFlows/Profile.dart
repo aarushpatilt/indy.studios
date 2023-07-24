@@ -17,27 +17,26 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  late Future<DocumentSnapshot> _futureProfileData;
+  late Future<Map<String, dynamic>> _futureProfileData;
 
   @override
   void initState() {
     super.initState();
-    _futureProfileData = FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.userID) // Use the widget.userID parameter
-        .get();
+    _futureProfileData = FirebaseComponents().getSpecificData(documentPath: 'users/${widget.userID}');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<DocumentSnapshot>(
+      body: FutureBuilder<Map<String, dynamic>>(
         future: _futureProfileData,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Text('No data found');
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator()); // Add a loading spinner
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Handle errors
           } else {
-            final profileData = snapshot.data!.data() as Map<String, dynamic>;
+            final profileData = snapshot.data!;
             return CustomScrollView(
               slivers: [
                 SliverAppBar(

@@ -219,7 +219,7 @@ class ProfileText600 extends StatelessWidget {
   final String text;
   final double size;
 
-  const ProfileText600 ({
+  const ProfileText600({
     Key? key,
     required this.text,
     required this.size,
@@ -227,13 +227,16 @@ class ProfileText600 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w600,
-        fontSize: size,
-        color: Colors.white,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        text,
+        style: TextStyle(
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w600,
+          fontSize: size,
+          color: Colors.white,
+        ),
       ),
     );
   }

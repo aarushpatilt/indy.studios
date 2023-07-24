@@ -246,7 +246,7 @@ class SongRow extends StatelessWidget {
                       child: MusicTile(
                         title: songTitle,
                         artist: songArtist,
-                        timestamp: timestamp,
+                        timestamp: timestamp.toString(),
                         imageUrl: imageUrl,
                         audioUrl: audioUrl,
                         albumId: albumId,

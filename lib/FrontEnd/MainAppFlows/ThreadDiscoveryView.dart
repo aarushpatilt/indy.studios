@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 import '../../FrontEndComponents/CustomTabController.dart';
 import 'package:video_player/video_player.dart';
 
@@ -81,7 +82,7 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
                   } else if (_lastDocument != null) {
                     // Loading more data when reach the end of the list
                     _loadMoreData();
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: ProfileText400(text: "you have reached da end", size: 12));
                   } else {
                     // All data loaded
                     return Container();
@@ -150,7 +151,16 @@ class _PostDisplayState extends State<PostDisplay> {
               child: MediaFilesDisplay(mediaFiles: data['image_urls'].cast<String>()),
             ),
             const SizedBox(height: GlobalVariables.smallSpacing),
-            Row(
+            GestureDetector(
+              onTap:() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Profile( userID: widget.data['user_id']),
+                      ),
+                    );
+              },
+              child: Row(
               children: [
                 Container(
                   width: 25,
@@ -172,6 +182,8 @@ class _PostDisplayState extends State<PostDisplay> {
                 ),
               ],
             ),
+            ),
+
             const SizedBox(height: 20),
             Text(
               data['caption'],
@@ -229,15 +241,22 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
   @override
   Widget build(BuildContext context) {
     final data = widget.data;
-
     return Container(
-
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            GestureDetector(
+              onTap:() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Profile( userID: widget.data['user_id']),
+                      ),
+                    );
+              },
+              child: Row(
               children: [
                 Container(
                   width: 25,
@@ -258,6 +277,7 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
                   ),
                 ),
               ],
+            ),
             ),
             const SizedBox(height: 20),
             Text(
@@ -304,7 +324,7 @@ class _MediaFilesDisplayState extends State<MediaFilesDisplay> {
         if (extension == 'mp4' || extension == 'mov') {
           return Padding(
             padding: EdgeInsets.only(right: (index != widget.mediaFiles.length - 1) ? 15 : 0),
-            child: ThreadPlayer(videoUrl: filePath),
+            child: ThreadPlayer(videoUrl: filePath, size: (widget.mediaFiles.length == 1) ? GlobalVariables.properWidth - 30 : GlobalVariables.properWidth - 50),
           );
         } else {
           return Padding(
@@ -337,8 +357,9 @@ class _MediaFilesDisplayState extends State<MediaFilesDisplay> {
 
 class ThreadPlayer extends StatefulWidget {
   final String videoUrl;
+  final double size;
 
-  ThreadPlayer({required this.videoUrl});
+  ThreadPlayer({required this.videoUrl, required this.size});
 
   @override
   _ThreadPlayerState createState() => _ThreadPlayerState();
@@ -362,52 +383,56 @@ class _ThreadPlayerState extends State<ThreadPlayer> {
     super.dispose();
   }
 
-@override
-Widget build(BuildContext context) {
-  return _controller.value.isInitialized
-      ? Container(
-          width: GlobalVariables.properWidth - 50,
-          height: GlobalVariables.properWidth - 50,
-          child: GestureDetector(
-            onTap: () {
-              setState(() {
-                _controller.value.isPlaying
-                    ? _controller.pause()
-                    : _controller.play();
-              });
-            },
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(5.0),
-                  child: VideoPlayer(_controller),
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      setState(() {
-                        _controller.value.isPlaying
-                            ? _controller.pause()
-                            : _controller.play();
-                      });
-                    },
-                    backgroundColor: Colors.transparent,
-                    child: Icon(
-                      _controller.value.isPlaying
-                          ? Icons.pause
-                          : Icons.play_arrow,
+  @override
+  Widget build(BuildContext context) {
+    return _controller.value.isInitialized
+        ? Container(
+            width: widget.size,
+            child: AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _controller.value.isPlaying
+                        ? _controller.pause()
+                        : _controller.play();
+                  });
+                },
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5.0),
+                      child: VideoPlayer(_controller),
                     ),
-                  ),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          setState(() {
+                            _controller.value.isPlaying
+                                ? _controller.pause()
+                                : _controller.play();
+                          });
+                        },
+                        backgroundColor: Colors.transparent,
+                        child: Icon(
+                          _controller.value.isPlaying
+                              ? Icons.pause
+                              : Icons.play_arrow,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        )
-      : Container();
+          )
+        : Container();
+  }
 }
 
-}
+
+
 
 class LatestThreadDisplay extends StatefulWidget {
   final String userId;
@@ -534,7 +559,7 @@ class _CreatedThreadViewState extends State<CreatedThreadView> {
                 } else if (_lastDocument != null) {
                   // Loading more data when reach the end of the list
                   _loadMoreData();
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else {
                   // All data loaded
                   return Container();

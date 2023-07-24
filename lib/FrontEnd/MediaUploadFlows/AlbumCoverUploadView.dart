@@ -85,17 +85,12 @@ class _AlbumCoverUploadViewState extends State<AlbumCoverUploadView> {
                         
                         if (result) {
 
-                          FirebaseComponents().addDocumentRef(documentID, 'users/${GlobalVariables.userUUID}/albums', 'songs', GlobalVariables.inputOne.text).then((result) {
+                          FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums/', 'users/${GlobalVariables.userUUID}/albums/$documentID', mediaData).then((result) {
 
-                            if(result){
-
-                              FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums/', 'users/${GlobalVariables.userUUID}/albums/$documentID', mediaData).then((result) {
-
-                                GlobalVariables().disposeInputs();
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: documentID, userID: GlobalVariables.userUUID)));
-                              });
-                            }
+                            GlobalVariables().disposeInputs();
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: documentID, userID: GlobalVariables.userUUID)));
                           });
+
                         }
                     });
 

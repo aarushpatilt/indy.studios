@@ -87,7 +87,7 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
                                       Row(
                                         children: [
                                           const InformationText(text: "Album, "),
-                                          InformationText(text: DateFormat('MMMM d yyyy').format(snapshot.data?['timestamp'].toDate())),
+                                          InformationText(text: ''),
                                         ],
                                       ),
                                     ],
