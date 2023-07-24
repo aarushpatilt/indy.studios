@@ -285,6 +285,7 @@ Future<List<Map<String, dynamic>>> getPaginatedReferencedData({
 }) async {
   List<Map<String, dynamic>> dataList = [];
   String ref;
+  String text = '';
 
   CollectionReference colRef = firebaseFirestore.collection(collectionPath);
   QuerySnapshot snapshot;
@@ -300,14 +301,20 @@ Future<List<Map<String, dynamic>>> getPaginatedReferencedData({
   snapshot = await query.get();
 
   for (var doc in snapshot.docs) {
-    if(T != null){
+    if(T != null && T != 'R'){
       ref = doc['ref'].path;
     } else {
       ref = doc['ref'];
     }
+
+    if(T == 'R'){
+      text = doc['text'];
+      print(text);
+    }
     DocumentSnapshot refDocSnapshot = await FirebaseFirestore.instance.doc(ref).get();
     Map<String, dynamic> data = refDocSnapshot.data() as Map<String, dynamic>;
-
+    
+    data['text'] = text;
     // Now we have the data, but we only want to keep the fields you're interested in
     Map<String, dynamic> filteredData = {};
     if (fields != null) {
@@ -417,6 +424,7 @@ Future<Map<String, dynamic>> getReferencedDocumentData({required String document
   }
 
     Future<void> addDocumentToCollection(String collectionPath, Map<String, dynamic> data,String? documentId) async {
+      data['timestamp'] =  DateTime.now().toString();
     CollectionReference collectionReference = firebaseFirestore.collection(collectionPath);
     if (documentId != null) {
       await collectionReference.doc(documentId).set(data).then((_) {
@@ -443,6 +451,7 @@ Future<Map<String, dynamic>> getReferencedDocumentData({required String document
       await firestore.doc('$tagType/$tag').set({"placeholder" : "null"});
       await firestore.collection('$tagType/$tag/collection').doc(documentID).set({
         'ref': firestore.collection(documentPath).doc(documentID),
+        "timestamp": DateTime.now().toString(),
       });
     }
 
@@ -450,6 +459,7 @@ Future<Map<String, dynamic>> getReferencedDocumentData({required String document
     for (String tag in tags) {
       await firestore.collection('$tagType/mix/collection').doc(documentID).set({
         'ref': firestore.collection(documentPath).doc(documentID),
+        "timestamp": DateTime.now().toString(),
       });
     }
 
@@ -465,6 +475,7 @@ Future<Map<String, dynamic>> getReferencedDocumentData({required String document
     await firestore.collection(collectionPath).doc(documentID).set({
       'title' : title,
       'ref': firestore.collection(documentPath).doc(documentID),
+      "timestamp": DateTime.now().toString(),
     });
 
 
@@ -854,7 +865,7 @@ class _MusicTileState extends State<MusicTile> {
                     uniqueID: widget.uniqueID, 
                     userID: widget.userID, 
                     albumId: widget.albumId,
-                    size: 30
+                    size: 30,sentence: 'liked your music'
                   )
                 ],
               ),
@@ -1054,7 +1065,7 @@ class _ProfileUsernameState extends State<ProfileUsername> {
 }
 
 
-Future<void> likedFunction(String type, String uniqueID, String likedUser, String? albumID) async {
+Future<void> likedFunction(String type, String uniqueID, String likedUser, String? albumID, String sentence) async {
 
   var path1 = "";
   var set2 = "";
@@ -1076,6 +1087,9 @@ Future<void> likedFunction(String type, String uniqueID, String likedUser, Strin
     path2 = 'users/${GlobalVariables.userUUID}/liked_$type/$uniqueID';
   }
 
+  String documentID = GlobalVariables().generateUUID().toString();
+  Map<String, dynamic> data = await FirebaseComponents().getSpecialData(documentPath: 'users/${GlobalVariables.userUUID}');
+  String username = data['username'];
 
   await Future.wait([
     FirebaseComponents.firebaseFirestore.doc(path1).set({
@@ -1086,6 +1100,7 @@ Future<void> likedFunction(String type, String uniqueID, String likedUser, Strin
     FirebaseComponents.firebaseFirestore.doc(path2).set({
       'ref': set2
     }),
+      FirebaseComponents().setEachDataToFirestore('/users/${GlobalVariables.userUUID}/activity/$documentID', {'text': '$username $sentence', 'unique_id' : documentID})
   ]);
 }
 
@@ -1169,8 +1184,9 @@ class LikeDislikeWidget extends StatefulWidget {
   final String userID;
   final String? albumId;
   final double size;
+  final String sentence;
 
-  LikeDislikeWidget({required this.type, required this.uniqueID, required this.userID, required this.size, this.albumId});
+  LikeDislikeWidget({required this.type, required this.uniqueID, required this.userID, required this.size, required this.sentence, this.albumId});
 
   @override
   _LikeDislikeWidgetState createState() => _LikeDislikeWidgetState();
@@ -1183,7 +1199,7 @@ class _LikeDislikeWidgetState extends State<LikeDislikeWidget> {
     if (isLiked) {
       await dislikedFunction(widget.type, widget.uniqueID, widget.userID, widget.albumId);
     } else {
-      await likedFunction(widget.type, widget.uniqueID, widget.userID, widget.albumId);
+      await likedFunction(widget.type, widget.uniqueID, widget.userID, widget.albumId, widget.sentence);
     }
     setState(() {
       isLiked = !isLiked;

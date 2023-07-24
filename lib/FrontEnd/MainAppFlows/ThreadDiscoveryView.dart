@@ -172,7 +172,7 @@ class _PostDisplayState extends State<PostDisplay> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Text(
               data['caption'],
               style: const TextStyle(
@@ -183,7 +183,7 @@ class _PostDisplayState extends State<PostDisplay> {
             const SizedBox(height: GlobalVariables.smallSpacing),
             Row(
               children: [
-                LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15),
+                LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15, sentence: 'liked your thread'),
                 const SizedBox(width: 10),
                 CommentIcon(size: 15, userID: data['user_id'], type: 'threads', uniqueID: data['unique_id'])
               ],
@@ -259,7 +259,7 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Text(
               data['caption'],
               style: const TextStyle(
@@ -270,7 +270,7 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
             const SizedBox(height: GlobalVariables.smallSpacing),
             Row(
               children: [
-                LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15),
+                LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15, sentence: 'liked your thread'),
                 const SizedBox(width: 10),
                 CommentIcon(size: 15, userID: data['user_id'], type: 'threads', uniqueID: data['unique_id'])
               ],

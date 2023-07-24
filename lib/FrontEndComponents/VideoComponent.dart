@@ -234,7 +234,10 @@ class _MoodTileState extends State<MoodTile>
                                           type: "moods",
                                           uniqueID: widget.uniqueID,
                                           userID: widget.userID,
-                                          size: 20),
+                                          size: 20,
+                                          sentence: 'liked your mood'
+                                          ),
+                                          
                                       const SizedBox(
                                           width: GlobalVariables.smallSpacing),
                                       const Icon(

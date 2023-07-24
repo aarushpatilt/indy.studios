@@ -19,6 +19,7 @@ import 'package:ndy/FrontEnd/ThoughtUploadView.dart';
 
 import 'FrontEnd/MainAppFlows/Feed.dart';
 import 'FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
+import 'FrontEnd/MenuFlow/ActivityView.dart';
 import 'FrontEndComponents/CustomTabController.dart';
 import 'FrontEndComponents/TextComponents.dart';
 

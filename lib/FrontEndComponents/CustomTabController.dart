@@ -5,6 +5,7 @@ import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/SearchMasterView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
+import 'package:ndy/FrontEnd/MenuFlow/ActivityView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedThreadsView.dart';
 
   import '../Backend/GlobalComponents.dart';
@@ -355,7 +356,16 @@ class MenuSideBar extends StatelessWidget {
                       const SizedBox(height: GlobalVariables.smallSpacing),
                       ProfileUsername(size: 25),
                       const SizedBox(height: GlobalVariables.mediumSpacing),
-                      const ProfileText500(text: "activity", size: 20),                      
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ActivityView(),
+                            ),
+                          );
+                        },
+                        child: const ProfileText500(text: "activity", size: 20),
+                      ),                    
                       const SizedBox(height: GlobalVariables.smallSpacing),
                       GestureDetector(
                         onTap: () {
