@@ -86,31 +86,36 @@ class _SongMoodsViewState extends State<SongMoodsView> {
                                 }),
                               );
                             },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: Image.network(
-                                    backgroundImageUrl,
-                                    width: 75,
-                                    height: 75,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                const SizedBox(width: GlobalVariables.smallSpacing),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ProfileText600(
-                                      text: musicData['title'],
-                                      size: 35,
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image.network(
+                                      backgroundImageUrl,
+                                      width: 75,
+                                      height: 75,
+                                      fit: BoxFit.cover,
                                     ),
-                                    const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                    ProfileText400(text: musicData['artists'], size: 15),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                  const SizedBox(width: GlobalVariables.smallSpacing),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: GlobalVariables.properWidth - 125,
+                                        child: ProfileText600(
+                                          text: musicData['title'],
+                                          size: 30,
+                                        ),
+                                      ),
+                                      const SizedBox(height: GlobalVariables.smallSpacing - 10),
+                                      ProfileText400(text: musicData['artists'], size: 15),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
 

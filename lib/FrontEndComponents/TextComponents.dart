@@ -227,20 +227,19 @@ class ProfileText600 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Text(
-        text,
-        style: TextStyle(
-          fontFamily: 'Inter',
-          fontWeight: FontWeight.w600,
-          fontSize: size,
-          color: Colors.white,
-        ),
+    return Text(
+      text,
+      style: TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w600,
+        fontSize: size,
+        color: Colors.white,
       ),
+      overflow: TextOverflow.ellipsis,
     );
   }
 }
+
 
 class GenericTextSmall extends StatelessWidget {
   final String text;

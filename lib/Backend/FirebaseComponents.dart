@@ -80,7 +80,7 @@ Future<List<Map<String, dynamic>>> getLatestTextAndPostFromCollection({required 
 
 
 
-  // Get data 
+// Get data 
 Future<Map<String, dynamic>> getSpecificData(
   {required String documentPath, List<String>? fields}) async {
 // Get a DocumentReference
