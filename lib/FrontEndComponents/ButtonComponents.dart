@@ -1192,14 +1192,14 @@ Widget build(BuildContext context) {
             Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
-                padding: const EdgeInsets.only(left: GlobalVariables.smallSpacing, top: 125, right: GlobalVariables.smallSpacing),
+                padding: const EdgeInsets.only(left: GlobalVariables.smallSpacing, top: 135, right: GlobalVariables.smallSpacing),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end, // Aligns column children towards the end
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     // The title
-                    TitleText(text: data['title']),
-                    const SizedBox(height: GlobalVariables.smallSpacing),  // Add spacing between the title and its description.
+                    ProfileText600(text: data['title'], size: 30),
+                    const SizedBox(height: GlobalVariables.mediumSpacing),  // Add spacing between the title and its description.
                     // The story preview, limited to 2 lines
                     Text(
                       data['story'],

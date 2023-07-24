@@ -41,12 +41,13 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black, // Set the background color of the Scaffold
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverToBoxAdapter(
-            child: Stack(
-              children: [
-                SingleChildScrollView(
+      body: Stack(
+        children: [
+          
+          CustomScrollView(
+            slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
                       FutureBuilder<Map<String, dynamic>>(
@@ -142,10 +143,10 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
                     ],
                   ),
                 ),
-                const CustomBackBar(title: "ALBUM"),
-              ],
-            ),
-          )
+              )
+            ],
+          ),
+          const CustomBackBar(title: "ALBUM"),
         ],
       ),
     );
