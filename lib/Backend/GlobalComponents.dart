@@ -259,7 +259,7 @@ class _TabSliderMenuState extends State<TabSliderMenu> {
           ProfileSubView(userID: widget.userID),
           const SizedBox(height: GlobalVariables.smallSpacing),
         if (selectedIndex == 1)
-          CreatedMoodsView(userId: widget.userID,),
+          CreatedMoodsView(userId: widget.userID, documentPath: 'users/${widget.userID}/moods'),
         if (selectedIndex == 2)
           CreatedThreadView()
         

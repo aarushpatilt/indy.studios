@@ -16,14 +16,11 @@ class LikedMoodsView extends StatefulWidget {
 }
 
 class _LikedMoodsViewState extends State<LikedMoodsView> {
-  late LikedMoodsProvider _likedMoodsProvider;
   String backgroundImageUrl = '';
 
   @override
   void initState() {
     super.initState();
-    _likedMoodsProvider = LikedMoodsProvider('users/${GlobalVariables.userUUID}/liked_moods');
-    _likedMoodsProvider.fetchLikedMoodsData();
     fetchBackgroundImageUrl();
   }
 
@@ -88,7 +85,7 @@ class _LikedMoodsViewState extends State<LikedMoodsView> {
                   ],
                 ),
                 SizedBox(height: GlobalVariables.mediumSpacing),
-                CreatedMoodsView(userId: GlobalVariables.userUUID,),
+                CreatedMoodsView(userId: GlobalVariables.userUUID, documentPath: 'users/${GlobalVariables.userUUID}/liked_moods'),
                 ],
               ),
             ), // Use the CreatedMoodsView widget instead of duplicating the same logic
@@ -450,8 +447,9 @@ class _MoodPlayerState extends State<MoodPlayer> {
 
 class CreatedMoodsView extends StatefulWidget {
   final String userId;
+  final String documentPath;
 
-  CreatedMoodsView({required this.userId});
+  CreatedMoodsView({required this.userId, required this.documentPath});
 
   @override
   _CreatedMoodsViewState createState() => _CreatedMoodsViewState();
@@ -463,7 +461,7 @@ class _CreatedMoodsViewState extends State<CreatedMoodsView> {
   @override
   void initState() {
     super.initState();
-    _createdMoodsProvider = CreatedMoodsProvider('users/${widget.userId}/moods');
+    _createdMoodsProvider = CreatedMoodsProvider(widget.documentPath);
     _createdMoodsProvider.fetchCreatedMoodsData();
   }
 

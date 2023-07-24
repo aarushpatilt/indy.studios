@@ -88,7 +88,7 @@ class _AlbumCoverUploadViewState extends State<AlbumCoverUploadView> {
                           FirebaseComponents().setEachMediaToStorage('users/${GlobalVariables.userUUID}/albums/', 'users/${GlobalVariables.userUUID}/albums/$documentID', mediaData).then((result) {
 
                             GlobalVariables().disposeInputs();
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: documentID, userID: GlobalVariables.userUUID)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumSongDisplayUploadView(albumID: documentID, userID: GlobalVariables.userUUID, something: "yuhh")));
                           });
 
                         }
