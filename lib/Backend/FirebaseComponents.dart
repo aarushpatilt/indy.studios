@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:provider/provider.dart';
+import '../FrontEnd/MainAppFlows/Profile.dart';
 import '../FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
 import '../FrontEndComponents/AudioComponents.dart';
 import '../FrontEndComponents/TextComponents.dart';
@@ -786,30 +787,30 @@ class _MusicTileState extends State<MusicTile> {
                   ),
                 ],
               ),
-              GestureDetector(
-                onTap: () async {
-                  if (widget.albumId != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AlbumSongDisplayUploadView(albumID: widget.albumId!, userID: widget.userID),
-                      ),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SingleCoverDisplay(singleID: widget.uniqueID, userID: widget.userID),
-                      ),
-                    );
-                  }
-                },
-                child: SizedBox(
-                  width: GlobalVariables.properWidth,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
+              SizedBox(
+                width: GlobalVariables.properWidth,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        if (widget.albumId != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AlbumSongDisplayUploadView(albumID: widget.albumId!, userID: widget.userID),
+                            ),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SingleCoverDisplay(singleID: widget.uniqueID, userID: widget.userID),
+                            ),
+                          );
+                        }
+                      },
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ProfileText600(text: widget.title, size: 30),
@@ -817,15 +818,26 @@ class _MusicTileState extends State<MusicTile> {
                           InformationText(text: widget.artist),
                         ],
                       ),
-                      ClipOval(
-                        child: SizedBox(
-                          width: 70.0,
-                          height: 70.0,
-                          child: FirstImageDisplay(documentPath: '/users/${widget.userID}'),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Profile(userID: widget.userID),
+                            ),
+                          );
+                      },
+                      child: 
+                        ClipOval(
+                          child: SizedBox(
+                            width: 70.0,
+                            height: 70.0,
+                            child: FirstImageDisplay(documentPath: '/users/${widget.userID}'),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: GlobalVariables.mediumSpacing),
