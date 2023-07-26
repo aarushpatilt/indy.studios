@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter/rendering.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/CameraUploadView.dart';
+import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
 
 import 'FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'FrontEndComponents/CustomTabController.dart';
@@ -84,7 +85,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CustomTabPage(),
+      home: LikedMoodsView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

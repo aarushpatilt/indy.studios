@@ -85,7 +85,8 @@ class _LikedMoodsViewState extends State<LikedMoodsView> {
                   ],
                 ),
                 SizedBox(height: GlobalVariables.mediumSpacing),
-                CreatedMoodsView(userId: GlobalVariables.userUUID, documentPath: 'users/${GlobalVariables.userUUID}/liked_moods'),
+                //CreatedMoodsView(userId: GlobalVariables.userUUID, documentPath: 'users/${GlobalVariables.userUUID}/liked_moods'),
+                CreatedMoodsView(userId: GlobalVariables.userUUID, documentPath: 'users/${GlobalVariables.userUUID}/liked_moods', type: 1)
                 ],
               ),
             ), // Use the CreatedMoodsView widget instead of duplicating the same logic
@@ -165,7 +166,9 @@ class MoodContainersRow extends StatelessWidget {
           imageUrl: moodList[i]['image_urls'][1],
           uniqueID: moodList[i]['unique_id'],
           userID: moodList[i]['user_id'],
-          musicID: moodList[i]['music_id']
+          musicID: moodList[i]['music_id'],
+          mediaURLs: moodList[i]['image_urls'].length >= 4 ? List<String>.from(moodList[i]['image_urls'].sublist(2).map((item) => item.toString())) 
+    : null,
         ),
       ));
 
@@ -191,6 +194,7 @@ class MoodContainer extends StatefulWidget {
   final String uniqueID;
   final String userID;
   final String musicID;
+  final List<String>? mediaURLs;
 
   MoodContainer({
     required this.mediaUrl,
@@ -202,6 +206,7 @@ class MoodContainer extends StatefulWidget {
     required this.uniqueID,
     required this.userID,
     required this.musicID,
+    this.mediaURLs
   });
 
   @override
@@ -331,6 +336,8 @@ class _MoodContainerState extends State<MoodContainer> {
                               userID: widget.userID,
                               albumID: "",
                               musicID: widget.musicID,
+                              mediaURLs: widget.mediaURLs,
+
                             ),
                           ),
                         ],
@@ -355,31 +362,55 @@ class CreatedMoodsProvider with ChangeNotifier {
   bool _hasError = false;
   String _error = '';
   DocumentSnapshot? _lastDocument;
+  int? type;
 
-  CreatedMoodsProvider(this._collectionPath);
+  CreatedMoodsProvider(this._collectionPath, {int? type});
 
   List<Map<String, dynamic>> get moodList => _moodList;
   bool get isLoading => _isLoading;
   bool get hasError => _hasError;
   String get error => _error;
 
-  Future<void> fetchCreatedMoodsData() async {
+  
+
+  Future<void> fetchCreatedMoodsData({int? type}) async {
+    print(type);
     try {
       _isLoading = true;
       notifyListeners();
 
       List<Map<String, dynamic>> data;
-      if (_lastDocument == null) {
-        data = await FirebaseComponents().getPaginatedCollectionData(
-          collectionPath: _collectionPath,
-          limit: 9,
-        );
+      if(type == null){
+        if (_lastDocument == null) {
+          data = await FirebaseComponents().getPaginatedCollectionData(
+            collectionPath: _collectionPath,
+            limit: 9,
+          );
+        } else {
+          data = await FirebaseComponents().getPaginatedCollectionData(
+            collectionPath: _collectionPath,
+            limit: 9,
+            startAfterDocument: _lastDocument,
+          );
+        }
       } else {
-        data = await FirebaseComponents().getPaginatedCollectionData(
-          collectionPath: _collectionPath,
-          limit: 9,
-          startAfterDocument: _lastDocument,
-        );
+        print("HEY");
+
+        if (_lastDocument == null) {
+          data = await FirebaseComponents().getPaginatedReferencedData(
+            collectionPath: _collectionPath,
+            limit: 9,
+          );
+        } else {
+          data = await FirebaseComponents().getPaginatedReferencedData(
+            collectionPath: _collectionPath,
+            limit: 9,
+            startAfter: _lastDocument,
+          );
+        }
+
+        print(data);
+
       }
 
       if (data.isNotEmpty) {
@@ -448,8 +479,9 @@ class _MoodPlayerState extends State<MoodPlayer> {
 class CreatedMoodsView extends StatefulWidget {
   final String userId;
   final String documentPath;
+  int? type;
 
-  CreatedMoodsView({required this.userId, required this.documentPath});
+  CreatedMoodsView({required this.userId, required this.documentPath, this.type});
 
   @override
   _CreatedMoodsViewState createState() => _CreatedMoodsViewState();
@@ -461,8 +493,8 @@ class _CreatedMoodsViewState extends State<CreatedMoodsView> {
   @override
   void initState() {
     super.initState();
-    _createdMoodsProvider = CreatedMoodsProvider(widget.documentPath);
-    _createdMoodsProvider.fetchCreatedMoodsData();
+    _createdMoodsProvider = CreatedMoodsProvider(widget.documentPath, type: widget.type);
+    _createdMoodsProvider.fetchCreatedMoodsData(type: widget.type);
   }
 
   @override
@@ -493,7 +525,7 @@ class _CreatedMoodsViewState extends State<CreatedMoodsView> {
                   return NotificationListener<ScrollNotification>(
                     onNotification: (scrollNotification) {
                       if (scrollNotification.metrics.pixels == scrollNotification.metrics.maxScrollExtent) {
-                        _createdMoodsProvider.fetchCreatedMoodsData();
+                        _createdMoodsProvider.fetchCreatedMoodsData(type: widget.type);
                       }
                       return true;
                     },
