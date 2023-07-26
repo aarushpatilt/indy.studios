@@ -41,7 +41,8 @@ class SignUpView extends StatelessWidget {
                     "last_name" : GlobalVariables.inputTwo.text,
                     "email_address" : GlobalVariables.inputThree.text,
                     "password": GlobalVariables.inputFour.text,
-                    "stats" : [0, 0, 0, 0]
+                    "stats" : [0, 0, 0, 0],
+                    "pinned" : [null, null, null]
                   };
                     
                   FirebaseComponents().signUp(GlobalVariables.inputThree.text, GlobalVariables.inputFour.text).then( (result) {

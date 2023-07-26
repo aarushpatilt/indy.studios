@@ -11,10 +11,10 @@ import 'TagFinderView.dart';
 import 'package:video_player/video_player.dart';
 
 class MoodUploadView extends StatefulWidget {
-  final File? mediaFile;
+  final List<File>? mediaFiles;
   final bool isVideo;
 
-  MoodUploadView({this.mediaFile, this.isVideo = false});
+  MoodUploadView({this.mediaFiles, this.isVideo = false});
 
   @override
   _MoodUploadViewState createState() => _MoodUploadViewState();
@@ -34,7 +34,7 @@ class _MoodUploadViewState extends State<MoodUploadView> {
   void initState() {
     super.initState();
     if (widget.isVideo) {
-      _videoController = VideoPlayerController.file(widget.mediaFile!)
+      _videoController = VideoPlayerController.file(widget.mediaFiles![0])
         ..initialize().then((_) {
           setState(() {});
         });
@@ -82,11 +82,23 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                         )
                       : CircularProgressIndicator()
                 else
-                  Image.file(
-                    widget.mediaFile!,
-                    width: GlobalVariables.properWidth,
-                    height: GlobalVariables.properWidth,
-                    fit: BoxFit.cover,
+                  Container(
+                    height: GlobalVariables.properWidth,  // Modify this according to your design.
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: widget.mediaFiles!.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(right: 10),  // Spacing between images.
+                          child: Image.file(
+                            widget.mediaFiles![index],
+                            width: GlobalVariables.properWidth,
+                            height: GlobalVariables.properWidth,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 const SizedBox(height: GlobalVariables.mediumSpacing),
                 Row(
@@ -198,13 +210,24 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                           "music_id" : _selectedList!['unique_id']
                         };
 
+
                         if (_selectedList!['album_id']!= null) {
                           data["albumID"] = _selectedList!['album_id'];
                         }
-                        Map<String, File> mediaData = {
-                          GlobalVariables().generateUUID().toString():
-                              widget.mediaFile!,
-                        };
+
+                        Map<String, File> mediaData = {};
+
+                        if(widget.mediaFiles!.length > 1){
+                            for (var file in widget.mediaFiles!) {
+                              print("HEY");
+                              mediaData[GlobalVariables().generateUUID().toString()] = file;
+                            }
+                        } else {
+
+                          mediaData = { GlobalVariables().generateUUID().toString() : widget.mediaFiles![0] };
+                        }
+
+                        print(mediaData);
 
                     FirebaseComponents()
                         .setEachDataToFirestore(

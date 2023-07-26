@@ -81,6 +81,7 @@ class MoodTile extends StatefulWidget {
   final String userID;
   final String albumID;
   final String musicID;
+  final List<String>? mediaURLs;
 
   const MoodTile({
     required this.mediaUrl,
@@ -95,6 +96,7 @@ class MoodTile extends StatefulWidget {
     required this.userID,
     required this.albumID,
     required this.musicID,
+    this.mediaURLs
   });
 
   @override
@@ -186,26 +188,51 @@ class _MoodTileState extends State<MoodTile>
                       print(playNotifier.value);
                     },
                     child:
-                    Align(
-                      alignment: Alignment.center,
-                      child: isVideo
-                          ? (_controller.value.isInitialized
-                          ? AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: VideoPlayer(_controller),
-                      )
-                          : Container())
-                          : Container(
-                        constraints: BoxConstraints(
-                          maxWidth: GlobalVariables.properWidth,
-                          maxHeight: GlobalVariables.properHeight,
-                        ),
-                        child: Image.network(
-                          widget.mediaUrl,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+Align(
+  alignment: Alignment.center,
+  child: isVideo
+    ? (_controller.value.isInitialized
+      ? AspectRatio(
+          aspectRatio: _controller.value.aspectRatio,
+          child: VideoPlayer(_controller),
+        )
+      : Container())
+    : (widget.mediaURLs != null && widget.mediaURLs!.isNotEmpty)
+      ? Container(
+          height: GlobalVariables.properHeight, // Modify this according to your design.
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.mediaURLs!.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(right: 10), // Spacing between images.
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxWidth: GlobalVariables.properWidth - 30,
+                    maxHeight: GlobalVariables.properWidth,
+                  ),
+                  child: Image.network(
+                    widget.mediaURLs![index],
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+              );
+            },
+          ),
+        )
+      : Container(
+          constraints: BoxConstraints(
+            maxWidth: GlobalVariables.properWidth,
+            maxHeight: GlobalVariables.properHeight,
+          ),
+          child: Image.network(
+            widget.mediaUrl,
+            fit: BoxFit.fitWidth,
+          ),
+        ),
+),
+
+
                   ),
                     // AUDIO CLICKABLE
                     Positioned(

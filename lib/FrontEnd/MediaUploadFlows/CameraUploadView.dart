@@ -26,7 +26,7 @@ class _CameraUploadViewState extends State<CameraUploadView> {
     });
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MoodUploadView(
-        mediaFile: File(_imageFile!.path),
+        mediaFiles: [File(_imageFile!.path)],
         isVideo: false,
       ),
     ));
@@ -44,24 +44,24 @@ class _CameraUploadViewState extends State<CameraUploadView> {
     });
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MoodUploadView(
-        mediaFile: File(_videoFile!.path),
+        mediaFiles: [File(_videoFile!.path)],
         isVideo: true,
       ),
     ));
   }
 
-  Future<void> _selectImage() async {
-    final XFile? selectedImage = await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _imageFile = selectedImage;
-    });
+Future<void> _selectImage() async {
+  final List<XFile>? selectedImages = await _picker.pickMultiImage();
+  if (selectedImages != null) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MoodUploadView(
-        mediaFile: File(_imageFile!.path),
+        mediaFiles: selectedImages.map((file) => File(file.path)).toList(),
         isVideo: false,
       ),
     ));
   }
+}
+
 
   Future<void> _selectVideo() async {
     final XFile? selectedVideo = await _picker.pickVideo(source: ImageSource.gallery);
@@ -75,7 +75,7 @@ class _CameraUploadViewState extends State<CameraUploadView> {
     });
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MoodUploadView(
-        mediaFile: File(_videoFile!.path),
+        mediaFiles: [File(_videoFile!.path)],
         isVideo: true,
       ),
     ));

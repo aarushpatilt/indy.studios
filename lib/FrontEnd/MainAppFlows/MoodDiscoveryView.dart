@@ -64,7 +64,10 @@ class _MoodDiscoveryViewState extends State<MoodDiscoveryView> {
                 uniqueID: docData['unique_id'],
                 userID: docData['user_id'],
                 albumID: docData['albumID'] ?? "null",
-                musicID: docData['music_id']
+                musicID: docData['music_id'],
+                mediaURLs: docData['image_urls'].length >= 4 ? List<String>.from(docData['image_urls'].sublist(2).map((item) => item.toString())) 
+    : null,
+
               );
             },
           ),

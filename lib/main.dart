@@ -5,23 +5,9 @@ import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter/rendering.dart';
-import 'package:ndy/Backend/GlobalComponents.dart';
-import 'package:ndy/FrontEnd/MainAppFlows/MoodDiscoveryView.dart';
-import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
-import 'package:ndy/FrontEnd/MainAppFlows/SongMoodView.dart';
-import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
-import 'package:ndy/FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
-import 'package:ndy/FrontEnd/MenuFlow/CommentView.dart';
-import 'package:ndy/FrontEnd/MenuFlow/EditMasterView.dart';
-import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
-import 'package:ndy/FrontEnd/MenuFlow/LikedSongsView.dart';
-import 'package:ndy/FrontEnd/MenuFlow/LikedThreadsView.dart';
-import 'package:ndy/FrontEnd/SignUpFlow/UserAuthView.dart';
-import 'package:ndy/FrontEnd/ThoughtUploadView.dart';
+import 'package:ndy/FrontEnd/MediaUploadFlows/CameraUploadView.dart';
 
-import 'FrontEnd/MainAppFlows/Feed.dart';
 import 'FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
-import 'FrontEnd/MenuFlow/ActivityView.dart';
 import 'FrontEndComponents/CustomTabController.dart';
 import 'FrontEndComponents/TextComponents.dart';
 
