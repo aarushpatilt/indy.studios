@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/Profile.dart';
+import 'package:ndy/FrontEndComponents/OptionComponent.dart';
 import '../../FrontEndComponents/CustomTabController.dart';
 import 'package:video_player/video_player.dart';
 
@@ -161,27 +162,33 @@ class _PostDisplayState extends State<PostDisplay> {
                     );
               },
               child: Row(
-              children: [
-                Container(
-                  width: 25,
-                  height: 25,
-                  child: ClipOval(
-                    child: Image.network(
-                      profilePicture,
-                      fit: BoxFit.cover,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                  children: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      child: ClipOval(
+                        child: Image.network(
+                          profilePicture,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
+                    const SizedBox(width: 10),
+                    Text(
+                      username,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                   ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  username,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
+                  OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 1)
+                ],
+              ),
             ),
 
             const SizedBox(height: 20),
@@ -257,27 +264,34 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
                     );
               },
               child: Row(
-              children: [
-                Container(
-                  width: 25,
-                  height: 25,
-                  child: ClipOval(
-                    child: Image.network(
-                      profilePicture,
-                      fit: BoxFit.cover,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                  children: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      child: ClipOval(
+                        child: Image.network(
+                          profilePicture,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  username,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+                    const SizedBox(width: 10),
+                    Text(
+                      username,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+
             ),
+            OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 2)
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             Text(

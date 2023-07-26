@@ -12,6 +12,7 @@ import 'package:ndy/FrontEnd/MainAppFlows/SongMoodView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
 import 'package:ndy/FrontEnd/MenuFlow/CommentView.dart';
+import 'package:ndy/FrontEnd/MenuFlow/EditMasterView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedSongsView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedThreadsView.dart';

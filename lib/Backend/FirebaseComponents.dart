@@ -56,6 +56,25 @@ class FirebaseComponents {
       return null;
     }
   }
+  Future<void> setPin(String postReferencePath, int position) async {// Assuming you have this global variable
+
+  DocumentReference docRef = firebaseFirestore.doc('users/${GlobalVariables.userUUID}');
+
+  await docRef.get().then((doc) {
+    if (doc.exists) {
+      List<dynamic> pinned = doc['pinned'];
+      print(pinned);
+      if (pinned.length > position) {
+        pinned[position] = postReferencePath;
+      } else {
+        pinned.add(postReferencePath);
+      }
+      docRef.update({'pinned': pinned});
+      print('done');
+    }
+  });
+}
+
 Future<List<Map<String, dynamic>>> getLatestTextAndPostFromCollection({required String collectionPath}) async {
     print("hey");
     var textDocSnapshot = await firebaseFirestore.collection(collectionPath)
