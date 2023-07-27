@@ -56,7 +56,7 @@ class _CustomTabControllerState extends State<CustomTabController>
               onPageChanged: (index) {
                 _tabController.animateTo(index);
               },
-              physics: NeverScrollableScrollPhysics(), // this will disable swipe
+              physics: const NeverScrollableScrollPhysics(), // this will disable swipe
               children: widget.tabViews,
             ),
           ),
@@ -159,11 +159,11 @@ class CustomAppBar extends StatelessWidget {
                   onTap: () {
                     Scaffold.of(context).openDrawer();
                   },
-                  child: Align(
+                  child: const Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: ProfilePicture(size: 30),
+                      padding: EdgeInsets.all(0),
+                      child: Icon(Icons.square_outlined, size: 25, color: Colors.white),
                     ),
                   ),
                 ),
@@ -284,7 +284,7 @@ class _CustomSliderBarState extends State<CustomSliderBar>
                       onTap: () {
                         Scaffold.of(context).openDrawer();
                       },
-                      child: ProfilePicture(size: 30),
+                      child: Icon(Icons.square_outlined, size: 25, color: Colors.white), //ProfilePicture(size: 30),
                     ),
                   ),
                   Expanded(
@@ -325,7 +325,7 @@ class _CustomSliderBarState extends State<CustomSliderBar>
                       ],
                     ),
                   ),
-                  const Icon(Icons.circle_outlined, size: 30, color: Colors.white),
+                  const Icon(Icons.circle_outlined, size: 30, color: Colors.transparent),
                 ],
               ),
             ),

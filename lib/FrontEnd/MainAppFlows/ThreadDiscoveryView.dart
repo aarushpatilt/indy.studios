@@ -62,41 +62,51 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
             child: RefreshIndicator(
               onRefresh: _refreshData,
               child: ListView.builder(
-                itemCount: _threadData.length + 1,
-                itemBuilder: (context, index) {
-                  if (index < _threadData.length) {
-                    var data = _threadData[index];
-                    if (data.containsKey('image_urls')) {
-                      return Container(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
-                          child: PostDisplay(data: data),
-                        ),
-                      );
-                    }
-                    return Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
-                        child: ThoughtDisplay(data: data),
-                      ),
-                    );
-                  } else if (_lastDocument != null) {
-                    // Loading more data when reach the end of the list
-                    _loadMoreData();
-                    return const Center(child: ProfileText400(text: "you have reached da end", size: 12));
-                  } else {
-                    // All data loaded
-                    return Container();
-                  }
-                },
-              ),
+  itemCount: _threadData.length + 2, // Add 2 to itemCount, 1 for the title and 1 for the loading or end message
+  itemBuilder: (context, index) {
+    // If index is zero, return the title
+    if (index == 0) {
+      return const Padding(
+        padding: EdgeInsets.only(bottom: 20.0, left: 15),
+        child: ProfileText500(text: "Discover", size: 30),
+      );
+    } 
+    // Need to subtract 1 from the index as we added a new widget at the beginning
+    index -= 1;
+    if (index < _threadData.length) {
+      var data = _threadData[index];
+      if (data.containsKey('image_urls')) {
+        return Container(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+            child: PostDisplay(data: data),
+          ),
+        );
+      }
+      return Container(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+          child: ThoughtDisplay(data: data),
+        ),
+      );
+    } else if (_lastDocument != null) {
+      // Loading more data when reach the end of the list
+      _loadMoreData();
+      return const Center(child: ProfileText400(text: "you have reached da end", size: 12));
+    } else {
+      // All data loaded
+      return Container();
+    }
+  },
+),
+
             ),
           ),
           const Positioned(
             top: 0,
             left: 0,
             right: 0,
-            child: CustomAppBar(),
+            child: CustomAppBar(title: ""),
           ),
         ],
       ),
@@ -161,37 +171,39 @@ class _PostDisplayState extends State<PostDisplay> {
                       ),
                     );
               },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+              child: Container(
+                color: Colors.transparent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 25,
-                      height: 25,
-                      child: ClipOval(
-                        child: Image.network(
-                          profilePicture,
-                          fit: BoxFit.cover,
+                    Row(
+                    children: [
+                      Container(
+                        width: 25,
+                        height: 25,
+                        child: ClipOval(
+                          child: Image.network(
+                            profilePicture,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      username,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
+                      const SizedBox(width: 10),
+                      Text(
+                        username,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
                       ),
+                    ],
                     ),
                   ],
-                  ),
-                  OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 1)
-                ],
+                ),
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Text(
               data['caption'],
               style: const TextStyle(
@@ -199,12 +211,25 @@ class _PostDisplayState extends State<PostDisplay> {
                 color: Colors.white,
               ),
             ),
-            const SizedBox(height: GlobalVariables.smallSpacing),
+            const SizedBox(height: 5),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15, sentence: 'liked your thread'),
-                const SizedBox(width: 10),
-                CommentIcon(size: 15, userID: data['user_id'], type: 'threads', uniqueID: data['unique_id'])
+                Row(
+                  children: [
+                    LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15, sentence: 'liked your thread'),
+                    const SizedBox(width: 10),
+                    CommentIcon(size: 15, userID: data['user_id'], type: 'threads', uniqueID: data['unique_id'])
+                  ],
+                ),
+                Container(
+                      color: Colors.transparent,
+                      width: 20,
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 1),
+                      ),
+                )
               ],
             ),
             const SizedBox(height: GlobalVariables.mediumSpacing),
@@ -289,11 +314,10 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
                   ],
 
             ),
-            OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 2)
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Text(
               data['caption'],
               style: const TextStyle(
@@ -301,12 +325,27 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
                 color: Colors.white,
               ),
             ),
-            const SizedBox(height: GlobalVariables.smallSpacing),
+            const SizedBox(height: 5),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15, sentence: 'liked your thread'),
-                const SizedBox(width: 10),
-                CommentIcon(size: 15, userID: data['user_id'], type: 'threads', uniqueID: data['unique_id'])
+                Row(
+                  children: [
+                    LikeDislikeWidget(type: "threads", uniqueID: data['unique_id'], userID: data['user_id'], size: 15, sentence: 'liked your thread'),
+                    const SizedBox(width: 10),
+                    CommentIcon(size: 15, userID: data['user_id'], type: 'threads', uniqueID: data['unique_id']),
+                    
+                    
+                  ],
+                ),
+                Container(
+                  color: Colors.transparent,
+                  width: 20,
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 2),
+                  ),
+                )
               ],
             ),
             const SizedBox(height: GlobalVariables.mediumSpacing),
@@ -414,9 +453,15 @@ class _ThreadPlayerState extends State<ThreadPlayer> {
                 },
                 child: Stack(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(5.0),
-                      child: VideoPlayer(_controller),
+                    Container(
+                      constraints: BoxConstraints(
+                        maxWidth: GlobalVariables.properWidth,
+                        maxHeight: GlobalVariables.properWidth,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5.0),
+                        child: VideoPlayer(_controller),
+                      )
                     ),
                     Align(
                       alignment: Alignment.bottomLeft,

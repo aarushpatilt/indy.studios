@@ -13,16 +13,19 @@ class OptionsIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.more_horiz, color: Colors.white, size: size),
-      onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return OptionsBottomSheet(postReferencePath: postReferencePath, position: position,);
-          },
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.all(0.0),
+      child: IconButton(
+        icon: Icon(Icons.more_horiz, color: Colors.white, size: size),
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return OptionsBottomSheet(postReferencePath: postReferencePath, position: position,);
+            },
+          );
+        },
+      ),
     );
   }
 }

@@ -35,7 +35,7 @@ class CommentIcon extends StatelessWidget {
       child: Container(
         width: size,
         height: size,
-        child: Icon(Icons.circle_outlined, color: Color.fromARGB(255, 237, 213, 139), size: size),
+        child: Icon(Icons.circle_outlined, color: Colors.grey, size: size),
       ),
     );
   }
