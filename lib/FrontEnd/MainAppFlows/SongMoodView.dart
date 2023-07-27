@@ -21,15 +21,11 @@ class SongMoodsView extends StatefulWidget {
 }
 
 class _SongMoodsViewState extends State<SongMoodsView> {
-  late LikedMoodsProvider _SongMoodsProvider;
   String backgroundImageUrl = '';
   Map<String, dynamic> musicData = {};
 
   @override
   void initState() {
-    super.initState();
-    _SongMoodsProvider = LikedMoodsProvider('songs/${widget.musicId}/moods');
-    _SongMoodsProvider.fetchLikedMoodsData();
     fetchBackgroundImageUrl();
   }
 
@@ -50,10 +46,7 @@ class _SongMoodsViewState extends State<SongMoodsView> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: ChangeNotifierProvider<LikedMoodsProvider>.value(
-        value: _SongMoodsProvider,
-        builder: (context, child) {
-          return CustomScrollView(
+      body: CustomScrollView(
             slivers: [
               SliverPadding(
                 padding: const EdgeInsets.only(top: 100),
@@ -118,27 +111,8 @@ class _SongMoodsViewState extends State<SongMoodsView> {
                               ),
                             ),
                           ),
-
                             const SizedBox(height: GlobalVariables.mediumSpacing),
-                            Consumer<LikedMoodsProvider>(
-                              builder: (context, provider, _) {
-                                if (provider.isLoading) {
-                                  return CircularProgressIndicator();
-                                } else if (provider.hasError) {
-                                  return Text('Error: ${provider.error}');
-                                } else {
-                                  final moodList = provider.moodList;
-                                  return Column(
-                                    children: [
-                                      for (int i = 0; i < moodList.length; i += 3)
-                                        MoodContainersRow(
-                                          moodList: moodList.sublist(i, i + 3 < moodList.length ? i + 3 : moodList.length),
-                                        ),
-                                    ],
-                                  );
-                                }
-                              },
-                            ),
+                            CreatedMoodsView(userId: widget.userID, documentPath: 'songs/${widget.musicId}/moods', type: 1)
                           ],
                         ),
                       ),
@@ -147,9 +121,7 @@ class _SongMoodsViewState extends State<SongMoodsView> {
                 ),
               ),
             ],
-          );
-        },
-      ),
+          )
     );
   }
 }

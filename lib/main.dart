@@ -85,7 +85,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LikedMoodsView(),
+      home: CustomTabPage(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
