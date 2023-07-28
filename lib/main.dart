@@ -126,3 +126,16 @@ class MyColumnWithCreatedMoodsView extends StatelessWidget {
     );
   }
 }
+
+extension ColorExtension on Color {
+  Color darken([int percent = 10]) {
+    assert(1 <= percent && percent <= 100);
+    final p = percent / 100;
+    return Color.fromRGBO(
+      (red * (1 - p)).round(),
+      (green * (1 - p)).round(),
+      (blue * (1 - p)).round(),
+      opacity,
+    );
+  }
+}

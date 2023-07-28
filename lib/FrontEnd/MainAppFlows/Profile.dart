@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
+import 'package:ndy/main.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 import '../../Backend/FirebaseComponents.dart';
@@ -108,7 +109,7 @@ Padding(
                                   Container(
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
-                                        colors: [_dominantColor, Colors.black],
+                                        colors: [_dominantColor.darken(40), Colors.black],
                                         begin: Alignment.topCenter,
                                         end: Alignment.center,
                                       ),
