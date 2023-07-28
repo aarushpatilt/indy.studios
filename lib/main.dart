@@ -5,6 +5,8 @@ import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter/rendering.dart';
+import 'package:ndy/Backend/GlobalComponents.dart';
+import 'package:ndy/FrontEnd/MainAppFlows/ProfileCustom.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/CameraUploadView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
 
@@ -82,6 +84,7 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
   );
 
+//ProfileCustom(userID: GlobalVariables.userUUID,)
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,

@@ -8,16 +8,16 @@ import '../../Backend/GlobalComponents.dart';
 import '../../FrontEndComponents/ButtonComponents.dart';
 import '../../FrontEndComponents/TextComponents.dart';
 
-class Profile extends StatefulWidget {
+class ProfileCustom extends StatefulWidget {
   final String userID;
 
-  Profile({required this.userID});
+  ProfileCustom({required this.userID});
 
   @override
-  _ProfileState createState() => _ProfileState();
+  _ProfileCustomState createState() => _ProfileCustomState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileCustomState extends State<ProfileCustom> {
   late Future<Map<String, dynamic>> _futureProfileData;
   late Color _dominantColor = Colors.black;
 

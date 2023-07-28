@@ -11,7 +11,8 @@ import 'package:ndy/FrontEnd/MenuFlow/LikedThreadsView.dart';
   import '../Backend/GlobalComponents.dart';
 import '../FrontEnd/MainAppFlows/Feed.dart';
   import '../FrontEnd/MainAppFlows/MusicDiscoveryView.dart';
-  import '../FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
+  import '../FrontEnd/MainAppFlows/ProfileCustom.dart';
+import '../FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
 import '../FrontEnd/MenuFlow/LikedMoodView.dart';
 import '../FrontEnd/MenuFlow/LikedSongsView.dart';
 import 'TextComponents.dart';
@@ -148,7 +149,7 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black,
+      color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(15, 50, 5, 15),
         child: Row(

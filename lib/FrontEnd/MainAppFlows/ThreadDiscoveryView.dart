@@ -40,7 +40,6 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
     List<Map<String, dynamic>> newItems = await FirebaseComponents().getPaginatedReferencedData(collectionPath: 'threads', limit: 5, T: "yes", startAfter: _lastDocument);
 
     if (newItems.isNotEmpty) {
-      // Updating the _lastDocument from the Firebase Firestore reference
       _lastDocument = await FirebaseFirestore.instance.collection('threads').doc(newItems.last['unique_id']).get();
 
       setState(() {
@@ -55,64 +54,74 @@ class _ThreadDiscoveryViewState extends State<ThreadDiscoveryView> {
       drawer: const Drawer(
         child: MenuSideBar(),
       ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 50), // Add top padding of 50
-            child: RefreshIndicator(
-              onRefresh: _refreshData,
-              child: ListView.builder(
-  itemCount: _threadData.length + 2, // Add 2 to itemCount, 1 for the title and 1 for the loading or end message
-  itemBuilder: (context, index) {
-    // If index is zero, return the title
-    if (index == 0) {
-      return const Padding(
-        padding: EdgeInsets.only(bottom: 20.0, left: 15),
-        child: ProfileText500(text: "Discover", size: 30),
-      );
-    } 
-    // Need to subtract 1 from the index as we added a new widget at the beginning
-    index -= 1;
-    if (index < _threadData.length) {
-      var data = _threadData[index];
-      if (data.containsKey('image_urls')) {
-        return Container(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
-            child: PostDisplay(data: data),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color.fromARGB(255, 23, 23, 23), Colors.black],
           ),
-        );
-      }
-      return Container(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
-          child: ThoughtDisplay(data: data),
         ),
-      );
-    } else if (_lastDocument != null) {
-      // Loading more data when reach the end of the list
-      _loadMoreData();
-      return const Center(child: ProfileText400(text: "you have reached da end", size: 12));
-    } else {
-      // All data loaded
-      return Container();
-    }
-  },
-),
-
+        
+        child: Stack(
+          children: [
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: RefreshIndicator(
+                  onRefresh: _refreshData,
+                  child: ListView.builder(
+                    itemCount: _threadData.length + 2,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return Container(
+                          child: const Padding(
+                            padding: EdgeInsets.only(bottom: GlobalVariables.mediumSpacing,left: 15),
+                            child: ProfileText500(text: "Discover", size: 30),
+                          ),
+                        );
+                      } 
+                      index -= 1;
+                      if (index < _threadData.length) {
+                        var data = _threadData[index];
+                        if (data.containsKey('image_urls')) {
+                          return Container(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+                              child: PostDisplay(data: data),
+                            ),
+                          );
+                        }
+                        return Container(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
+                            child: ThoughtDisplay(data: data),
+                          ),
+                        );
+                      } else if (_lastDocument != null) {
+                        _loadMoreData();
+                        return const Center(child: ProfileText400(text: "you have reached da end", size: 12));
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
+                ),
+              ),
             ),
-          ),
-          const Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: CustomAppBar(title: ""),
-          ),
-        ],
+            const Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: CustomAppBar(title: ""),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+
 
 
 
@@ -227,7 +236,7 @@ class _PostDisplayState extends State<PostDisplay> {
                       width: 20,
                       child: Align(
                         alignment: Alignment.topLeft,
-                        child: OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 1),
+                        child: OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 1, profileImageURL: profilePicture),
                       ),
                 )
               ],
@@ -343,7 +352,7 @@ class _ThoughtDisplayState extends State<ThoughtDisplay> {
                   width: 20,
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 2),
+                    child: OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 2, profileImageURL: profilePicture),
                   ),
                 )
               ],

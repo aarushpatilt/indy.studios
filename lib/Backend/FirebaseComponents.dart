@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/AlbumSongsDisplayUploadView.dart';
+import 'package:ndy/FrontEnd/MenuFlow/CommentView.dart';
 import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:provider/provider.dart';
 import '../FrontEnd/MainAppFlows/Profile.dart';
@@ -882,17 +883,23 @@ class _MusicTileState extends State<MusicTile> {
                     child: ValueListenableBuilder(
                       valueListenable: playNotifier,
                       builder: (context, bool value, child) {
-                        return Icon(value ? Icons.circle : Icons.circle_outlined, size: 30, color: Colors.white);
+                        return Icon(value ? Icons.pause_circle : Icons.play_circle_fill_rounded, size: 35, color: Colors.grey);
                       },
                     ),
                   ),
-                  LikeDislikeWidget(
-                    type: widget.albumId != null ? "albums" : "singles", 
-                    uniqueID: widget.uniqueID, 
-                    userID: widget.userID, 
-                    albumId: widget.albumId,
-                    size: 30,sentence: 'liked your music'
-                  )
+                  Row(
+                    children: [
+                      LikeDislikeWidget(
+                        type: widget.albumId != null ? "albums" : "singles", 
+                        uniqueID: widget.uniqueID, 
+                        userID: widget.userID, 
+                        albumId: widget.albumId,
+                        size: 30,sentence: 'liked your music'
+                      ),
+                      const SizedBox(width: 15),
+                      CommentIcon(userID: widget.userID, uniqueID: widget.uniqueID, type: widget.albumId != null ? "albums" : "singles", size: 30)
+                    ],
+                  ),
                 ],
               ),
               const SizedBox(height: GlobalVariables.mediumSpacing),
@@ -1246,7 +1253,7 @@ class _LikeDislikeWidgetState extends State<LikeDislikeWidget> {
               child: Icon(
                 isLiked ? Icons.favorite : Icons.favorite_border,
                 size: widget.size,
-                color: Colors.white,
+                color: Colors.grey,
               ),
             );
       },

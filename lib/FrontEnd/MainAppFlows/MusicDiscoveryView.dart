@@ -43,6 +43,7 @@ class _MusicDiscoveryViewState extends State<MusicDiscoveryView> {
     setState(() {
       documents.addAll(newDocs);
     });
+    _updatePaletteGenerator();
   }
 
   Future<String?> _getAlbumId() async {
