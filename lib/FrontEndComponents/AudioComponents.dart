@@ -81,7 +81,7 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
             height: 2.0,
             child: LinearProgressIndicator(
               minHeight: 2.0,
-              backgroundColor: Colors.white,
+              backgroundColor: Color.fromARGB(129, 158, 158, 158),
               valueColor: AlwaysStoppedAnimation<Color>(widget.barColor),
               value: (_totalDuration > 0) ? _currentPosition / _totalDuration : 0.0,
             ),

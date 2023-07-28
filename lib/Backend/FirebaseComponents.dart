@@ -883,7 +883,7 @@ class _MusicTileState extends State<MusicTile> {
                     child: ValueListenableBuilder(
                       valueListenable: playNotifier,
                       builder: (context, bool value, child) {
-                        return Icon(value ? Icons.pause_circle : Icons.play_circle_fill_rounded, size: 35, color: Colors.grey);
+                        return Icon(value ? Icons.pause_circle : Icons.play_circle_fill_rounded, size: 30, color: Colors.grey);
                       },
                     ),
                   ),
@@ -894,10 +894,10 @@ class _MusicTileState extends State<MusicTile> {
                         uniqueID: widget.uniqueID, 
                         userID: widget.userID, 
                         albumId: widget.albumId,
-                        size: 30,sentence: 'liked your music'
+                        size: 25,sentence: 'liked your music'
                       ),
                       const SizedBox(width: 15),
-                      CommentIcon(userID: widget.userID, uniqueID: widget.uniqueID, type: widget.albumId != null ? "albums" : "singles", size: 30)
+                      CommentIcon(userID: widget.userID, uniqueID: widget.uniqueID, type: widget.albumId != null ? "albums" : "singles", size: 25)
                     ],
                   ),
                 ],

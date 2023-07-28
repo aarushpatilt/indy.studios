@@ -371,7 +371,7 @@ Align(
                                   AudioPlayerUI(
                                       url: widget.audioUrl,
                                       playNotifier: playNotifier,
-                                      barColor: Colors.yellow
+                                      barColor: Colors.white
                                   )
                               
                                 ],
