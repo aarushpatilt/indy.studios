@@ -9,12 +9,14 @@ class CommentIcon extends StatelessWidget {
   final String uniqueID;
   final String type;
   final double size;
+  String? albumID;
 
   CommentIcon({
     required this.userID,
     required this.uniqueID,
     required this.type,
     required this.size,
+    this.albumID
   });
 
   @override
@@ -28,6 +30,7 @@ class CommentIcon extends StatelessWidget {
               userID: userID,
               uniqueID: uniqueID,
               type: type,
+              albumID: albumID,
             ),
           ),
         );
@@ -45,11 +48,13 @@ class CommentSection extends StatefulWidget {
   final String userID;
   final String uniqueID;
   final String type;
+  String? albumID;
 
   CommentSection({
     required this.userID,
     required this.uniqueID,
     required this.type,
+    this.albumID
   });
 
   @override
@@ -70,10 +75,19 @@ class _CommentSectionState extends State<CommentSection> {
       comments.add(comment);
       isCommenting = true;
     });
-    await FirebaseComponents().setEachDataToFirestore(
-      'users/${widget.userID}/${widget.type}/${widget.uniqueID}/comments/$documentID',
-      comment,
-    );
+    if(widget.type == "albums"){
+      print("HEY");
+      print(widget.albumID);
+      await FirebaseComponents().setEachDataToFirestore(
+        'users/${widget.userID}/${widget.type}/${widget.albumID}/collections/${widget.uniqueID}/comments/$documentID',
+        comment,
+      );
+    } else {
+      await FirebaseComponents().setEachDataToFirestore(
+        'users/${widget.userID}/${widget.type}/${widget.uniqueID}/comments/$documentID',
+        comment,
+      );
+    }
     setState(() {
       isCommenting = false;
     });
@@ -102,10 +116,14 @@ class _CommentSectionState extends State<CommentSection> {
                 vertical: 0,
               ),
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: FirebaseComponents().getCollectionData(
-                  collectionPath:
-                      '/users/${widget.userID}/${widget.type}/${widget.uniqueID}/comments',
-                ),
+                future: widget.albumID != null ? 
+                  FirebaseComponents().getCollectionData(
+                      collectionPath:  'users/${widget.userID}/${widget.type}/${widget.albumID}/collections/${widget.uniqueID}/comments',
+                  )
+                  :
+                  FirebaseComponents().getCollectionData(
+                      collectionPath: '/users/${widget.userID}/${widget.type}/${widget.uniqueID}/comments',
+                  ),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();

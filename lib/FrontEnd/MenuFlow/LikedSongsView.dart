@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ndy/FrontEndComponents/OptionComponent.dart';
 import 'package:provider/provider.dart';
 
 import '../../Backend/FirebaseComponents.dart';
@@ -171,7 +172,7 @@ class SongRow extends StatelessWidget {
   final String imageUrl;
   final String songTitle;
   final String songArtist;
-  final DateTime timestamp;
+  final String timestamp;
   final String audioUrl;
   final String? albumId;
   final String userID;
@@ -199,22 +200,32 @@ class SongRow extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 15.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.network(
-              imageUrl,
-              width: GlobalVariables.largeSize,
-              height: GlobalVariables.largeSize,
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(width: GlobalVariables.smallSpacing),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                GenericTextReg(text: songTitle),
-                const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                GenericTextReg(text: songArtist),
+                Image.network(
+                  imageUrl,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+                const SizedBox(width: GlobalVariables.smallSpacing),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ProfileText500(text: songTitle, size: 15),
+                    const SizedBox(height: GlobalVariables.smallSpacing - 10),
+                    ProfileText400(text: songArtist, size: 12),
+                  ],
+                ),                
               ],
             ),
+            Column(
+              children: [
+                OptionsIcon(postReferencePath: albumId != null ? 'users/$userID/albums/$albumId/collections/$uniqueID' : 'users/$userID/singles/$uniqueID', position: 0, profileImageURL: imageUrl, size: 20)
+              ],
+            )
           ],
         ),
       ),
@@ -228,9 +239,9 @@ class SongRow extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return DraggableScrollableSheet(
-          initialChildSize: 0.9,
+          initialChildSize: 0.89,
           minChildSize: 0.5,
-          maxChildSize: 0.9,
+          maxChildSize: 0.89,
           builder: (BuildContext context, ScrollController scrollController) {
             return ClipRect(
               child: Container(

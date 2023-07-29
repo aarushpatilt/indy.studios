@@ -29,7 +29,6 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
     super.initState();
     _albumDataFuture = FirebaseComponents().getSpecificData(
       documentPath: '/users/${GlobalVariables.userUUID}/albums/${widget.albumID}',
-      fields: ['title', 'timestamp', 'tags', 'description', 'image_urls'],
     );
     _collectionDataDisplay = CollectionDataDisplay(  // create an instance of the new class
       collectionPath: '/users/${GlobalVariables.userUUID}/albums/${widget.albumID}/collections',

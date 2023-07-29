@@ -12,6 +12,7 @@ import 'package:ndy/FrontEndComponents/ButtonComponents.dart';
 import 'package:provider/provider.dart';
 import '../FrontEnd/MainAppFlows/Profile.dart';
 import '../FrontEnd/MediaUploadFlows/SinglesCoverDisplay.dart';
+import '../FrontEnd/MenuFlow/LikedSongsView.dart';
 import '../FrontEndComponents/AudioComponents.dart';
 import '../FrontEndComponents/TextComponents.dart';
 import 'GlobalComponents.dart';
@@ -623,7 +624,6 @@ class CollectionDataDisplay {
   Future<List<Map<String, dynamic>>> getCollectionData() {
     return FirebaseComponents().getCollectionData(
       collectionPath: this.collectionPath,
-      fields: this.fields,
     );
   }
 
@@ -642,39 +642,14 @@ class CollectionDataDisplay {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               Map<String, dynamic> docData = snapshot.data![index];
+              print(docData);
               return Padding(
                 padding: const EdgeInsets.only(
                   left: GlobalVariables.horizontalSpacing,
                   right: GlobalVariables.horizontalSpacing,
-                  bottom: GlobalVariables.mediumSpacing,  // changed the value to GlobalVariables.mediumSpacing
+                  bottom: 0 // changed the value to GlobalVariables.mediumSpacing
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,  // added this line to space out the elements
-                  children: [
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(2.0),
-                          child: Image.network(
-                            docData['image_urls'][1],
-                            width: 50,
-                            height: 50,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            GenericTextSemi(text:  docData['title']),
-                            const SizedBox(height: GlobalVariables.smallSpacing - 5),
-                            GenericTextReg(text: docData['artists']),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Icon(Icons.favorite_border, color: Colors.white, size: 20),  // added this line to add the heart icon
-                  ],
-                ),
+                child: SongRow(imageUrl: docData['image_urls'][1], songTitle: docData['title'], songArtist: docData['artists'], timestamp: docData['timestamp'], audioUrl: docData['image_urls'][0], albumId: docData['album_id'], userID: docData['user_id'], tags: docData['tags'], barColor: Colors.green, uniqueID: docData['unique_id'])
               );
             },
           );
@@ -897,7 +872,7 @@ class _MusicTileState extends State<MusicTile> {
                         size: 25,sentence: 'liked your music'
                       ),
                       const SizedBox(width: 15),
-                      CommentIcon(userID: widget.userID, uniqueID: widget.uniqueID, type: widget.albumId != null ? "albums" : "singles", size: 25)
+                      CommentIcon(userID: widget.userID, uniqueID: widget.uniqueID, type: widget.albumId != null ? "albums" : "singles", size: 25, albumID: widget.albumId)
                     ],
                   ),
                 ],

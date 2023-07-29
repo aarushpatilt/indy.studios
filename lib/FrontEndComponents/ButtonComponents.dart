@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:ndy/Backend/FirebaseComponents.dart';
 import 'package:ndy/Backend/GlobalComponents.dart';
+import 'package:ndy/FrontEnd/MenuFlow/LikedSongsView.dart';
 import '../FrontEnd/MainAppFlows/Profile.dart';
 import 'TextComponents.dart';
 import 'dart:io';
@@ -788,38 +789,7 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
                   if (snapshot.connectionState != ConnectionState.done) {
                     return CircularProgressIndicator(); // Display loading indicator while image is loading
                   }
-                  return InkWell(
-                    onTap: () => {
-
-                      if(widget.type != null){
-                        _onButtonMusic(context, songData)
-                      } else {
-                        _onButtonPressed(songData)
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      child: Row(
-                        children: [
-                          Image.network(
-                            imageUrl,
-                            width: GlobalVariables.largeSize,
-                            height: GlobalVariables.largeSize,
-                            fit: BoxFit.cover,
-                          ),
-                          const SizedBox(width: GlobalVariables.smallSpacing),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GenericTextReg(text: songTitle),
-                              const SizedBox(height: GlobalVariables.smallSpacing - 10) ,
-                              GenericTextReg(text: songArtist),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                  return SongRow(imageUrl: imageUrl, songTitle: songTitle, songArtist: songArtist, timestamp: songData['timestamp'], audioUrl: songData['image_urls'][0], albumId: songData['album_id'], userID: songData['user_id'], tags: songData['tags'], barColor: Colors.green, uniqueID: songData['unique_id']);
                 },
               );
             },

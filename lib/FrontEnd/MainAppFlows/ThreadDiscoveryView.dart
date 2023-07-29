@@ -700,34 +700,3 @@ class _CreatedThreadViewState extends State<CreatedThreadView> {
 
 
 
-class PinnedSongDisplay extends StatefulWidget {
-  final String userId;
-
-  PinnedSongDisplay({Key? key, required this.userId}) : super(key: key);
-
-  @override
-  _PinnedSongDisplayState createState() => _PinnedSongDisplayState();
-}
-
-class _PinnedSongDisplayState extends State<PinnedSongDisplay> {
-  late Future<Map<String, dynamic>> _latestThreadData;
-  late Future<Map<String, dynamic>> _pinnedData;
-
-  @override
-  void initState() {
-    super.initState();
-    _refreshData();
-  }
-
-  Future<void> _refreshData() async {
-    String documentPath = 'users/${widget.userId}';
-    _latestThreadData = FirebaseComponents().getSpecificData(documentPath: documentPath);
-
-    Map<String, dynamic> latestThreadData = await _latestThreadData;
-    String pinnedDocPath = latestThreadData['pinned'][2];
-    
-    setState(() {
-      _pinnedData = FirebaseComponents().getSpecialData(documentPath: pinnedDocPath);
-    });
-  }
-}

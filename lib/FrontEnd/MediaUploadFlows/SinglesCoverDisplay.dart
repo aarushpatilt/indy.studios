@@ -5,6 +5,7 @@ import 'package:ndy/FrontEndComponents/CustomTabController.dart';
 import '../../Backend/FirebaseComponents.dart';
 import '../../Backend/GlobalComponents.dart';
 import '../../FrontEndComponents/TextComponents.dart';
+import '../MenuFlow/LikedSongsView.dart';
 import 'AlbumUploadView.dart'; // Required for date formatting
 
 class SingleCoverDisplay extends StatefulWidget {
@@ -111,11 +112,7 @@ class _SingleCoverDisplayState extends State<SingleCoverDisplay> {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
-                                child: SongImageDisplay(
-                                  url: data['image_urls'][1],
-                                  title: data['title'],
-                                  artists: data['artists'],
-                                ),
+                                child: SongRow(imageUrl: data['image_urls'][1], songTitle: data['title'], songArtist: data['artists'], timestamp: data['timestamp'], audioUrl: data['image_urls'][0], albumId: data['album_id'], userID: data['user_id'], tags: data['tags'], barColor: Colors.green, uniqueID: data['unique_id'])
                               ),
                             const SizedBox(height: 50)
                           ],
