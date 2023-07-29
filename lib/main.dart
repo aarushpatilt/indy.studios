@@ -12,6 +12,7 @@ import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
 import 'package:ndy/FrontEnd/SignUpFlow/UpgradeView.dart';
 
 import 'FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
+import 'FrontEnd/VoteFlow/VoteUpload.dart';
 import 'FrontEndComponents/CustomTabController.dart';
 import 'FrontEndComponents/TextComponents.dart';
 
@@ -89,7 +90,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: UpgradeView(),
+      home: CustomTabPage(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
