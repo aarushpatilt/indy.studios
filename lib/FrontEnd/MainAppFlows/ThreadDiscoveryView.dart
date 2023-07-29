@@ -9,6 +9,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../FrontEndComponents/TextComponents.dart';
 import '../MenuFlow/CommentView.dart';
+import '../MenuFlow/LikedSongsView.dart';
 
 
 class ThreadDiscoveryView extends StatefulWidget {
@@ -696,7 +697,52 @@ class _CreatedThreadViewState extends State<CreatedThreadView> {
   }
 }
 
+class PinnedSongDisplay extends StatefulWidget {
+  final String userId;
 
+  PinnedSongDisplay({Key? key, required this.userId}) : super(key: key);
 
+  @override
+  _PinnedSongDisplayState createState() => _PinnedSongDisplayState();
+}
 
+class _PinnedSongDisplayState extends State<PinnedSongDisplay> {
+  late Future<Map<String, dynamic>> _latestThreadData;
+  late Future<Map<String, dynamic>> _pinnedData;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshData();
+  }
+
+  Future<void> _refreshData() async {
+    String documentPath = 'users/${widget.userId}';
+    _latestThreadData = FirebaseComponents().getSpecificData(documentPath: documentPath);
+
+    Map<String, dynamic> latestThreadData = await _latestThreadData;
+    String pinnedDocPath = latestThreadData['pinned'][0];
+    
+    setState(() {
+      _pinnedData = FirebaseComponents().getSpecialData(documentPath: pinnedDocPath);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: _pinnedData, // Use _pinnedData here instead of _latestThreadData
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
+        } else {
+          var data = snapshot.data!; // This is the data for _pinnedData
+          return SongRow(imageUrl: data['image_urls'][1], songTitle: data['title'], songArtist: data['artists'], timestamp: data['timestamp'], audioUrl: data['image_urls'][0], albumId: data['album_id'], userID: data['user_id'], tags: data['tags'], barColor: Colors.green, uniqueID: data['unique_id']); //Changed from ThoughtDisplay to SongDisplay
+        }
+      },
+    );
+  }
+}
 

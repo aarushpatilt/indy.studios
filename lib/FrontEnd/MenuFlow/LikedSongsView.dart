@@ -70,9 +70,9 @@ class _LikedSongViewState extends State<LikedSongView> {
               ),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 50),
+                  padding: const EdgeInsets.only(top: 50),
                   child: Container(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                         horizontal: GlobalVariables.horizontalSpacing),
                     height: screenHeight,
                     width: screenWidth,
@@ -92,11 +92,11 @@ class _LikedSongViewState extends State<LikedSongView> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 16), // Add additional spacing if needed
+                        const SizedBox(height: 16), // Add additional spacing if needed
                         Consumer<LikedSongsProvider>(
                           builder: (context, provider, _) {
                             if (provider.isLoading) {
-                              return CircularProgressIndicator();
+                              return const CircularProgressIndicator();
                             } else if (provider.hasError) {
                               return Text('Error: ${provider.error}');
                             } else {
@@ -198,7 +198,7 @@ class SongRow extends StatelessWidget {
     return GestureDetector(
       onTap: () => _showMusicTile(context),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15.0),
+        padding: const EdgeInsets.symmetric(vertical: 15.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -245,7 +245,7 @@ class SongRow extends StatelessWidget {
           builder: (BuildContext context, ScrollController scrollController) {
             return ClipRect(
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
                   color: Colors.black,
                 ),
@@ -253,7 +253,7 @@ class SongRow extends StatelessWidget {
                   controller: scrollController,
                   children: [
                     Transform.translate(
-                      offset: Offset(0, -100),
+                      offset: const Offset(0, -100),
                       child: MusicTile(
                         title: songTitle,
                         artist: songArtist,

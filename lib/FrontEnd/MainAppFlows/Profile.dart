@@ -169,8 +169,9 @@ Padding(
                                             ),
                                           ],
                                         ),
-                                        
-                                        const SizedBox(height: GlobalVariables.largeSpacing),
+                                        const SizedBox(height: GlobalVariables.mediumSpacing),
+                                        PinnedSongDisplay(userId: widget.userID),
+                                        const SizedBox(height: GlobalVariables.mediumSpacing - 10),
                                         TabSliderMenu(initialIndex: 0, userID: GlobalVariables.userUUID),
                                       ],
                                     ),
