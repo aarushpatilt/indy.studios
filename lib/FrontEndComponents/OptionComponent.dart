@@ -109,9 +109,19 @@ class _OptionsBottomSheetState extends State<OptionsBottomSheet> {
                                       ProfileText400(text: isPinned ? "UNPIN" : "PIN", size: 12),
                                     ],
                                   ),
-                                  onTap: () {
-                                    FirebaseComponents().setPin(widget.postReferencePath, widget.position);
-                                    Navigator.of(context).pop();
+                                  onTap: () async {
+                                    isPinned ? await FirebaseComponents().getSpecificData(documentPath: 'users/${GlobalVariables.userUUID}', fields: ['pinned']).then((result) {
+
+                                      List<dynamic> newResult = result['pinned'];
+                                      print(newResult);
+                                      newResult[widget.position] = '';
+                                      print(newResult);
+                                      FirebaseComponents().updateSpecificField(documentPath: 'users/${GlobalVariables.userUUID}', newData:  { 'pinned' : newResult });
+                                    }) :
+                                     FirebaseComponents().setPin(widget.postReferencePath, widget.position);
+
+
+                                     Navigator.of(context).pop();
                                   },
                                 );
                               } else if (snapshot.hasError) {

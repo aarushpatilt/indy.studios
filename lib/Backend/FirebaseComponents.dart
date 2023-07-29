@@ -58,6 +58,17 @@ class FirebaseComponents {
       return null;
     }
   }
+
+  Future<void> updateSpecificField({required String documentPath, required Map<String, dynamic> newData}) async {
+    try {
+      await FirebaseFirestore.instance.doc(documentPath).update(newData);
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+
   Future<void> setPin(String postReferencePath, int position) async {// Assuming you have this global variable
 
   DocumentReference docRef = firebaseFirestore.doc('users/${GlobalVariables.userUUID}');

@@ -4,7 +4,6 @@ import 'package:ndy/FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedSongsView.dart';
 import 'package:ndy/main.dart';
 import 'package:palette_generator/palette_generator.dart';
-
 import '../../Backend/FirebaseComponents.dart';
 import '../../Backend/GlobalComponents.dart';
 import '../../FrontEndComponents/ButtonComponents.dart';
@@ -87,7 +86,7 @@ class _ProfileState extends State<Profile> {
                                 controller: scrollController,
                                 physics: const ClampingScrollPhysics(),
                                 children: [
-Padding(
+                            Padding(
                               padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +109,7 @@ Padding(
                                   Container(
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
-                                        colors: [_dominantColor.darken(40), Colors.black],
+                                        colors: [_dominantColor.darken(35), Colors.black],
                                         begin: Alignment.topCenter,
                                         end: Alignment.center,
                                       ),
@@ -222,4 +221,3 @@ class _ProfileSubViewState extends State<ProfileSubView> {
     );
   }
 }
-
