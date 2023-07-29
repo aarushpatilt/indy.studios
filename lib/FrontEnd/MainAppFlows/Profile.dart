@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
+import 'package:ndy/FrontEnd/MenuFlow/LikedSongsView.dart';
 import 'package:ndy/main.dart';
 import 'package:palette_generator/palette_generator.dart';
 
@@ -145,29 +146,30 @@ Padding(
                                             Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
-                                                GenericTextReg(text: profileData['stats'][0].toString()),
+                                                ProfileText400(text: profileData['stats'][0].toString().toUpperCase(), size: 13),
                                                 const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                                const ProfileText400(text: "listening", size: 15),
+                                                const ProfileText400(text: "LISTENING", size: 10),
                                               ],
                                             ),
                                             Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
-                                                GenericTextReg(text: profileData['stats'][1].toString()),
+                                                ProfileText400(text: profileData['stats'][1].toString().toUpperCase(), size: 13),
                                                 const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                                const ProfileText400(text: "listeners", size: 15),
+                                                const ProfileText400(text: "LISTENERS", size: 10),
                                               ],
                                             ),
                                             Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
-                                                GenericTextReg(text: profileData['stats'][2].toString()),
+                                                ProfileText400(text: profileData['stats'][2].toString().toUpperCase(), size: 13),
                                                 const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                                const ProfileText400(text: "monthly", size: 15),
+                                                const ProfileText400(text: "MONTHLY", size:10),
                                               ],
                                             ),
                                           ],
                                         ),
+                                        
                                         const SizedBox(height: GlobalVariables.largeSpacing),
                                         TabSliderMenu(initialIndex: 0, userID: GlobalVariables.userUUID),
                                       ],
@@ -208,10 +210,11 @@ class _ProfileSubViewState extends State<ProfileSubView> {
         children: <Widget>[
           const SizedBox(height: GlobalVariables.smallSpacing),
           BioPreview(userID: widget.userID),
-          const SizedBox(height: GlobalVariables.mediumSpacing),
-          LatestThreadDisplay(userId: widget.userID),
+          const SizedBox(height: GlobalVariables.largeSpacing - 10),
+          PinnedTextDisplay(userId: widget.userID),
+          PinnedThreadDisplay(userId: widget.userID),
           AlbumListDisplay(userID: widget.userID, collectionPath: '/users/${widget.userID}/albums', title: 'ALBUMS'),
-          const SizedBox(height: GlobalVariables.mediumSpacing),
+          const SizedBox(height: GlobalVariables.largeSpacing - 10),
           AlbumListDisplay(userID: widget.userID, collectionPath: '/users/${widget.userID}/singles', title: 'SINGLES', type: 1)
         ],
       ),

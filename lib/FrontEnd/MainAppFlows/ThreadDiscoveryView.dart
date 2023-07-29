@@ -502,17 +502,18 @@ class _ThreadPlayerState extends State<ThreadPlayer> {
 
 
 
-class LatestThreadDisplay extends StatefulWidget {
+class PinnedThreadDisplay extends StatefulWidget {
   final String userId;
 
-  LatestThreadDisplay({Key? key, required this.userId}) : super(key: key);
+  PinnedThreadDisplay({Key? key, required this.userId}) : super(key: key);
 
   @override
-  _LatestThreadDisplayState createState() => _LatestThreadDisplayState();
+  _PinnedThreadDisplayState createState() => _PinnedThreadDisplayState();
 }
 
-class _LatestThreadDisplayState extends State<LatestThreadDisplay> {
+class _PinnedThreadDisplayState extends State<PinnedThreadDisplay> {
   late Future<Map<String, dynamic>> _latestThreadData;
+  late Future<Map<String, dynamic>> _pinnedData;
 
   @override
   void initState() {
@@ -521,49 +522,103 @@ class _LatestThreadDisplayState extends State<LatestThreadDisplay> {
   }
 
   Future<void> _refreshData() async {
+    String documentPath = 'users/${widget.userId}';
+    _latestThreadData = FirebaseComponents().getSpecificData(documentPath: documentPath);
+
+    Map<String, dynamic> latestThreadData = await _latestThreadData;
+    String pinnedDocPath = latestThreadData['pinned'][1];
+    
     setState(() {
-      _latestThreadData = FirebaseComponents().getLatestDocumentFromCollection(collectionPath: 'users/${widget.userId}/threads');
+      _pinnedData = FirebaseComponents().getSpecialData(documentPath: pinnedDocPath);
     });
   }
 
+
+
+
+@override
+Widget build(BuildContext context) {
+  return FutureBuilder<Map<String, dynamic>>(
+    future: _pinnedData, // Use _pinnedData here instead of _latestThreadData
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
+      } else {
+        var pinnedData = snapshot.data; // This is the data for _pinnedData
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ProfileText400(text: "PINNED POST", size: 12),
+            const SizedBox(height: GlobalVariables.smallSpacing),
+            PostDisplay(data: pinnedData!),
+          ],
+        );
+      }
+    },
+  );
+}
+
+}
+
+class PinnedTextDisplay extends StatefulWidget {
+  final String userId;
+
+  PinnedTextDisplay({Key? key, required this.userId}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: _latestThreadData,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container();
-        } else if (snapshot.hasError) {
-          return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
-        } else {
-          var data = snapshot.data;
-          return LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              return Container(
-                child: RefreshIndicator(
-                  onRefresh: _refreshData,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: data!.containsKey('image_urls') ? [
-                        const ProfileText400(text: "RECENT", size: 12),
-                        const SizedBox(height: GlobalVariables.smallSpacing),
-                        PostDisplay(data: data),
-                      ] : [
-                        const ProfileText400(text: "RECENT", size: 12),
-                        const SizedBox(height: GlobalVariables.smallSpacing),
-                        ThoughtDisplay(data: data),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      },
-    );
+  _PinnedTextDisplayState createState() => _PinnedTextDisplayState();
+}
+
+class _PinnedTextDisplayState extends State<PinnedTextDisplay> {
+  late Future<Map<String, dynamic>> _latestThreadData;
+  late Future<Map<String, dynamic>> _pinnedData;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshData();
   }
+
+  Future<void> _refreshData() async {
+    String documentPath = 'users/${widget.userId}';
+    _latestThreadData = FirebaseComponents().getSpecificData(documentPath: documentPath);
+
+    Map<String, dynamic> latestThreadData = await _latestThreadData;
+    String pinnedDocPath = latestThreadData['pinned'][2];
+    
+    setState(() {
+      _pinnedData = FirebaseComponents().getSpecialData(documentPath: pinnedDocPath);
+    });
+  }
+
+
+
+
+@override
+Widget build(BuildContext context) {
+  return FutureBuilder<Map<String, dynamic>>(
+    future: _pinnedData, // Use _pinnedData here instead of _latestThreadData
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
+      } else {
+        var pinnedData = snapshot.data; // This is the data for _pinnedData
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ProfileText400(text: "PINNED TEXT", size: 12),
+            const SizedBox(height: GlobalVariables.smallSpacing),
+            ThoughtDisplay(data: pinnedData!),
+          ],
+        );
+      }
+    },
+  );
+}
 }
 
 class CreatedThreadView extends StatefulWidget {
@@ -643,3 +698,36 @@ class _CreatedThreadViewState extends State<CreatedThreadView> {
 
 
 
+
+
+class PinnedSongDisplay extends StatefulWidget {
+  final String userId;
+
+  PinnedSongDisplay({Key? key, required this.userId}) : super(key: key);
+
+  @override
+  _PinnedSongDisplayState createState() => _PinnedSongDisplayState();
+}
+
+class _PinnedSongDisplayState extends State<PinnedSongDisplay> {
+  late Future<Map<String, dynamic>> _latestThreadData;
+  late Future<Map<String, dynamic>> _pinnedData;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshData();
+  }
+
+  Future<void> _refreshData() async {
+    String documentPath = 'users/${widget.userId}';
+    _latestThreadData = FirebaseComponents().getSpecificData(documentPath: documentPath);
+
+    Map<String, dynamic> latestThreadData = await _latestThreadData;
+    String pinnedDocPath = latestThreadData['pinned'][2];
+    
+    setState(() {
+      _pinnedData = FirebaseComponents().getSpecialData(documentPath: pinnedDocPath);
+    });
+  }
+}
