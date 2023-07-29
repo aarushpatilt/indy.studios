@@ -12,104 +12,94 @@ class UpgradeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const HeaderPrevious(text: "DISCOVER"),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          GlobalVariables.horizontalSpacing,
-          GlobalVariables.largeSpacing,
-          GlobalVariables.horizontalSpacing,
-          50,
-        ),
-        child: Align(
-          alignment: Alignment.topLeft,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: GlobalVariables.horizontalSpacing),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const GenericTextReg(text: "Want your music to be discovered?"),
-              const GenericTextReg(text: "A few steps and you'll be ready"),
-              const SizedBox(height: GlobalVariables.mediumSpacing),
-              Row(
-
-                children: [
-
-                  const SizedBox(width: GlobalVariables.horizontalSpacing),
-
-                  const TransparentCircleWithBorder(),
-
-                  ClearButton(
-                      text: 'ADD SINGLE',
-                      width: 125,
-                      onPressed: () {
-
-                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SingleUploadView(),
-                            ),
-                          );
-
-                      },
-                  ),
-
-                ]
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              const Align(
+                alignment: Alignment.topCenter,
+                child: ProfileText400(
+                  text: "UPLOAD", 
+                  size: 10
+                ),
               ),
               const SizedBox(height: GlobalVariables.mediumSpacing),
-              Row(
-                
-                children: [
-
-                  const SizedBox(width: GlobalVariables.horizontalSpacing),
-                  const TransparentCircleWithBorder(),
-
-                  ClearButton(
-                      text: 'ADD ALBUM',
-                      width: 125,
-                      onPressed: () {
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AlbumCoverUploadView(),
-                            ),
-                          );
-                      },
-                  ),
-
-                ]
-              ),
-              Expanded(
-                child: Container(
-                  width: GlobalVariables.properWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.end,
+              const ProfileText400(text: "Upgrade to an artist to truly launch your platform", size: 12),
+              const SizedBox(height: 5),
+              const ProfileText400(text: "As an artist you can compete in events", size: 12),
+              const SizedBox(height: GlobalVariables.largeSpacing),
+              
+              InkWell(
+                onTap: () {
+                  // onTap functionality for the first row.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SingleUploadView()),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 25.0), // Added leading padding.
+                  child: Row(
                     children: [
-                      ClearButton(
-                        text: 'SKIP',
-                        width: GlobalVariables.properWidth,
-                        onPressed: () {},
+                      Container(
+                        width: 12, // Circle size reduced.
+                        height: 12, // Circle size reduced.
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 1, // Border width reduced.
+                          ),
+                        ),
                       ),
-                      SizedBox(height: 10),
-                      WhiteOutlineButton(
-                        text: 'SUBMIT',
-                        width: GlobalVariables.properWidth,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CustomTabPage(),
-                            ),
-                          );
-                        },
-                      ),
+                      const SizedBox(width: GlobalVariables.smallSpacing), // Added spacing between circle and text.
+                      const ProfileText400(text: "UPLOAD SINGLE", size: 10),
                     ],
                   ),
                 ),
-              )
+              ),
+
+              const SizedBox(height: GlobalVariables.largeSpacing),
+
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AlbumCoverUploadView()),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 25.0), // Added leading padding.
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 12, // Circle size reduced.
+                        height: 12, // Circle size reduced.
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 1, // Border width reduced.
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: GlobalVariables.smallSpacing), // Added spacing between circle and text.
+                      const ProfileText400(text: "UPLOAD AN ALBUM", size: 10),
+                    ],
+                  ),
+                ),
+              ),
             ],
+            
           ),
         ),
       ),
     );
   }
 }
+
+
+
+

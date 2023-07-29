@@ -551,8 +551,6 @@ Widget build(BuildContext context) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ProfileText400(text: "PINNED POST", size: 12),
-            const SizedBox(height: GlobalVariables.smallSpacing),
             PostDisplay(data: pinnedData!),
           ],
         );
@@ -611,8 +609,6 @@ Widget build(BuildContext context) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ProfileText400(text: "PINNED TEXT", size: 12),
-            const SizedBox(height: GlobalVariables.smallSpacing),
             ThoughtDisplay(data: pinnedData!),
           ],
         );

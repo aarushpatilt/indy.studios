@@ -23,17 +23,31 @@ class CommentIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CommentSection(
-              userID: userID,
-              uniqueID: uniqueID,
-              type: type,
-              albumID: albumID,
-            ),
-          ),
-        );
+showModalBottomSheet(
+  backgroundColor: Colors.transparent,
+  context: context,
+  builder: (context) => FractionallySizedBox(
+    heightFactor: 0.9,
+    child: Container(
+      color: Colors.transparent,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+        ),
+        child: CommentSection(
+          userID: userID,
+          uniqueID: uniqueID,
+          type: type,
+          albumID: albumID,
+        ),
+      ),
+    ),
+  ),
+  isScrollControlled: true,
+);
+
+
       },
       child: Container(
         width: size,
@@ -100,13 +114,16 @@ class _CommentSectionState extends State<CommentSection> {
       body: Stack(
         children: [
           const Positioned(
-            top: 0,
+            top: 40,
             left: 0,
             right: 0,
-            child: CustomBackBar(),
+            child: Align(
+              alignment: Alignment.center,
+              child: ProfileText400(text: "COMMENT", size: 10),
+            ),
           ),
           Positioned(
-            top: 90,
+            top: 70,
             left: 0,
             right: 0,
             bottom: 0,

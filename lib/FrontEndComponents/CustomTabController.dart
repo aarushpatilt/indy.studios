@@ -237,6 +237,58 @@ class CustomBackBar extends StatelessWidget {
   }
 }
 
+class CustomBar extends StatelessWidget {
+  final String? title;
+
+  const CustomBar({this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 50, 5, 15),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+              color: Colors.transparent,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      print("hey");
+                      Navigator.of(context).pop(); // Pops current view off the navigation stack
+                    },
+                    child: const SizedBox(
+                      height: 48, // these dimensions can be changed based on your needs
+                      width: 48,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Icon(Icons.arrow_back, size: 15, color: Colors.transparent), // Back button icon
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            ),
+            ProfileText500(
+              text: title ?? 'DISCOVER',
+              size: 10,
+            ),
+            const Expanded(
+              child: Text(""),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class CustomSliderBar extends StatefulWidget {
   const CustomSliderBar({Key? key}) : super(key: key);

@@ -9,6 +9,7 @@ import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/ProfileCustom.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/CameraUploadView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
+import 'package:ndy/FrontEnd/SignUpFlow/UpgradeView.dart';
 
 import 'FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'FrontEndComponents/CustomTabController.dart';
@@ -88,7 +89,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CustomTabPage(),
+      home: UpgradeView(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
