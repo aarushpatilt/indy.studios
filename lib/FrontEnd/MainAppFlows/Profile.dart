@@ -64,12 +64,12 @@ class _ProfileState extends State<Profile> {
                         width: double.infinity,  // let it take the full width of the screen
                         child: ColorFiltered(
                           colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.3), 
+                            Colors.black.withOpacity(0.35), 
                             BlendMode.darken,
                           ),
                           child: Image.network(
                             profileData['image_urls'][1],
-                            fit: BoxFit.fitWidth,  // change this to BoxFit.fill to maintain the aspect ratio
+                            fit: BoxFit.fitHeight,  // change this to BoxFit.fill to maintain the aspect ratio
                           ),
                         ),
                       ),

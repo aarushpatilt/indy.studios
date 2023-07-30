@@ -545,7 +545,7 @@ Widget build(BuildContext context) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return CircularProgressIndicator();
       } else if (snapshot.hasError) {
-        return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
+        return Container();
       } else {
         var pinnedData = snapshot.data; // This is the data for _pinnedData
         return Column(
@@ -603,7 +603,7 @@ Widget build(BuildContext context) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return CircularProgressIndicator();
       } else if (snapshot.hasError) {
-        return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
+        return Container();
       } else {
         var pinnedData = snapshot.data; // This is the data for _pinnedData
         return Column(
@@ -732,7 +732,7 @@ class _PinnedSongDisplayState extends State<PinnedSongDisplay> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return ProfileText400(text: 'Error: ${snapshot.error}', size: 15);
+          return Container();
         } else {
           var data = snapshot.data!; // This is the data for _pinnedData
           return SongRow(imageUrl: data['image_urls'][1], songTitle: data['title'], songArtist: data['artists'], timestamp: data['timestamp'], audioUrl: data['image_urls'][0], albumId: data['album_id'], userID: data['user_id'], tags: data['tags'], barColor: Colors.green, uniqueID: data['unique_id']); //Changed from ThoughtDisplay to SongDisplay
