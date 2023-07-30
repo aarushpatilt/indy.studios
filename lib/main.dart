@@ -9,6 +9,7 @@ import 'package:ndy/Backend/GlobalComponents.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/ProfileCustom.dart';
 import 'package:ndy/FrontEnd/MediaUploadFlows/CameraUploadView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
+import 'package:ndy/FrontEnd/SignUpFlow/EditProfile.dart';
 import 'package:ndy/FrontEnd/SignUpFlow/EditView.dart';
 import 'package:ndy/FrontEnd/SignUpFlow/UpgradeView.dart';
 
@@ -91,7 +92,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: EditView(),
+      home: CustomTabPage(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),

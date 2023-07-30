@@ -508,6 +508,31 @@ Future<Map<String, dynamic>> getReferencedDocumentData({required String document
 
     return true;
   }
+
+Future<bool> replaceAndUploadImage(List<dynamic> imageURLs, String documentPath, String filePath, String oldImageUrl, File newImage, int index) async {
+    final storage = FirebaseStorage.instance;
+    final firestore = FirebaseFirestore.instance;
+    try {
+      Reference oldImageRef = storage.refFromURL(oldImageUrl);
+      await oldImageRef.delete();
+
+      String imageUUID = GlobalVariables().generateUUID().toString();
+      Reference newImageRef = storage.ref('$filePath/$imageUUID.jpg');
+      await newImageRef.putFile(newImage);
+
+      String newImageUrl = await newImageRef.getDownloadURL();
+
+      imageURLs[index] = newImageUrl; // replace the old URL with the new one at the same index
+
+      await firestore.doc(documentPath).update({'image_urls': imageURLs});
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
    // Set an array of media inside of a folder ( storage )
   Future<bool> setEachMediaToStorage(String path, String documentPath, Map<String, File> map) async {
     String filePath = '';

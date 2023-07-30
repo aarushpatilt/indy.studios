@@ -7,6 +7,7 @@ import 'package:ndy/FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/UploadMasterView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/ActivityView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedThreadsView.dart';
+import 'package:ndy/FrontEnd/SignUpFlow/EditView.dart';
 
   import '../Backend/GlobalComponents.dart';
 import '../FrontEnd/MainAppFlows/Feed.dart';
@@ -15,6 +16,7 @@ import '../FrontEnd/MainAppFlows/Feed.dart';
 import '../FrontEnd/MediaUploadFlows/MusicDiscoverView.dart';
 import '../FrontEnd/MenuFlow/LikedMoodView.dart';
 import '../FrontEnd/MenuFlow/LikedSongsView.dart';
+import 'OptionComponent.dart';
 import 'TextComponents.dart';
 
 class CustomTabController extends StatefulWidget {
@@ -455,7 +457,19 @@ class MenuSideBar extends StatelessWidget {
                         child: const ProfileText500(text: "thoughts", size: 20),
                       ),                    
                       SizedBox(height:  MediaQuery.of(context).size.height * 0.35),
-                      const ProfileText400(text: "edit", size: 15),  
+                      GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          isScrollControlled: true, 
+                          builder: (BuildContext context) {
+                            return EditBottomSheet();
+                          },
+                        );
+                      },
+                        child: const ProfileText400(text: "edit", size: 15),
+                      ), 
                       const SizedBox(height: GlobalVariables.smallSpacing), 
                       const ProfileText400(text: "settings", size: 15), 
 

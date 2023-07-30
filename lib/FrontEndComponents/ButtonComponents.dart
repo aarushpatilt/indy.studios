@@ -336,12 +336,14 @@ class ProfilePictureSelector extends StatefulWidget {
   final double size;
   final Color color;
   final Function(File) onImageSelected;
+  final String? currentProfileUrl;
 
   const ProfilePictureSelector({
     Key? key,
     required this.size,
     required this.color,
     required this.onImageSelected,
+    this.currentProfileUrl,
   }) : super(key: key);
 
   @override
@@ -351,6 +353,11 @@ class ProfilePictureSelector extends StatefulWidget {
 
 class _ProfilePictureSelectorState extends State<ProfilePictureSelector> {
   XFile? _image;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future getImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -386,15 +393,20 @@ class _ProfilePictureSelectorState extends State<ProfilePictureSelector> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: widget.color,
-          border: Border.all(color: Colors.white, width: 0.5), // Add this
+          border: Border.all(color: Colors.white, width: 0.5),
           image: _image != null
               ? DecorationImage(
                   image: FileImage(File(_image!.path)),
                   fit: BoxFit.cover,
                 )
-              : null,
+              : widget.currentProfileUrl != null
+                ? DecorationImage(
+                    image: NetworkImage(widget.currentProfileUrl!),
+                    fit: BoxFit.cover,
+                  )
+                : null,
         ),
-        child: _image == null
+        child: _image == null && widget.currentProfileUrl == null
             ? const Icon(
                 Icons.add,
                 color: Colors.white,
@@ -407,11 +419,13 @@ class _ProfilePictureSelectorState extends State<ProfilePictureSelector> {
 }
 
 
+
 class BackgroundPictureSelector extends StatefulWidget {
   final double width;
   final double height;
   final Color color;
   final Function(File) onImageSelected;
+  final String? currentBackgroundUrl; // Added this parameter
 
   const BackgroundPictureSelector({
     Key? key,
@@ -419,6 +433,7 @@ class BackgroundPictureSelector extends StatefulWidget {
     required this.height,
     required this.color,
     required this.onImageSelected,
+    this.currentBackgroundUrl, // Added this parameter
   }) : super(key: key);
 
   @override
@@ -453,7 +468,7 @@ class _BackgroundPictureSelectorState
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           color: widget.color,
-          border: Border.all( // Added the border property
+          border: Border.all(
             color: Colors.white,
             width: 0.5,
           ),
@@ -462,9 +477,14 @@ class _BackgroundPictureSelectorState
                   image: FileImage(File(_image!.path)),
                   fit: BoxFit.cover,
                 )
-              : null,
+              : widget.currentBackgroundUrl != null
+                ? DecorationImage(
+                    image: NetworkImage(widget.currentBackgroundUrl!),
+                    fit: BoxFit.cover,
+                  )
+                : null,
         ),
-        child: _image == null
+        child: _image == null && widget.currentBackgroundUrl == null
             ? const Icon(
                 Icons.add,
                 color: Colors.white,
@@ -475,6 +495,7 @@ class _BackgroundPictureSelectorState
     );
   }
 }
+
 
 
 // Generic Square selector

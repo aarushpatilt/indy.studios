@@ -77,7 +77,7 @@ class _EditViewState extends State<EditView> {
                                   if (result) {
                                     GlobalVariables.userUUID = uuid;
                                     GlobalVariables().disposeInputs();
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileCreationView()));
+                                    Navigator.pop(context);
                                   }
                                 });
                               }
