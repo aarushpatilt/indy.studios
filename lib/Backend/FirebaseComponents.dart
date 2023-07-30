@@ -572,6 +572,63 @@ Future<Map<String, dynamic>> getReferencedDocumentData({required String document
     }
   }
 
+  // Method to update the password
+Future<bool> updatePassword(String email, String password, String newPassword) async {
+  try {
+    User? user = FirebaseAuth.instance.currentUser;
+    print(user);
+
+    // Create credentials
+    AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+    print(credential);
+
+    await user?.reauthenticateWithCredential(credential);
+    // Updating password
+    await FirebaseAuth.instance.currentUser?.updatePassword(newPassword);
+    return true;
+  } catch (e) {
+    print(e);
+    return false;
+  }
+  
+}
+
+Future<bool> updateEmail(String email, String password, String newEmail) async {
+  try {
+    // Get the user
+    User? user = FirebaseAuth.instance.currentUser;
+    print(user);
+
+    // Create credentials
+    AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+    print(credential);
+
+    // Reauthenticate
+    await user?.reauthenticateWithCredential(credential);
+
+    // Update the email
+    await user!.updateEmail(newEmail);
+    
+    return true;
+  } catch (e) {
+    print(e);
+    return false;
+  }
+}
+
+
+// Method to handle forgotten password
+Future<bool> forgotPassword(String email) async {
+  try {
+    // Sending password reset email
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    return true;
+  } catch (e) {
+    print(e);
+    return false;
+  }
+}
+
   // Get Recents ( tags, moods )
   
 }
