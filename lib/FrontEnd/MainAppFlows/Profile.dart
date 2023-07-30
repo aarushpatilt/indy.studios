@@ -139,34 +139,37 @@ class _ProfileState extends State<Profile> {
                                           ],
                                         ),
                                         const SizedBox(height: GlobalVariables.largeSpacing),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                ProfileText400(text: profileData['stats'][0].toString().toUpperCase(), size: 13),
-                                                const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                                const ProfileText400(text: "LISTENING", size: 10),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                ProfileText400(text: profileData['stats'][1].toString().toUpperCase(), size: 13),
-                                                const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                                const ProfileText400(text: "LISTENERS", size: 10),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                ProfileText400(text: profileData['stats'][2].toString().toUpperCase(), size: 13),
-                                                const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                                                const ProfileText400(text: "MONTHLY", size:10),
-                                              ],
-                                            ),
-                                          ],
+                                        Container(
+                                          width: GlobalVariables.properWidth,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  ProfileText400(text: profileData['stats'][0].toString().toUpperCase(), size: 13),
+                                                  const SizedBox(height: GlobalVariables.smallSpacing - 10),
+                                                  const ProfileText400(text: "LISTENING", size: 10),
+                                                ],
+                                              ),
+                                              Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  ProfileText400(text: profileData['stats'][1].toString().toUpperCase(), size: 13),
+                                                  const SizedBox(height: GlobalVariables.smallSpacing - 10),
+                                                  const ProfileText400(text: "LISTENERS", size: 10),
+                                                ],
+                                              ),
+                                              Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  ProfileText400(text: profileData['stats'][2].toString().toUpperCase(), size: 13),
+                                                  const SizedBox(height: GlobalVariables.smallSpacing - 10),
+                                                  const ProfileText400(text: "MONTHLY", size:10),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         const SizedBox(height: GlobalVariables.mediumSpacing),
                                         PinnedSongDisplay(userId: widget.userID),
