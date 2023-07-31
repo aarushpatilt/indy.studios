@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ndy/Backend/HeartIcon.dart';
 import 'package:ndy/FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'package:ndy/FrontEnd/MenuFlow/LikedSongsView.dart';
 import 'package:ndy/main.dart';
@@ -94,10 +95,16 @@ class _ProfileState extends State<Profile> {
                                   const ProfileText600(text: "user", size: 15),
                                   const SizedBox(height: GlobalVariables.smallSpacing - 15),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      ProfileText600(text: profileData['first_name'], size: 35),
-                                      const SizedBox(width: GlobalVariables.smallSpacing - 15),
-                                      ProfileText600(text: profileData['last_name'], size: 35),
+                                      Row(
+                                        children: [
+                                          ProfileText600(text: profileData['first_name'], size: 35),
+                                          const SizedBox(width: GlobalVariables.smallSpacing - 15),
+                                          ProfileText600(text: profileData['last_name'], size: 35),
+                                        ],
+                                      ),
+                                      HeartIcon(size: 25, userID: widget.userID)
                                     ],
                                   ),
                                   const SizedBox(height: GlobalVariables.smallSpacing - 10),
@@ -109,7 +116,7 @@ class _ProfileState extends State<Profile> {
                                   Container(
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
-                                        colors: [_dominantColor.darken(35), Colors.black],
+                                        colors: [_dominantColor.darken(55), Colors.black],
                                         begin: Alignment.topCenter,
                                         end: Alignment.center,
                                       ),
