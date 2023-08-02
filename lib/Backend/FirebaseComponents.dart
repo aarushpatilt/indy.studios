@@ -331,8 +331,10 @@ Future<List<Map<String, dynamic>>> getPaginatedReferencedData({
   for (var doc in snapshot.docs) {
     if(T != null && T != 'R'){
       ref = doc['ref'].path;
+      print(ref);
     } else {
       ref = doc['ref'];
+      print(ref);
     }
 
     if(T == 'R'){

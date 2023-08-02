@@ -109,7 +109,7 @@ class _AlbumSongDisplayUploadViewState extends State<AlbumSongDisplayUploadView>
                                 ),
                                 const SizedBox(height: GlobalVariables.largeSpacing),
                                 ProfileText400(text: '${snapshot.data?['description']}', size: 12),
-                                if(widget.something != null)
+                                if(widget.userID == GlobalVariables.userUUID)
                                 Column(
                                   children: [
                                     const SizedBox(height: GlobalVariables.largeSpacing),
