@@ -159,6 +159,7 @@ class _MoodUploadViewState extends State<MoodUploadView> {
                           MaterialPageRoute(
                             builder: (context) => MusicFinderView(
                               onListSelected: _handleListSelected,
+                              select: "return"
                             ),
                           ),
                         );

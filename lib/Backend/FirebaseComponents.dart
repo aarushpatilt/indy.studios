@@ -636,17 +636,24 @@ Future<bool> deletePost(String documentPath, String collectionPath) async {
   try {
     // Retrieve the document
     final DocumentSnapshot document = await FirebaseFirestore.instance.doc(documentPath).get();
-    // Delete each media file from Storage
-    List<dynamic> downloadURLs = document.get('image_urls');
-    for (var url in downloadURLs) {
-      String path = extractPathFromUrl(url);
-      print(path);
-      await FirebaseStorage.instance.ref(path).delete();
+
+    // Get data and cast to Map
+    Map<String, dynamic> docData = document.data() as Map<String, dynamic>;
+
+    // Check if document has 'image_urls' field and it's not null
+    if (docData.containsKey('image_urls') && docData['image_urls'] != null) {
+      // Delete each media file from Storage
+      List<dynamic> downloadURLs = docData['image_urls'];
+      for (var url in downloadURLs) {
+        String path = extractPathFromUrl(url);
+        print(path);
+        await FirebaseStorage.instance.ref(path).delete();
+      }
     }
 
     // Delete the document reference from the 'threads' collection
     await FirebaseFirestore.instance.collection(collectionPath).doc(document.id).delete();
-    print( FirebaseFirestore.instance.collection(collectionPath).doc(document.id));
+
     // Delete the documents in the 'likes' subcollection
     QuerySnapshot likesQuerySnapshot = await document.reference.collection('likes').get();
     for (var doc in likesQuerySnapshot.docs) {
@@ -671,6 +678,8 @@ Future<bool> deletePost(String documentPath, String collectionPath) async {
   }
 }
 
+
+
 String extractPathFromUrl(String url) {
   Uri uri = Uri.parse(url);
   String path = uri.path;
@@ -684,6 +693,55 @@ String extractPathFromUrl(String url) {
   // Also, remove the query part of the URL
   return Uri.decodeFull(segments.join('/')).split('?').first;
 }
+
+Future<void> deleteMood(String documentPath, String collectionPath, List<dynamic> tags) async {
+  // Initialize Firebase Firestore and Firebase Storage
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
+
+  // Get document ID from documentPath
+  final String documentId = documentPath.split('/').last;
+
+  // Delete document in the collectionPath with documentId
+  await firestore.collection(collectionPath).doc(documentId).delete();
+
+  // Iterate over tags and delete document in each tag sub-collection
+  for (var tag in tags) {
+    // Ensure tag is a string
+    if (tag is String) {
+      await firestore.collection('$collectionPath/$tag/collection').doc(documentId).delete();
+    }
+  }
+
+  // Delete document in the mix sub-collection with documentId
+  await firestore.collection('$collectionPath/mix/collection').doc(documentId).delete();
+
+  // Get document from documentPath
+  DocumentSnapshot documentSnapshot = await firestore.doc(documentPath).get();
+
+  // Get image_urls from the document
+  List<String> imageUrls = (documentSnapshot.data() as Map<String, dynamic>)['image_urls'].map<String>((item) => item as String).toList();
+
+  // Iterate over imageUrls starting from index 1, delete each
+  for (int i = 2; i < imageUrls.length; i++) {
+    String imageUrl = imageUrls[i];
+    // Extract the file path from the URL
+    var urlRegExp = RegExp(r'https://firebasestorage.googleapis.com/v0/b/(.*?)/o/(.*?)\?alt=media.*');
+    var match = urlRegExp.firstMatch(imageUrl);
+    if (match != null) {
+      // Decoding URL encoded path
+      String filePath = Uri.decodeFull(match.group(2) ?? '');
+      // Delete the file from Firebase Storage
+      await storage.ref(filePath).delete();
+    }
+  }
+
+  // Finally delete the document itself and subcollections (handled by the Cloud Function)
+  await firestore.doc(documentPath).delete();
+}
+
+
+
 
 
 

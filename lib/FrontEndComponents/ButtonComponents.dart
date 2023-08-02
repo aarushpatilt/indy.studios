@@ -666,8 +666,9 @@ class SearchBarSong extends StatefulWidget {
   final String collectionPath;
   final Function(Map<String, dynamic>)? onListSelected;
   final int? type;
+  final String? select;
 
-  SearchBarSong({required this.collectionPath, this.onListSelected, this.type});
+  SearchBarSong({required this.collectionPath, this.onListSelected, this.type, this.select});
 
   @override
   _SearchBarSongState createState() => _SearchBarSongState();
@@ -713,51 +714,6 @@ class _SearchBarSongState extends State<SearchBarSong> {
     });
     _performSearch(_query);
   }
-
-  void _onButtonPressed(Map<String, dynamic> list) {
-    widget.onListSelected!(list);
-    Navigator.pop(context);
-  }
-
-void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (BuildContext context) {
-      return DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        expand: false,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return ListView(
-            controller: scrollController,
-            shrinkWrap: true, // Allow the ListView to take up the available space
-            children: [
-              Container(
-                color: Colors.black,
-                child: Transform.translate(
-                  offset: Offset(0, -100),
-                  child: MusicTile(
-                    title: data['title'],
-                    artist: data['artists'],
-                    timestamp: data['timestamp'],
-                    imageUrl: data['image_urls'][1],
-                    audioUrl: data['image_urls'][0],
-                    albumId: data['album_id'],
-                    userID: data['user_id'],
-                    tags: data['tags'],
-                    barColor: Colors.black,
-                    uniqueID: data['unique_id'],
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      );
-    },
-  );
-
-}
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -810,7 +766,28 @@ void _onButtonMusic(BuildContext context, Map<String, dynamic> data) {
                   if (snapshot.connectionState != ConnectionState.done) {
                     return CircularProgressIndicator(); // Display loading indicator while image is loading
                   }
-                  return SongRow(imageUrl: imageUrl, songTitle: songTitle, songArtist: songArtist, timestamp: songData['timestamp'], audioUrl: songData['image_urls'][0], albumId: songData['album_id'], userID: songData['user_id'], tags: songData['tags'], barColor: Colors.green, uniqueID: songData['unique_id']);
+                  if(widget.select == "return"){
+  return GestureDetector(
+    onTap: () {
+      if (widget.onListSelected != null) {
+        widget.onListSelected!(songData);
+        print(widget.onListSelected!(songData));
+        Navigator.pop(context);
+      }
+    },
+    child: SongRowNoFunc(
+      imageUrl: imageUrl, 
+      songTitle: songTitle, 
+      songArtist: songArtist, 
+      albumId: songData['album_id'], 
+      userID: songData['user_id'], 
+      uniqueID: songData['unique_id'], 
+      tags: songData['tags'],
+    ),
+  );
+                  } else {
+                    return SongRow(imageUrl: imageUrl, songTitle: songTitle, songArtist: songArtist, timestamp: songData['timestamp'], audioUrl: songData['image_urls'][0], albumId: songData['album_id'], userID: songData['user_id'], tags: songData['tags'], barColor: Colors.green, uniqueID: songData['unique_id']);
+                  }
                 },
               );
             },

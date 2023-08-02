@@ -9,8 +9,8 @@ import '../Backend/FirebaseComponents.dart';
 import '../FrontEnd/SignUpFlow/EditProfile.dart';
 class OptionsIcon extends StatelessWidget {
   final double size;
-  final String postReferencePath;
-  final int position;
+  final String? postReferencePath;
+  final int? position;
   final String profileImageURL;
   Map<String, dynamic>? songData;
   final String? collectionPath;
@@ -18,7 +18,7 @@ class OptionsIcon extends StatelessWidget {
   final String? tagType;
   final String? type;
 
-  OptionsIcon({required this.size, required this.postReferencePath, required this.position, required this.profileImageURL, this.songData, this.collectionPath, this.documentPath, this.tagType, this.type});
+  OptionsIcon({required this.size, this.postReferencePath, this.position, required this.profileImageURL, this.songData, this.collectionPath, this.documentPath, this.tagType, this.type});
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,8 @@ class OptionsIcon extends StatelessWidget {
 }
 
 class OptionsBottomSheet extends StatefulWidget {
-  final String postReferencePath;
-  final int position;
+  final String? postReferencePath;
+  final int? position;
   final String profileImageURL;
   Map<String, dynamic>? songData;
   final String? documentPath;
@@ -52,7 +52,7 @@ class OptionsBottomSheet extends StatefulWidget {
   final String? type;
   
 
-  OptionsBottomSheet({required this.postReferencePath, required this.position, required this.profileImageURL, this.songData, this.documentPath, this.collectionPath, this.tagType, this.type});
+  OptionsBottomSheet({this.postReferencePath, this.position, required this.profileImageURL, this.songData, this.documentPath, this.collectionPath, this.tagType, this.type});
 
   @override
   _OptionsBottomSheetState createState() => _OptionsBottomSheetState();
@@ -115,7 +115,7 @@ class _OptionsBottomSheetState extends State<OptionsBottomSheet> {
                           FutureBuilder<Map<String, dynamic>>(
                             future: pinnedPaths,
                             builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                              if (snapshot.hasData) {
+                              if (snapshot.hasData && widget.postReferencePath != null) {
                                 bool isPinned = (snapshot.data!['pinned'][widget.position] == widget.postReferencePath);
                                 return GestureDetector(
                                   child: Row(
@@ -130,11 +130,11 @@ class _OptionsBottomSheetState extends State<OptionsBottomSheet> {
 
                                       List<dynamic> newResult = result['pinned'];
                                       print(newResult);
-                                      newResult[widget.position] = '';
+                                      newResult[widget.position!] = '';
                                       print(newResult);
                                       FirebaseComponents().updateSpecificField(documentPath: 'users/${GlobalVariables.userUUID}', newData:  { 'pinned' : newResult });
                                     }) :
-                                     FirebaseComponents().setPin(widget.postReferencePath, widget.position);
+                                     FirebaseComponents().setPin(widget.postReferencePath!, widget.position!);
 
 
                                      Navigator.of(context).pop();
@@ -143,7 +143,7 @@ class _OptionsBottomSheetState extends State<OptionsBottomSheet> {
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
-                                return CircularProgressIndicator();
+                                return Container();
                               }
                             },
                           ),
@@ -153,12 +153,16 @@ class _OptionsBottomSheetState extends State<OptionsBottomSheet> {
                               children: [
                                 Icon(Icons.circle_outlined, color: Colors.white, size: 15),
                                 SizedBox(width: 15),
-                                ProfileText400(text: "DELETE - coming soon", size: 12),
+                                ProfileText400(text: "DELETE", size: 12),
                               ],
                             ),
                             onTap: () {
                               if(widget.type == "post"){
                                 FirebaseComponents().deletePost(widget.documentPath!, widget.collectionPath!);
+                              } else if(widget.type == "mood") {
+
+                                FirebaseComponents().deleteMood(widget.documentPath!, widget.collectionPath!, widget.songData!['tags']);
+
                               } else {
                                 FirebaseComponents().deleteSong(widget.songData!['unique_id'], widget.documentPath!, widget.collectionPath!, widget.tagType!, widget.songData!['tags'], widget.songData!['title']);
                               }

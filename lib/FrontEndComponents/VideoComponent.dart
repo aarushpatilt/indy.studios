@@ -8,6 +8,7 @@ import '../Backend/GlobalComponents.dart';
 import '../FrontEnd/MainAppFlows/SongMoodView.dart';
 import '../FrontEnd/MenuFlow/CommentView.dart';
 import 'CustomTabController.dart';
+import 'OptionComponent.dart';
 import 'TextComponents.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -264,21 +265,16 @@ Align(
                                           size: 20,
                                           sentence: 'liked your mood'
                                           ),
-                                          
-                                      const SizedBox(
-                                          width: GlobalVariables.smallSpacing),
-                                      const Icon(
-                                        Icons.repeat,
-                                        color: Color.fromARGB(255, 90, 90, 90),
-                                        size: 20.0,
-                                      ),
                                       const SizedBox(
                                           width: GlobalVariables.smallSpacing),
                                       CommentIcon(
                                           size: 20,
                                           userID: widget.userID,
                                           type: 'moods',
-                                          uniqueID: widget.uniqueID)
+                                          uniqueID: widget.uniqueID),
+                                          const SizedBox(
+                                          width: GlobalVariables.smallSpacing),
+                                        OptionsIcon(size: 20, profileImageURL: widget.mediaUrl, documentPath: 'users/${GlobalVariables.userUUID}/moods/${widget.uniqueID}', collectionPath: 'moods', songData: {'tags': widget.tags}, type: "mood"),
                                     ],
                                   ),
                                   const SizedBox(height: 10),

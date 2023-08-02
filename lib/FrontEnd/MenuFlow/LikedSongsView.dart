@@ -179,6 +179,7 @@ class SongRow extends StatelessWidget {
   final List<dynamic> tags;
   final Color barColor;
   final String uniqueID;
+  final String? select;
 
   SongRow({
     required this.imageUrl,
@@ -191,44 +192,14 @@ class SongRow extends StatelessWidget {
     required this.tags,
     required this.barColor,
     required this.uniqueID,
+    this.select
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => _showMusicTile(context),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Image.network(
-                  imageUrl,
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                ),
-                const SizedBox(width: GlobalVariables.smallSpacing),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ProfileText500(text: songTitle, size: 15),
-                    const SizedBox(height: GlobalVariables.smallSpacing - 10),
-                    ProfileText400(text: songArtist, size: 12),
-                  ],
-                ),                
-              ],
-            ),
-            Column(
-              children: [
-                OptionsIcon(postReferencePath: albumId != null ? 'users/$userID/albums/$albumId/collections/$uniqueID' : 'users/$userID/singles/$uniqueID', position: 0, profileImageURL: imageUrl, size: 20, documentPath: 'users/${GlobalVariables.userUUID}/${albumId != null ? 'albums' : 'singles' }${albumId != null ? '/$albumId/collections/$uniqueID' : '/$uniqueID'}', collectionPath: 'songs', tagType: albumId != null ? 'albums' : 'singles',songData: {'unique_id': uniqueID, 'tags' : tags, 'title' : songTitle},)
-              ],
-            )
-          ],
-        ),
-      ),
+      child: SongRowNoFunc(imageUrl: imageUrl, songTitle: songTitle, songArtist: songArtist, albumId: albumId, userID: userID, uniqueID: uniqueID, tags: tags),
     );
   }
 
@@ -274,6 +245,63 @@ class SongRow extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class SongRowNoFunc extends StatelessWidget {
+  const SongRowNoFunc({
+    super.key,
+    required this.imageUrl,
+    required this.songTitle,
+    required this.songArtist,
+    required this.albumId,
+    required this.userID,
+    required this.uniqueID,
+    required this.tags,
+  });
+
+  final String imageUrl;
+  final String songTitle;
+  final String songArtist;
+  final String? albumId;
+  final String userID;
+  final String uniqueID;
+  final List tags;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Image.network(
+                imageUrl,
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(width: GlobalVariables.smallSpacing),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ProfileText500(text: songTitle, size: 15),
+                  const SizedBox(height: GlobalVariables.smallSpacing - 10),
+                  ProfileText400(text: songArtist, size: 12),
+                ],
+              ),                
+            ],
+          ),
+          Column(
+            children: [
+              OptionsIcon(postReferencePath: albumId != null ? 'users/$userID/albums/$albumId/collections/$uniqueID' : 'users/$userID/singles/$uniqueID', position: 0, profileImageURL: imageUrl, size: 20, documentPath: 'users/${GlobalVariables.userUUID}/${albumId != null ? 'albums' : 'singles' }${albumId != null ? '/$albumId/collections/$uniqueID' : '/$uniqueID'}', collectionPath: 'songs', tagType: albumId != null ? 'albums' : 'singles',songData: {'unique_id': uniqueID, 'tags' : tags, 'title' : songTitle},)
+            ],
+          )
+        ],
+      ),
     );
   }
 }

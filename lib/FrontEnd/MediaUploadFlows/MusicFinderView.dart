@@ -6,8 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MusicFinderView extends StatefulWidget {
   final Function(Map<String, dynamic>)? onListSelected;
+  final String? select;
 
-  MusicFinderView({this.onListSelected});
+  MusicFinderView({this.onListSelected, this.select});
 
   @override
   _MusicFinderViewState createState() => _MusicFinderViewState();
@@ -40,6 +41,7 @@ class _MusicFinderViewState extends State<MusicFinderView> {
               SearchBarSong(
                 collectionPath: 'songs',
                 onListSelected: widget.onListSelected,
+                select: widget.select,
               ),
             ],
           ),
