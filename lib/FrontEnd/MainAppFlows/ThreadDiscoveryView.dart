@@ -237,7 +237,7 @@ class _PostDisplayState extends State<PostDisplay> {
                       width: 20,
                       child: Align(
                         alignment: Alignment.topLeft,
-                        child: OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 1, profileImageURL: profilePicture),
+                        child: OptionsIcon(size: 15, postReferencePath: 'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', position: 1, profileImageURL: profilePicture, documentPath:'users/${GlobalVariables.userUUID}/threads/${data['unique_id']}', collectionPath: 'threads', type: "post"),
                       ),
                 )
               ],

@@ -223,7 +223,7 @@ class SongRow extends StatelessWidget {
             ),
             Column(
               children: [
-                OptionsIcon(postReferencePath: albumId != null ? 'users/$userID/albums/$albumId/collections/$uniqueID' : 'users/$userID/singles/$uniqueID', position: 0, profileImageURL: imageUrl, size: 20)
+                OptionsIcon(postReferencePath: albumId != null ? 'users/$userID/albums/$albumId/collections/$uniqueID' : 'users/$userID/singles/$uniqueID', position: 0, profileImageURL: imageUrl, size: 20, documentPath: 'users/${GlobalVariables.userUUID}/${albumId != null ? 'albums' : 'singles' }${albumId != null ? '/$albumId/collections/$uniqueID' : '/$uniqueID'}', collectionPath: 'songs', tagType: albumId != null ? 'albums' : 'singles',songData: {'unique_id': uniqueID, 'tags' : tags, 'title' : songTitle},)
               ],
             )
           ],

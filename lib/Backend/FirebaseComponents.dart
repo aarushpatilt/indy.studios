@@ -59,6 +59,62 @@ class FirebaseComponents {
     }
   }
 
+Future<bool> deleteSong(String documentID, String documentPath, String collectionPath, String tagType, List<dynamic> tags, String title) async {
+  try {
+    // Get a reference to the Firestore instance
+    final firestore = FirebaseFirestore.instance;
+    final firebaseStorage = FirebaseStorage.instance;
+
+    // Fetch the document to get the list of download URLs
+    DocumentSnapshot docSnapshot = await firestore.doc(documentPath).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+      if (data.containsKey('image_urls')) {
+        List<String> downloadURLs = List<String>.from(data['image_urls']);
+
+        // Delete the song media from Firebase Storage
+        for (var url in downloadURLs) {
+          var fileRef = firebaseStorage.refFromURL(url);
+          await fileRef.delete();
+        }
+      }
+    }
+
+    // Delete the document from Firestore
+    await firestore.doc(documentPath).delete();
+
+    // Delete the reference from the main collection
+    await firestore.collection(collectionPath).doc(documentID).delete();
+
+    // Delete the subcollections manually
+    for (String tag in tags) {
+      String tagCollectionPath = 'tags/$tag/collection/$documentID';
+      CollectionReference subcollection = firestore.collection(tagCollectionPath);
+      QuerySnapshot querySnapshot = await subcollection.get();
+
+      for (DocumentSnapshot doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+    }
+
+    // Manually delete from the mix tag collection
+    String mixTagCollectionPath = 'tags/mix/collection/$documentID';
+    CollectionReference mixSubcollection = firestore.collection(mixTagCollectionPath);
+    QuerySnapshot mixQuerySnapshot = await mixSubcollection.get();
+
+    for (DocumentSnapshot doc in mixQuerySnapshot.docs) {
+      await doc.reference.delete();
+    }
+
+    return true;
+  } catch (e) {
+    print(e);
+    return false;
+  }
+}
+
+
+
   Future<void> updateSpecificField({required String documentPath, required Map<String, dynamic> newData}) async {
     try {
       await FirebaseFirestore.instance.doc(documentPath).update(newData);
@@ -576,6 +632,59 @@ Future<bool> replaceAndUploadImage(List<dynamic> imageURLs, String documentPath,
     }
   }
 
+Future<bool> deletePost(String documentPath, String collectionPath) async {
+  try {
+    // Retrieve the document
+    final DocumentSnapshot document = await FirebaseFirestore.instance.doc(documentPath).get();
+    // Delete each media file from Storage
+    List<dynamic> downloadURLs = document.get('image_urls');
+    for (var url in downloadURLs) {
+      String path = extractPathFromUrl(url);
+      print(path);
+      await FirebaseStorage.instance.ref(path).delete();
+    }
+
+    // Delete the document reference from the 'threads' collection
+    await FirebaseFirestore.instance.collection(collectionPath).doc(document.id).delete();
+    print( FirebaseFirestore.instance.collection(collectionPath).doc(document.id));
+    // Delete the documents in the 'likes' subcollection
+    QuerySnapshot likesQuerySnapshot = await document.reference.collection('likes').get();
+    for (var doc in likesQuerySnapshot.docs) {
+      // Delete each document in the subcollection
+      await doc.reference.delete();
+    }
+
+    // Delete the documents in the 'comments' subcollection
+    QuerySnapshot commentsQuerySnapshot = await document.reference.collection('comments').get();
+    for (var doc in commentsQuerySnapshot.docs) {
+      // Delete each document in the subcollection
+      await doc.reference.delete();
+    }
+
+    // Finally, delete the document itself
+    await document.reference.delete();
+
+    return true;
+  } catch (e) {
+    print(e);
+    return false;
+  }
+}
+
+String extractPathFromUrl(String url) {
+  Uri uri = Uri.parse(url);
+  String path = uri.path;
+
+  // '/v0/b/{bucket}/o/{path}'
+  // We want to remove the first three segments of the path: ['v0', 'b', '{bucket}', 'o', ...]
+  List<String> segments = path.split('/');
+  segments.removeRange(0, 5);
+
+  // The path is URL encoded, so we need to decode it
+  // Also, remove the query part of the URL
+  return Uri.decodeFull(segments.join('/')).split('?').first;
+}
+
 
 
 
@@ -799,6 +908,7 @@ class FirestoreService {
 
     return fetchedData;
   }
+
 }
 
 

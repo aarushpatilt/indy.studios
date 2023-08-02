@@ -12,8 +12,13 @@ class OptionsIcon extends StatelessWidget {
   final String postReferencePath;
   final int position;
   final String profileImageURL;
+  Map<String, dynamic>? songData;
+  final String? collectionPath;
+  final String? documentPath;
+  final String? tagType;
+  final String? type;
 
-  OptionsIcon({required this.size, required this.postReferencePath, required this.position, required this.profileImageURL});
+  OptionsIcon({required this.size, required this.postReferencePath, required this.position, required this.profileImageURL, this.songData, this.collectionPath, this.documentPath, this.tagType, this.type});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,7 @@ class OptionsIcon extends StatelessWidget {
             backgroundColor: Colors.transparent,
             isScrollControlled: true, 
             builder: (BuildContext context) {
-              return OptionsBottomSheet(postReferencePath: postReferencePath, position: position, profileImageURL: profileImageURL,);
+              return OptionsBottomSheet(postReferencePath: postReferencePath, position: position, profileImageURL: profileImageURL, documentPath: documentPath, collectionPath: collectionPath, tagType: tagType, songData: songData, type: type);
             },
           );
         },
@@ -40,8 +45,14 @@ class OptionsBottomSheet extends StatefulWidget {
   final String postReferencePath;
   final int position;
   final String profileImageURL;
+  Map<String, dynamic>? songData;
+  final String? documentPath;
+  final String? collectionPath;
+  final String? tagType;
+  final String? type;
+  
 
-  OptionsBottomSheet({required this.postReferencePath, required this.position, required this.profileImageURL});
+  OptionsBottomSheet({required this.postReferencePath, required this.position, required this.profileImageURL, this.songData, this.documentPath, this.collectionPath, this.tagType, this.type});
 
   @override
   _OptionsBottomSheetState createState() => _OptionsBottomSheetState();
@@ -54,6 +65,9 @@ class _OptionsBottomSheetState extends State<OptionsBottomSheet> {
   void initState() {
     super.initState();
     pinnedPaths = FirebaseComponents().getSpecificData(documentPath: 'users/${GlobalVariables.userUUID}');
+    print(widget.documentPath);
+    print(widget.collectionPath);
+    print(widget.tagType);
   }
 
   @override
@@ -143,7 +157,11 @@ class _OptionsBottomSheetState extends State<OptionsBottomSheet> {
                               ],
                             ),
                             onTap: () {
-                              print("HEY");
+                              if(widget.type == "post"){
+                                FirebaseComponents().deletePost(widget.documentPath!, widget.collectionPath!);
+                              } else {
+                                FirebaseComponents().deleteSong(widget.songData!['unique_id'], widget.documentPath!, widget.collectionPath!, widget.tagType!, widget.songData!['tags'], widget.songData!['title']);
+                              }
                             },
                           ),
                           const SizedBox(height: 35),
