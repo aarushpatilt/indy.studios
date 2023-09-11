@@ -463,16 +463,22 @@ class _ThreadPlayerState extends State<ThreadPlayer> {
                 },
                 child: Stack(
                   children: [
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: GlobalVariables.properWidth,
-                        maxHeight: GlobalVariables.properWidth,
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(5.0),
-                        child: VideoPlayer(_controller),
-                      )
-                    ),
+Container(
+  constraints: BoxConstraints(
+    maxWidth: GlobalVariables.properWidth,
+    maxHeight: GlobalVariables.properWidth,
+  ),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(5.0),
+    child: AspectRatio(
+      aspectRatio: _controller.value.size != null 
+                      ? _controller.value.size.width / _controller.value.size.height 
+                      : 16 / 9, // fallback ratio if the video's dimensions are not available
+      child: VideoPlayer(_controller),
+    ),
+  ),
+),
+
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: FloatingActionButton(

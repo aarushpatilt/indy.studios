@@ -12,6 +12,7 @@ import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
 import 'package:ndy/FrontEnd/SignUpFlow/EditProfile.dart';
 import 'package:ndy/FrontEnd/SignUpFlow/EditView.dart';
 import 'package:ndy/FrontEnd/SignUpFlow/UpgradeView.dart';
+import 'package:ndy/FrontEnd/SignUpFlow/UserAuthView.dart';
 
 import 'FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
 import 'FrontEnd/VoteFlow/VoteUpload.dart';
