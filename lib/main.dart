@@ -95,7 +95,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.ios,
+      options: DefaultFirebaseOptions.android,
   );
 
 //ProfileCustom(userID: GlobalVariables.userUUID,)
