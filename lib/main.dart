@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart'
 import 'package:flutter/rendering.dart';
 import 'package:ndy/create_account/account.dart';
 import 'package:ndy/create_account/signup.dart';
+import 'package:ndy/global/constants.dart';
 import 'package:ndy/global/controls.dart';
 import 'package:ndy/global/uploads.dart';
 
@@ -105,7 +106,7 @@ class ComponentScreen extends StatelessWidget {
 
     // Replace CustomTextField with any component you wish to test
     // ignore: prefer_const_constructors
-    Widget componentToTest = CustomComponent(title: "read", icon: Icons.circle);
+    Widget componentToTest =  CustomSearchBar(rectangleColor: Constant.inactiveColor, title: "tag", titleColor: Constant.activeColor, titleSize: Constant.smallMedText);
     
     return Scaffold(
       backgroundColor: Colors.red, // Set the background color to red
@@ -113,7 +114,13 @@ class ComponentScreen extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
-            child: componentToTest, // Place your component here
+            child: Column(
+              children: [
+
+                const SizedBox(height: 300),
+                componentToTest
+              ],
+            ) // Place your component here
           ),
         ),
       ),

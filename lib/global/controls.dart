@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ndy/global/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CustomComponent extends StatefulWidget {
   final String title;
@@ -114,4 +117,173 @@ class TagBubbleComponent extends StatelessWidget {
       }).toList(),
     );
   }
+}
+
+
+
+class CustomSearchBar extends StatefulWidget {
+  final Color rectangleColor;
+  final String title;
+  final Color titleColor;
+  final double titleSize;
+
+  CustomSearchBar({
+    required this.rectangleColor,
+    required this.title,
+    required this.titleColor,
+    required this.titleSize,
+  });
+
+  @override
+  _CustomSearchBarState createState() => _CustomSearchBarState();
+}
+
+class _CustomSearchBarState extends State<CustomSearchBar> {
+  final TextEditingController _searchController = TextEditingController();
+  List<String> searchResults = [];
+  bool _hasSearched = false; 
+  List<String> addedTags = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    searchTags(_searchController.text);
+  }
+
+  void addTag(String tag) {
+    if (addedTags.length < 3 && !addedTags.contains(tag)) {
+      setState(() {
+        addedTags.add(tag);
+      });
+    }
+  }
+
+  void removeTag(String tag) {
+    setState(() {
+      addedTags.remove(tag);
+    });
+  }
+
+  void searchTags(String query) async {
+    if (query.isNotEmpty) {
+      // Define the end range for the query
+      String endRange = query.substring(0, query.length - 1) + String.fromCharCode(query.codeUnitAt(query.length - 1) + 1);
+
+      var snapshot = await FirebaseFirestore.instance
+          .collection('tags')
+          .where('name', isGreaterThanOrEqualTo: query)
+          .where('name', isLessThan: endRange)
+          .get();
+      var docs = snapshot.docs;
+
+      setState(() {
+        searchResults = docs.map((doc) => doc.id).toList();
+        _hasSearched = true; 
+        print(searchResults);
+      });
+    } else {
+      setState(() {
+        searchResults = [];
+         _hasSearched = false; 
+      });
+    }
+  }
+@override
+Widget build(BuildContext context) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        height: 35,
+        color: widget.rectangleColor,
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                decoration: const InputDecoration(
+                  hintText: 'Search...',
+                  hintStyle: TextStyle(
+                    color: Constant.activeColor,
+                    fontSize: Constant.smallMedText,
+                  ),
+                  border: InputBorder.none,
+                ),
+                style: const TextStyle(
+                  color: Constant.activeColor,
+                  fontSize: Constant.smallMedText,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: Constant.mediumSpacing),
+      if (_searchController.text.isNotEmpty)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              _searchController.text,
+              style: const TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor),
+            ),
+            InkWell(
+              onTap: () => addTag(_searchController.text),
+              child: const Text("create", style: TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor)),
+            ),
+          ],
+        ),
+        const SizedBox(height: Constant.smallSpacing),
+      ...searchResults.map((result) => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                result,
+                style: const TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor),
+              ),
+              InkWell(
+                onTap: () => addTag(result),
+                child: const Text("add", style: TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor)),
+              ),
+            ],
+          )).toList(),
+      const SizedBox(height: Constant.smallSpacing),
+      const Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            "Added Tags",
+            style: TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor),
+          ),
+        ],
+      ),
+
+      ...addedTags.map((tag) => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                tag,
+                style: const TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor),
+              ),
+              InkWell(
+                onTap: () => removeTag(tag),
+                child: const Text("remove", style: TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor)),
+              ),
+            ],
+          )).toList(),
+    ],
+  );
+}
+
 }
