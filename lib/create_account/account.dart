@@ -86,7 +86,18 @@ class _CreateAccountState extends State<CreateAccount> {
                       characterLimitNum: 100, 
                     ),
                   ),
-                  const SizedBox(height: Constant.largeSpacing),  
+                  const SizedBox(height: Constant.mediumSpacing),  
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "3 tags that describe you or your music: ",
+                      style: TextStyle(
+                        fontSize: Constant.smallText,
+                        color: Constant.activeColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: Constant.mediumSpacing),  
                   TagComponent(title: "tags", icon: Icons.circle)
                 ],
               ),

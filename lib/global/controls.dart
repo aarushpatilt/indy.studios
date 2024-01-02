@@ -27,15 +27,13 @@ class _TagComponentState extends State<TagComponent> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(widget.title, style: const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText)),
-              IconButton(
-                icon:  Icon(
+              GestureDetector(
+                child: Icon(
                   widget.icon,
                   color: Constant.activeColor,
                   size: Constant.smallMedText,
                 ),
-                splashColor: Colors.transparent, // Remove splash effect
-                highlightColor: Colors.transparent, // Remove highlight effect
-                onPressed: () async {
+                onTap: () async {
                   List<String> result = await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const SearchTagView()),
@@ -49,6 +47,7 @@ class _TagComponentState extends State<TagComponent> {
           ),
           // Using collection if inside the children list
           if (strings.isNotEmpty) 
+            const SizedBox(height: Constant.mediumSpacing),
             TagBubbleComponent(
               tags: strings, 
               textColor: Constant.activeColor, 
@@ -60,28 +59,6 @@ class _TagComponentState extends State<TagComponent> {
     );
   }
 
-}
-
-class SecondView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // Dummy array of strings, replace with your logic
-    List<String> arrayOfStrings = ["String 1", "String 2", "String 3"];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second View"),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          child: Text("Return to Previous Screen"),
-          onPressed: () {
-            Navigator.pop(context, arrayOfStrings);
-          },
-        ),
-      ),
-    );
-  }
 }
 
 class TagBubbleComponent extends StatelessWidget {
@@ -97,7 +74,7 @@ class TagBubbleComponent extends StatelessWidget {
     required this.textColor,
     required this.textSize,
     required this.bubbleColor,
-    this.bubbleSize = 50.0, // Default size if not provided
+    this.bubbleSize = 35.0, // Default size if not provided
   }) : super(key: key);
 
   @override

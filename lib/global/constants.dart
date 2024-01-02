@@ -5,7 +5,7 @@ class Constant {
   static const Color mainColor = Colors.pink;
   static const Color backgroundColor = Colors.black;
   static const Color activeColor = Colors.white;
-  static const Color inactiveColor = Colors.grey;
+  static const Color inactiveColor = Color.fromARGB(255, 48, 48, 48);
 
   static const double smallText = 10;
   static const double smallMedText = 12;
