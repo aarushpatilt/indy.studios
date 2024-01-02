@@ -5,17 +5,17 @@ import 'package:ndy/global/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ndy/views/search_view.dart';
 
-class CustomComponent extends StatefulWidget {
+class TagComponent extends StatefulWidget {
   final String title;
   final IconData icon;
 
-  CustomComponent({required this.title, required this.icon});
+  TagComponent({required this.title, required this.icon});
 
   @override
-  _CustomComponentState createState() => _CustomComponentState();
+  _TagComponentState createState() => _TagComponentState();
 }
 
-class _CustomComponentState extends State<CustomComponent> {
+class _TagComponentState extends State<TagComponent> {
   List<String> strings = [];
 
   @override
@@ -26,9 +26,15 @@ class _CustomComponentState extends State<CustomComponent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(widget.title),
+              Text(widget.title, style: const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText)),
               IconButton(
-                icon: Icon(widget.icon),
+                icon:  Icon(
+                  widget.icon,
+                  color: Constant.activeColor,
+                  size: Constant.smallMedText,
+                ),
+                splashColor: Colors.transparent, // Remove splash effect
+                highlightColor: Colors.transparent, // Remove highlight effect
                 onPressed: () async {
                   List<String> result = await Navigator.push(
                     context,
@@ -245,7 +251,7 @@ Widget build(BuildContext context) {
             ),
             InkWell(
               onTap: () => addTag(_searchController.text),
-              child: const Text("create", style: TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor)),
+              child: const Text("create", style: TextStyle(fontSize: Constant.smallMedText, color: Constant.inactiveColor)),
             ),
           ],
         ),
@@ -259,11 +265,11 @@ Widget build(BuildContext context) {
               ),
               InkWell(
                 onTap: () => addTag(result),
-                child: const Text("add", style: TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor)),
+                child: const Text("add", style: TextStyle(fontSize: Constant.smallMedText, color: Constant.inactiveColor)),
               ),
             ],
           )).toList(),
-      const SizedBox(height: Constant.smallSpacing),
+      const SizedBox(height: Constant.largeSpacing),
       const Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -273,20 +279,29 @@ Widget build(BuildContext context) {
           ),
         ],
       ),
-
-      ...addedTags.map((tag) => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                tag,
-                style: const TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor),
-              ),
-              InkWell(
-                onTap: () => removeTag(tag),
-                child: const Text("remove", style: TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor)),
-              ),
-            ],
-          )).toList(),
+      const SizedBox(height: Constant.smallSpacing),
+    Column(
+      children: addedTags.map<Widget>((tag) {
+        return Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  tag,
+                  style: const TextStyle(fontSize: Constant.smallMedText, color: Constant.activeColor),
+                ),
+                InkWell(
+                  onTap: () => removeTag(tag),
+                  child: const Text("remove", style: TextStyle(fontSize: Constant.smallMedText, color: Constant.inactiveColor)),
+                ),
+              ],
+            ),
+            SizedBox(height: Constant.smallSpacing),
+          ],
+        );
+      }).toList(),
+    ),
     ],
   );
 }

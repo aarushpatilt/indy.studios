@@ -92,39 +92,39 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const ComponentScreen(),
+      home: const CreateAccount(),
     );
   }
 }
 
-class ComponentScreen extends StatelessWidget {
-  const ComponentScreen({super.key});
+// class ComponentScreen extends StatelessWidget {
+//   const ComponentScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    // Create a TextEditingController for the CustomTextField
-    final TextEditingController textController = TextEditingController();
+//   @override
+//   Widget build(BuildContext context) {
+//     // Create a TextEditingController for the CustomTextField
+//     final TextEditingController textController = TextEditingController();
 
-    // Replace CustomTextField with any component you wish to test
-    // ignore: prefer_const_constructors
-    Widget componentToTest = CustomComponent(title: "tags", icon: Icons.add);
+//     // Replace CustomTextField with any component you wish to test
+//     // ignore: prefer_const_constructors
+//     Widget componentToTest = CustomComponent(title: "tags", icon: Icons.add);
     
-    return Scaffold(
-      backgroundColor: Colors.red, // Set the background color to red
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
-            child: Column(
-              children: [
+//     return Scaffold(
+//       backgroundColor: Colors.red, // Set the background color to red
+//       body: SafeArea(
+//         child: Center(
+//           child: Padding(
+//             padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
+//             child: Column(
+//               children: [
 
-                const SizedBox(height: 300),
-                componentToTest
-              ],
-            ) // Place your component here
-          ),
-        ),
-      ),
-    );
-  }
-}
+//                 const SizedBox(height: 300),
+//                 componentToTest
+//               ],
+//             ) // Place your component here
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

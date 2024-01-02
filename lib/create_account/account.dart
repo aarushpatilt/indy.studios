@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ndy/global/backend.dart';
 import 'package:ndy/global/constants.dart';
+import 'package:ndy/global/controls.dart';
 import 'package:ndy/global/inputs.dart';
 import 'package:ndy/global/uploads.dart';
 import 'package:uuid/uuid.dart';
@@ -85,6 +86,8 @@ class _CreateAccountState extends State<CreateAccount> {
                       characterLimitNum: 100, 
                     ),
                   ),
+                  const SizedBox(height: Constant.largeSpacing),  
+                  TagComponent(title: "tags", icon: Icons.circle)
                 ],
               ),
             ),
