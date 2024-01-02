@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ndy/views/search_view.dart';
 
 class CustomComponent extends StatefulWidget {
   final String title;
@@ -31,7 +32,7 @@ class _CustomComponentState extends State<CustomComponent> {
                 onPressed: () async {
                   List<String> result = await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SecondView()),
+                    MaterialPageRoute(builder: (context) => const SearchTagView()),
                   );
                   setState(() {
                     strings = result;
@@ -126,12 +127,14 @@ class CustomSearchBar extends StatefulWidget {
   final String title;
   final Color titleColor;
   final double titleSize;
+  final Function(List<String>) onTagsUpdated;
 
   CustomSearchBar({
     required this.rectangleColor,
     required this.title,
     required this.titleColor,
     required this.titleSize,
+    required this.onTagsUpdated,
   });
 
   @override
@@ -165,6 +168,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       setState(() {
         addedTags.add(tag);
       });
+      widget.onTagsUpdated(addedTags);
     }
   }
 
@@ -172,6 +176,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     setState(() {
       addedTags.remove(tag);
     });
+    widget.onTagsUpdated(addedTags);
   }
 
   void searchTags(String query) async {
@@ -206,7 +211,7 @@ Widget build(BuildContext context) {
       Container(
         height: 35,
         color: widget.rectangleColor,
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: EdgeInsets.symmetric(horizontal: 5),
         child: Row(
           children: [
             Expanded(
@@ -286,4 +291,50 @@ Widget build(BuildContext context) {
   );
 }
 
+}
+
+class CustomAppBar extends StatelessWidget {
+  final List<String> data;
+  final String title;
+  final Color titleColor;
+  final double titleSize;
+  final Color iconColor;
+  final double iconSize;
+
+  CustomAppBar({
+    required this.data,
+    required this.title,
+    required this.titleColor,
+    required this.titleSize,
+    required this.iconColor,
+    required this.iconSize,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      color: Colors.transparent,
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () {
+              // Handle the back navigation
+              Navigator.pop(context, data);
+            },
+            child: Icon(Icons.arrow_back, color: iconColor, size: iconSize),
+          ),
+          Spacer(), // Pushes everything to the start and end
+          Text(
+            title,
+            style: TextStyle(
+              color: titleColor,
+              fontSize: titleSize,
+            ),
+          ),
+          Spacer(), // Ensures the title is centered
+        ],
+      ),
+    );
+  }
 }

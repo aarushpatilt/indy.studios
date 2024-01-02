@@ -8,6 +8,7 @@ import 'package:ndy/create_account/signup.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:ndy/global/controls.dart';
 import 'package:ndy/global/uploads.dart';
+import 'package:ndy/views/search_view.dart';
 
 
 class DefaultFirebaseOptions {
@@ -106,7 +107,7 @@ class ComponentScreen extends StatelessWidget {
 
     // Replace CustomTextField with any component you wish to test
     // ignore: prefer_const_constructors
-    Widget componentToTest =  CustomSearchBar(rectangleColor: Constant.inactiveColor, title: "tag", titleColor: Constant.activeColor, titleSize: Constant.smallMedText);
+    Widget componentToTest = CustomComponent(title: "tags", icon: Icons.add);
     
     return Scaffold(
       backgroundColor: Colors.red, // Set the background color to red
