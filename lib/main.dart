@@ -5,20 +5,6 @@ import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter/rendering.dart';
-import 'package:ndy/Backend/GlobalComponents.dart';
-import 'package:ndy/FrontEnd/MainAppFlows/ProfileCustom.dart';
-import 'package:ndy/FrontEnd/MediaUploadFlows/CameraUploadView.dart';
-import 'package:ndy/FrontEnd/MenuFlow/LikedMoodView.dart';
-import 'package:ndy/FrontEnd/SignUpFlow/EditProfile.dart';
-import 'package:ndy/FrontEnd/SignUpFlow/EditView.dart';
-import 'package:ndy/FrontEnd/SignUpFlow/UpgradeView.dart';
-import 'package:ndy/FrontEnd/SignUpFlow/UserAuthView.dart';
-
-import 'FrontEnd/MainAppFlows/ThreadDiscoveryView.dart';
-import 'FrontEnd/VoteFlow/VoteUpload.dart';
-import 'FrontEndComponents/CustomTabController.dart';
-import 'FrontEndComponents/TextComponents.dart';
-
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:
@@ -102,7 +88,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CustomTabPage(),
+      home: MainApp(),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
@@ -121,35 +107,6 @@ class MainApp extends StatelessWidget {
           child: Text('Hello'),
         ),
       ),
-    );
-  }
-}
-
-class MyColumnWithCreatedMoodsView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(height: 100),
-        ProfileText400(text: "HEY", size: 15),
-        CreatedThreadView(),
-      
-      ],
-    );
-  }
-}
-
-extension ColorExtension on Color {
-  Color darken([int percent = 10]) {
-    assert(1 <= percent && percent <= 100);
-    final p = percent / 100;
-    return Color.fromRGBO(
-      (red * (1 - p)).round(),
-      (green * (1 - p)).round(),
-      (blue * (1 - p)).round(),
-      opacity,
     );
   }
 }
