@@ -8,8 +8,9 @@ import 'package:ndy/views/search_view.dart';
 class TagComponent extends StatefulWidget {
   final String title;
   final IconData icon;
+  final Function(List<String>) finalTags;
 
-  TagComponent({required this.title, required this.icon});
+  TagComponent({required this.title, required this.icon, required this.finalTags});
 
   @override
   _TagComponentState createState() => _TagComponentState();

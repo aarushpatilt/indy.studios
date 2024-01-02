@@ -16,6 +16,7 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   File? profileImage; // Changed to nullable File and moved into state class
+  List<String>? tags;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +99,11 @@ class _CreateAccountState extends State<CreateAccount> {
                     ),
                   ),
                   const SizedBox(height: Constant.mediumSpacing),  
-                  TagComponent(title: "tags", icon: Icons.circle)
+                  TagComponent(title: "tags", icon: Icons.circle, finalTags: (finalTags) {
+                    setState(() {
+                      tags = finalTags;
+                    });
+                  },)
                 ],
               ),
             ),
@@ -121,7 +126,7 @@ class _CreateAccountState extends State<CreateAccount> {
               "bio": Constant.textControllerTwo.text,
               "link": Constant.textControllerThree.text,
               "images" : [null],
-              "tags" : [null]
+              "tags" : tags
             };
 
             List<String> url = await FirebaseBackend().uploadImages([profileImage!], 'users/uuid'); //change in final production
