@@ -81,24 +81,31 @@ class TagBubbleComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: tags.map((tag) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          margin: EdgeInsets.symmetric(horizontal: 5),
-          decoration: BoxDecoration(
-            color: bubbleColor,
-            borderRadius: BorderRadius.circular(bubbleSize / 2), // This creates the rounded corners
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            tag,
-            style: TextStyle(
-              color: textColor,
-              fontSize: textSize,
+      children: tags.asMap().map((index, tag) {
+        return MapEntry(
+          index,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            // Apply margin conditionally
+            margin: EdgeInsets.only(
+              left: index == 0 ? 0 : 5, // Remove left margin for the first tag
+              right: 5,
+            ),
+            decoration: BoxDecoration(
+              color: bubbleColor,
+              borderRadius: BorderRadius.circular(bubbleSize / 2), // This creates the rounded corners
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              tag,
+              style: TextStyle(
+                color: textColor,
+                fontSize: textSize,
+              ),
             ),
           ),
         );
-      }).toList(),
+      }).values.toList(),
     );
   }
 }
