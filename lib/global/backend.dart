@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseBackend {
 
@@ -142,5 +145,23 @@ class FirebaseBackend {
       return null;
     }
   }
+  Future<List<String>> uploadImages(List<File> imageFiles, String storagePath) async {
+    List<String> downloadUrls = [];
 
+    for (File imageFile in imageFiles) {
+      try {
+        String fileName = 'unique_file_name'; // Generate a unique file name for each file
+        Reference storageReference = FirebaseStorage.instance.ref().child('$storagePath/$fileName');
+        UploadTask uploadTask = storageReference.putFile(imageFile);
+        TaskSnapshot taskSnapshot = await uploadTask;
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+        downloadUrls.add(downloadUrl);
+      } catch (e) {
+        print(e);
+        // Optionally, handle the error for each file upload
+      }
+    }
+
+    return downloadUrls;
+  }
 }

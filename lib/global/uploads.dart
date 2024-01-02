@@ -6,12 +6,14 @@ class CircleImagePicker extends StatefulWidget {
   final double width;
   final double height;
   final Color strokeColor;
+  final Function(File) onImagePicked;
 
   const CircleImagePicker({
     Key? key,
     required this.width,
     required this.height,
     required this.strokeColor,
+    required this.onImagePicked,
   }) : super(key: key);
 
   @override
@@ -29,6 +31,7 @@ class _CircleImagePickerState extends State<CircleImagePicker> {
       setState(() {
         _image = image;
       });
+      widget.onImagePicked(File(_image!.path)); 
     }
   }
 
@@ -47,11 +50,11 @@ class _CircleImagePickerState extends State<CircleImagePicker> {
                   fit: BoxFit.cover,
                 )
               : null,
-          border: Border.all(color: widget.strokeColor, width: 2),
+          border: Border.all(color: widget.strokeColor, width: 1),
           shape: BoxShape.circle,
         ),
         child: _image == null
-            ? Icon(Icons.add, color: widget.strokeColor)
+            ? Icon(Icons.add, color: widget.strokeColor, weight: 0.5, size: 15)
             : null,
       ),
     );

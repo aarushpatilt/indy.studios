@@ -1,12 +1,20 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:ndy/create_account/account.dart';
 import 'package:ndy/global/backend.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:ndy/global/inputs.dart';
+import 'package:ndy/global/uploads.dart';
 import 'package:uuid/uuid.dart';
 
-class SignUpView extends StatelessWidget {
-  const SignUpView({super.key});
+class CreateAccount extends StatefulWidget {
+  const CreateAccount({super.key});
+
+  @override
+  _CreateAccountState createState() => _CreateAccountState();
+}
+
+class _CreateAccountState extends State<CreateAccount> {
+  File? profileImage; // Changed to nullable File and moved into state class
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +43,20 @@ class SignUpView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: Constant.gapSpacing),
+                  CircleImagePicker(width: 95, height: 95, strokeColor: Constant.activeColor, onImagePicked: (File imageFile) {
+                    profileImage = imageFile;
+                  },),
+                  const SizedBox(height: Constant.gapSpacing),
                   Container(
                     // Container for CustomTextField
                     child: CustomTextField(
                       controller: Constant.textControllerOne,
                       inputTextColor: Colors.white, 
-                      titleText: 'first name', 
+                      titleText: 'username', 
                       titleTextColor: Colors.white, 
                       underTextColor: Colors.grey, 
-                      characterLimitEnabled: false, 
-                      characterLimitNum: 50, 
+                      characterLimitEnabled: true, 
+                      characterLimitNum: 25, 
                     ),
                   ),
                   const SizedBox(height: Constant.largeSpacing),
@@ -53,11 +65,11 @@ class SignUpView extends StatelessWidget {
                     child: CustomTextField(
                       controller: Constant.textControllerTwo,
                       inputTextColor: Colors.white, 
-                      titleText: 'last name', 
+                      titleText: 'bio', 
                       titleTextColor: Colors.white, 
                       underTextColor: Colors.grey, 
-                      characterLimitEnabled: false, 
-                      characterLimitNum: 50, 
+                      characterLimitEnabled: true, 
+                      characterLimitNum: 100, 
                     ),
                   ),
                   const SizedBox(height: Constant.largeSpacing),        
@@ -66,24 +78,11 @@ class SignUpView extends StatelessWidget {
                     child: CustomTextField(
                       controller: Constant.textControllerThree,
                       inputTextColor: Colors.white, 
-                      titleText: 'email', 
+                      titleText: 'link', 
                       titleTextColor: Colors.white,
                       underTextColor: Colors.grey, 
-                      characterLimitEnabled: false, 
-                      characterLimitNum: 50, 
-                    ),
-                  ),
-                  const SizedBox(height: Constant.largeSpacing), 
-                  Container(
-                    // Container for CustomTextField
-                    child: CustomTextField(
-                      controller: Constant.textControllerFour,
-                      inputTextColor: Colors.white, 
-                      titleText: 'password', 
-                      titleTextColor: Colors.white,
-                      underTextColor: Colors.grey, 
-                      characterLimitEnabled: false, 
-                      characterLimitNum: 50, 
+                      characterLimitEnabled: true, 
+                      characterLimitNum: 100, 
                     ),
                   ),
                 ],
@@ -104,23 +103,22 @@ class SignUpView extends StatelessWidget {
 
             Map<String, dynamic> data = {
 
-              "UUID": uuid,
-              "first_name": Constant.textControllerOne.text,
-              "last_name": Constant.textControllerTwo.text,
-              "email_address": Constant.textControllerThree.text,
-              "password": Constant.textControllerFour.text,
-              "stats" : [0, 0, 0, 0],
-              "pinned" : [null, null, null]
+              "username": Constant.textControllerOne.text,
+              "bio": Constant.textControllerTwo.text,
+              "link": Constant.textControllerThree.text,
+              "images" : [null],
+              "tags" : [null]
             };
 
-            await FirebaseBackend().signUp(Constant.textControllerThree.text, Constant.textControllerFour.text);
+            List<String> url = await FirebaseBackend().uploadImages([profileImage!], 'users/uuid'); //change in final production
+            data['images'] = url;
 
             await FirebaseBackend().addDocumentToFirestoreWithId('users', uuid, data);
 
             Constant.textDispose();
 
             // ignore: use_build_context_synchronously
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateAccount()));
+            //Navigator.push(context, MaterialPageRoute(builder: (context) => const Profile()));
           },
         ),
       ),

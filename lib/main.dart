@@ -3,7 +3,9 @@ import 'package:firebase_core/firebase_core.dart' show Firebase, FirebaseOptions
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter/rendering.dart';
+import 'package:ndy/create_account/account.dart';
 import 'package:ndy/create_account/signup.dart';
+import 'package:ndy/global/controls.dart';
 import 'package:ndy/global/uploads.dart';
 
 
@@ -103,16 +105,17 @@ class ComponentScreen extends StatelessWidget {
 
     // Replace CustomTextField with any component you wish to test
     // ignore: prefer_const_constructors
-    Widget componentToTest = CircleImagePicker(
-        width: 100,
-        height: 100,
-        strokeColor: Colors.blue,
-      );
-
+    Widget componentToTest = CustomComponent(title: "read", icon: Icons.circle);
+    
     return Scaffold(
-      backgroundColor: Colors.black, // Set the background color to black
-      body: Center(
-        child: componentToTest, // Place your component here
+      backgroundColor: Colors.red, // Set the background color to red
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
+            child: componentToTest, // Place your component here
+          ),
+        ),
       ),
     );
   }
