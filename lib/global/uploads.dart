@@ -147,19 +147,17 @@ class _MusicUploadState extends State<MusicUpload> {
 
     if (result != null) {
       File file = File(result.files.single.path!);
-      int duration = await _getDuration(file);
-      if (duration > 30000) { // If more than 30 seconds
-        file = await _trimAudio(file); // Trim the audio
-      }
-      print("done!!");
+      file = await _trimAudio(file); // Trim the audio
       widget.onFileSelected(file);
     }
   }
 
   Future<int> _getDuration(File file) async {
     String dur = "";
-    await FlutterFFprobe().getMediaInformation(file.path).then((info) {
-      dur = info.getMediaProperties()?['duration'];
+    print("HUHHHHH");
+    print(file.path);
+    await FlutterFFprobe().getMediaInformation(file.path).then((info) async {
+      dur = await info.getMediaProperties()?['duration'];
     });
     double? result = double.tryParse(dur);
     
