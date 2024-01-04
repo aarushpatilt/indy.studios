@@ -10,14 +10,14 @@ import 'package:uuid/uuid.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
-class SingleUpload extends StatefulWidget {
-  const SingleUpload({super.key});
+class AlbumUpload extends StatefulWidget {
+  const AlbumUpload({super.key});
 
   @override
-  _SingleUploadState createState() => _SingleUploadState();
+  _AlbumUploadState createState() => _AlbumUploadState();
 }
 
-class _SingleUploadState extends State<SingleUpload> {
+class _AlbumUploadState extends State<AlbumUpload> {
   File? profileImage; // Changed to nullable File and moved into state class
   List<String>? tags;
   File? musicFile;
@@ -81,19 +81,6 @@ class _SingleUploadState extends State<SingleUpload> {
                             child: CustomTextField(
                               controller: Constant.textControllerTwo,
                               inputTextColor: Colors.white, 
-                              titleText: 'additional artists', 
-                              titleTextColor: Colors.white, 
-                              underTextColor: Colors.grey, 
-                              characterLimitEnabled: true, 
-                              characterLimitNum: 75, 
-                            ),
-                          ),
-                          const SizedBox(height: Constant.largeSpacing),
-                          Container(
-                            // Container for CustomTextField
-                            child: CustomTextField(
-                              controller: Constant.textControllerThree,
-                              inputTextColor: Colors.white, 
                               titleText: 'description', 
                               titleTextColor: Colors.white, 
                               underTextColor: Colors.grey, 
@@ -107,17 +94,7 @@ class _SingleUploadState extends State<SingleUpload> {
                               tags = finalTags;
                             });
                           },),
-                          const SizedBox(height: Constant.largeSpacing), 
-                          MusicUpload(title: "music upload", icon: Icons.circle, onFileSelected: (File bruh) { 
-                            setState(() {
-                              musicFile = bruh;
-                              musicName = musicFile!.path.split('/').last;
-                              print(musicName);
-                            });
-                           },),
-                          const SizedBox(height: Constant.smallSpacing), 
-                          Text(musicName, style: const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText)),
-                          const SizedBox(height: Constant.smallSpacing),  
+                          const SizedBox(height: Constant.gapSpacing), 
                           CustomButton(
                               borderColor: Colors.transparent, // Example color, change as needed
                               textColor: Constant.activeColor, // Example color, change as needed
@@ -130,20 +107,16 @@ class _SingleUploadState extends State<SingleUpload> {
                                 Map<String, dynamic> data = {
 
                                   "title": Constant.textControllerOne.text,
-                                  "artists": username! + " " + Constant.textControllerTwo.text,
                                   "description": Constant.textControllerThree.text,
                                   "tags" : tags,
                                   "images" : [null],
-                                  "music" : [null]
                                 };
 
                                 List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/${SharedData().getUserUuid()}'); 
                                 data['images'] = url;
 
-                                List<String> musicUrl = await FirebaseBackend().uploadFiles([musicFile!], 'users/${SharedData().getUserUuid()}'); 
-                                data['music'] = musicUrl;
 
-                                await FirebaseBackend().addDocumentToFirestoreWithId('users/${SharedData().getUserUuid()}/music/singles/${Constant.textControllerOne.text}', uuid, data);
+                                await FirebaseBackend().addDocumentToFirestoreWithId('users/${SharedData().getUserUuid()}/music/albums /${Constant.textControllerOne.text}', uuid, data);
 
                                 Constant.textDispose();
 

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter/rendering.dart';
 import 'package:ndy/create_account/account.dart';
+import 'package:ndy/create_account/albumupload.dart';
 import 'package:ndy/create_account/signup.dart';
 import 'package:ndy/create_account/singleupload.dart';
 import 'package:ndy/global/constants.dart';
@@ -93,7 +94,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const SingleUpload(),
+      home: const AlbumUpload(),
     );
   }
 }
