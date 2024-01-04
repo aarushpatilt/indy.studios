@@ -129,7 +129,7 @@ class _CreateAccountState extends State<CreateAccount> {
               "tags" : tags
             };
 
-            List<String> url = await FirebaseBackend().uploadImages([profileImage!], 'users/uuid'); //change in final production
+            List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/uuid'); //change in final production
             data['images'] = url;
 
             await FirebaseBackend().addDocumentToFirestoreWithId('users', uuid, data);

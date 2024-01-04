@@ -4,6 +4,7 @@ import 'package:ndy/global/backend.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:ndy/global/controls.dart';
 import 'package:ndy/global/inputs.dart';
+import 'package:ndy/global/shared.dart';
 import 'package:ndy/global/uploads.dart';
 import 'package:uuid/uuid.dart';
 import 'package:file_picker/file_picker.dart';
@@ -40,7 +41,7 @@ class _SingleUploadState extends State<SingleUpload> {
                 children: [
                   const SizedBox(height: Constant.mediumSpacing),
                   const Text(
-                    'sign up',
+                    'upload',
                     style: TextStyle(
                       fontSize: Constant.medText,
                       color: Colors.white,
@@ -67,11 +68,24 @@ class _SingleUploadState extends State<SingleUpload> {
                             child: CustomTextField(
                               controller: Constant.textControllerOne,
                               inputTextColor: Colors.white, 
-                              titleText: 'artists', 
+                              titleText: 'title', 
                               titleTextColor: Colors.white, 
                               underTextColor: Colors.grey, 
                               characterLimitEnabled: true, 
                               characterLimitNum: 25, 
+                            ),
+                          ),
+                          const SizedBox(height: Constant.largeSpacing),
+                          Container(
+                    // Container for CustomTextField
+                            child: CustomTextField(
+                              controller: Constant.textControllerOne,
+                              inputTextColor: Colors.white, 
+                              titleText: 'additional artists', 
+                              titleTextColor: Colors.white, 
+                              underTextColor: Colors.grey, 
+                              characterLimitEnabled: true, 
+                              characterLimitNum: 75, 
                             ),
                           ),
                           const SizedBox(height: Constant.largeSpacing),
@@ -84,7 +98,7 @@ class _SingleUploadState extends State<SingleUpload> {
                               titleTextColor: Colors.white, 
                               underTextColor: Colors.grey, 
                               characterLimitEnabled: true, 
-                              characterLimitNum: 100, 
+                              characterLimitNum: 200, 
                             ),
                           ),
                           const SizedBox(height: Constant.mediumSpacing), 
@@ -111,20 +125,24 @@ class _SingleUploadState extends State<SingleUpload> {
                               onPressed: () async {
 
                                 String uuid = const Uuid().v4();
+                                String? username = await SharedData().getUsername();
 
                                 Map<String, dynamic> data = {
 
-                                  "username": Constant.textControllerOne.text,
-                                  "bio": Constant.textControllerTwo.text,
-                                  "link": Constant.textControllerThree.text,
+                                  "title": Constant.textControllerOne.text,
+                                  "artists": username! + " " + Constant.textControllerTwo.text,
+                                  "description": Constant.textControllerThree.text,
                                   "images" : [null],
-                                  "tags" : tags
+                                  "music" : [null]
                                 };
 
-                                List<String> url = await FirebaseBackend().uploadImages([profileImage!], 'users/uuid'); //change in final production
+                                List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/${SharedData().getUserUuid()}'); 
                                 data['images'] = url;
 
-                                await FirebaseBackend().addDocumentToFirestoreWithId('users', uuid, data);
+                                List<String> musicUrl = await FirebaseBackend().uploadFiles([musicFile!], 'users/${SharedData().getUserUuid()}'); 
+                                data['music'] = musicUrl;
+
+                                await FirebaseBackend().addDocumentToFirestoreWithId('users/${SharedData().getUserUuid()}/music/singles/${Constant.textControllerOne.text}', uuid, data);
 
                                 Constant.textDispose();
 

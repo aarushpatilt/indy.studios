@@ -145,7 +145,7 @@ class FirebaseBackend {
       return null;
     }
   }
-  Future<List<String>> uploadImages(List<File> imageFiles, String storagePath) async {
+  Future<List<String>> uploadFiles(List<File> imageFiles, String storagePath) async {
     List<String> downloadUrls = [];
 
     for (File imageFile in imageFiles) {
