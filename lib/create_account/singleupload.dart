@@ -52,7 +52,7 @@ class _SingleUploadState extends State<SingleUpload> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(height: Constant.gapSpacing),
+                          const SizedBox(height: Constant.largeSpacing),
                           RectangleImagePicker(
                             width: 350,
                             height: 350,
@@ -103,9 +103,40 @@ class _SingleUploadState extends State<SingleUpload> {
                            },),
                           const SizedBox(height: Constant.smallSpacing), 
                           Text(musicName, style: const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText)),
+                          const SizedBox(height: Constant.smallSpacing),  
+                          CustomButton(
+                              borderColor: Colors.transparent, // Example color, change as needed
+                              textColor: Constant.activeColor, // Example color, change as needed
+                              titleText: 'done', // Button title text
+                              onPressed: () async {
+
+                                String uuid = const Uuid().v4();
+
+                                Map<String, dynamic> data = {
+
+                                  "username": Constant.textControllerOne.text,
+                                  "bio": Constant.textControllerTwo.text,
+                                  "link": Constant.textControllerThree.text,
+                                  "images" : [null],
+                                  "tags" : tags
+                                };
+
+                                List<String> url = await FirebaseBackend().uploadImages([profileImage!], 'users/uuid'); //change in final production
+                                data['images'] = url;
+
+                                await FirebaseBackend().addDocumentToFirestoreWithId('users', uuid, data);
+
+                                Constant.textDispose();
+
+                                // ignore: use_build_context_synchronously
+                                //Navigator.push(context, MaterialPageRoute(builder: (context) => const Profile()));
+                              },
+                            ),
                         ],
+
                       ),
                     ),
+                    
                   ),
                 ],
               ),
