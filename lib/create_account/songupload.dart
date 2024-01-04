@@ -171,9 +171,15 @@ class _SongUploadState extends State<SongUpload> {
                                   "music" : [null],
                                   "type": widget.type
                                 };
+                                if(imageCover == null){
+                                  List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/${uuid}'); 
+                                  data['images'] = url;
+                                } else {
+                                  String? temp = await imageCover;
+                                  data['images'] = [temp!];
 
-                                List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/${uuid}'); 
-                                data['images'] = url;
+                                }
+                                
 
                                 List<String> musicUrl = await FirebaseBackend().uploadFiles([musicFile!], 'users/${uuid}'); 
                                 data['music'] = musicUrl;
@@ -183,6 +189,8 @@ class _SongUploadState extends State<SongUpload> {
                                 Constant.textDispose();
 
                                 // ignore: use_build_context_synchronously
+                                
+                                Navigator.pop(context, ["Complete"]);
                                 Navigator.pop(context, ["Complete"]);
 
                                 // ignore: use_build_context_synchronously

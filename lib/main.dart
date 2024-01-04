@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const SongUpload(collectionPath: 'tt', type: ''),
+      home: const SignUpView(),
     );
   }
 }
