@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:ndy/create_account/choice.dart';
 import 'package:ndy/global/backend.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:ndy/global/controls.dart';
 import 'package:ndy/global/inputs.dart';
+import 'package:ndy/global/shared.dart';
 import 'package:ndy/global/uploads.dart';
 import 'package:uuid/uuid.dart';
 
@@ -102,6 +104,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   TagComponent(title: "tags", icon: Icons.circle, finalTags: (finalTags) {
                     setState(() {
                       tags = finalTags;
+                      print(tags);
                     });
                   },)
                 ],
@@ -118,7 +121,7 @@ class _CreateAccountState extends State<CreateAccount> {
           titleText: 'done', // Button title text
           onPressed: () async {
 
-            String uuid = const Uuid().v4();
+            String? uuid = await SharedData().getUserUuid();
 
             Map<String, dynamic> data = {
 
@@ -132,12 +135,14 @@ class _CreateAccountState extends State<CreateAccount> {
             List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/uuid'); //change in final production
             data['images'] = url;
 
-            await FirebaseBackend().addDocumentToFirestoreWithId('users', uuid, data);
+            await FirebaseBackend().updateDocumentInFirestore('users/', uuid!, data);
+            
+            SharedData().saveUsername(Constant.textControllerOne.text);
 
             Constant.textDispose();
 
             // ignore: use_build_context_synchronously
-            //Navigator.push(context, MaterialPageRoute(builder: (context) => const Profile()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const ChoiceView()));
           },
         ),
       ),

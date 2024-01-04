@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:ndy/create_account/albumupload.dart';
+import 'package:ndy/create_account/singleupload.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ndy/views/search_view.dart';
@@ -38,6 +40,64 @@ class _TagComponentState extends State<TagComponent> {
                   List<String> result = await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const SearchTagView()),
+                  );
+                  setState(() {
+                    strings = result;
+                  });
+                },
+              ),
+            ],
+          ),
+          // Using collection if inside the children list
+          if (strings.isNotEmpty) 
+            const SizedBox(height: Constant.mediumSpacing),
+            TagBubbleComponent(
+              tags: strings, 
+              textColor: Constant.activeColor, 
+              textSize: Constant.smallMedText, 
+              bubbleColor: Constant.inactiveColor,
+            ),
+        ],
+      ),
+    );
+  }
+
+}
+
+class ArtistComponent extends StatefulWidget {
+  final String title;
+  final IconData icon;
+  final Function(List<String>) finalTags;
+  final WidgetBuilder navigateTo;
+
+  ArtistComponent({required this.title, required this.icon, required this.finalTags, required this.navigateTo});
+
+  @override
+  _ArtistComponentState createState() => _ArtistComponentState();
+}
+
+class _ArtistComponentState extends State<ArtistComponent> {
+  List<String> strings = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(widget.title, style: const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText)),
+              GestureDetector(
+                child: Icon(
+                  widget.icon,
+                  color: Constant.activeColor,
+                  size: Constant.smallMedText,
+                ),
+                onTap: () async {
+                  List<String> result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: widget.navigateTo),
                   );
                   setState(() {
                     strings = result;

@@ -40,14 +40,8 @@ class _SingleUploadState extends State<SingleUpload> {
                 mainAxisSize: MainAxisSize.min, // Makes the column wrap its content
                 children: [
                   const SizedBox(height: Constant.mediumSpacing),
-                  const Text(
-                    'upload',
-                    style: TextStyle(
-                      fontSize: Constant.medText,
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
+                   CustomAppBar(
+                    data: [], title: "select", titleColor: Constant.activeColor, titleSize: Constant.medText, iconColor: Constant.activeColor, iconSize: Constant.medText),
                   Expanded( // Wrap the rest of the content in an Expanded
                     child: SingleChildScrollView( // Wrap the content in a SingleChildScrollView
                       child: Column(
@@ -146,6 +140,9 @@ class _SingleUploadState extends State<SingleUpload> {
                                 await FirebaseBackend().addDocumentToFirestoreWithId('users/${SharedData().getUserUuid()}/music/singles/${Constant.textControllerOne.text}', uuid, data);
 
                                 Constant.textDispose();
+
+                                // ignore: use_build_context_synchronously
+                                Navigator.pop(context, ["Complete"]);
 
                                 // ignore: use_build_context_synchronously
                                 //Navigator.push(context, MaterialPageRoute(builder: (context) => const Profile()));

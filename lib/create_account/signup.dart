@@ -3,6 +3,7 @@ import 'package:ndy/create_account/account.dart';
 import 'package:ndy/global/backend.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:ndy/global/inputs.dart';
+import 'package:ndy/global/shared.dart';
 import 'package:uuid/uuid.dart';
 
 class SignUpView extends StatelessWidget {
@@ -116,6 +117,9 @@ class SignUpView extends StatelessWidget {
             await FirebaseBackend().signUp(Constant.textControllerThree.text, Constant.textControllerFour.text);
 
             await FirebaseBackend().addDocumentToFirestoreWithId('users', uuid, data);
+
+            await SharedData().saveUUID(uuid);
+            print(await SharedData().getUserUuid());
 
             Constant.textDispose();
 

@@ -101,7 +101,7 @@ class _AlbumUploadState extends State<AlbumUpload> {
                               titleText: 'done', // Button title text
                               onPressed: () async {
 
-                                String uuid = const Uuid().v4();
+                                String? uuid = await SharedData().getUserUuid();
                                 String? username = await SharedData().getUsername();
 
                                 Map<String, dynamic> data = {
@@ -112,11 +112,11 @@ class _AlbumUploadState extends State<AlbumUpload> {
                                   "images" : [null],
                                 };
 
-                                List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/${SharedData().getUserUuid()}'); 
+                                List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/${uuid!}'); 
                                 data['images'] = url;
 
 
-                                await FirebaseBackend().addDocumentToFirestoreWithId('users/${SharedData().getUserUuid()}/music/albums /${Constant.textControllerOne.text}', uuid, data);
+                                await FirebaseBackend().addDocumentToFirestoreWithId('users/${uuid!}/music/albums /${Constant.textControllerOne.text}', uuid, data);
 
                                 Constant.textDispose();
 

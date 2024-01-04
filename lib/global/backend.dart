@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 
 class FirebaseBackend {
 
@@ -150,7 +151,7 @@ class FirebaseBackend {
 
     for (File imageFile in imageFiles) {
       try {
-        String fileName = 'unique_file_name'; // Generate a unique file name for each file
+        String fileName = const Uuid().v4();; // Generate a unique file name for each file
         Reference storageReference = FirebaseStorage.instance.ref().child('$storagePath/$fileName');
         UploadTask uploadTask = storageReference.putFile(imageFile);
         TaskSnapshot taskSnapshot = await uploadTask;
