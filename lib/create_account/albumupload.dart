@@ -56,8 +56,8 @@ class _AlbumUploadState extends State<AlbumUpload> {
                         children: [
                           const SizedBox(height: Constant.largeSpacing),
                           RectangleImagePicker(
-                            width: 350,
-                            height: 350,
+                            width:  MediaQuery.of(context).size.width * 0.95,
+                            height:  MediaQuery.of(context).size.width * 0.95,
                             strokeColor: Constant.activeColor,
                             onImagePicked: (File imageFile) {
                               profileImage = imageFile;
