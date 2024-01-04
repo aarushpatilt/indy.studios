@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ndy/global/backend.dart';
@@ -14,8 +15,9 @@ class SongUpload extends StatefulWidget {
 
   final String collectionPath;
   final String type;
+  final String? album_uuid;
 
-  const SongUpload({super.key, required this.collectionPath, required this.type});
+  const SongUpload({super.key, required this.collectionPath, required this.type, this.album_uuid});
 
   @override
   _SongUploadState createState() => _SongUploadState();
@@ -26,6 +28,22 @@ class _SongUploadState extends State<SongUpload> {
   List<String>? tags;
   File? musicFile;
   String musicName = "";
+  Future<String?>? imageCover;
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.album_uuid != null){
+      imageCover = _getImageCover();
+    }
+    
+  }
+  Future<String?> _getImageCover() async {
+    String? uuid = await SharedData().getUserUuid();
+    Map<String, dynamic> image_map = await FirebaseBackend().getSpecificFieldsFromDocument('users/$uuid/music/', widget.album_uuid!, ['images']);
+    
+    return image_map['images'][0] as String;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +70,29 @@ class _SongUploadState extends State<SongUpload> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const SizedBox(height: Constant.largeSpacing),
-                          RectangleImagePicker(
-                            width: 350,
-                            height: 350,
-                            strokeColor: Constant.activeColor,
-                            onImagePicked: (File imageFile) {
-                              profileImage = imageFile;
+                          FutureBuilder<String?>(
+                            future: imageCover,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return CircularProgressIndicator(); // Or some other loading indicator
+                              }
+                              if (snapshot.hasData && snapshot.data != null) {
+                                return Image.network(
+                                  snapshot.data!,
+                                  width: 350,
+                                  height: 350,
+                                  fit: BoxFit.cover,
+                                );
+                              } else {
+                                return RectangleImagePicker(
+                                  width: 350,
+                                  height: 350,
+                                  strokeColor: Constant.activeColor,
+                                  onImagePicked: (File imageFile) {
+                                    profileImage = imageFile;
+                                  },
+                                );
+                              }
                             },
                           ),
                           const SizedBox(height: Constant.largeSpacing),
@@ -127,7 +162,7 @@ class _SongUploadState extends State<SongUpload> {
                                 String single_uuid = Uuid().v4();
 
                                 Map<String, dynamic> data = {
-
+                                  "uuid" : single_uuid,
                                   "title": Constant.textControllerOne.text,
                                   "artists": username! + " " + Constant.textControllerTwo.text,
                                   "description": Constant.textControllerThree.text,

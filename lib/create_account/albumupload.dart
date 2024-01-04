@@ -108,6 +108,7 @@ class _AlbumUploadState extends State<AlbumUpload> {
 
                                 Map<String, dynamic> data = {
 
+                                  "uuid" : album_uuid,
                                   "title": Constant.textControllerOne.text,
                                   "description": Constant.textControllerThree.text,
                                   "tags" : tags,
@@ -124,7 +125,7 @@ class _AlbumUploadState extends State<AlbumUpload> {
                                 Constant.textDispose();
 
                                 // ignore: use_build_context_synchronously
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => SongUpload(collectionPath: 'users/${uuid!}/music/${album_uuid}/songs', type: "album")));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => SongUpload(collectionPath: 'users/${uuid!}/music/${album_uuid}/songs', type: "album", album_uuid: album_uuid,)));
                               },
                             ),
                         ],
