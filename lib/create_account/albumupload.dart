@@ -124,7 +124,7 @@ class _AlbumUploadState extends State<AlbumUpload> {
                                 Constant.textDispose();
 
                                 // ignore: use_build_context_synchronously
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => SongUpload(collectionPath: 'users/${uuid!}/music/${album_uuid}', type: "album")));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => SongUpload(collectionPath: 'users/${uuid!}/music/${album_uuid}/songs', type: "album")));
                               },
                             ),
                         ],

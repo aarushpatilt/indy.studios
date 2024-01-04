@@ -21,6 +21,21 @@ class _ChoiceViewState extends State<ChoiceView> {
   File? profileImage; // Changed to nullable File and moved into state class
   List<String>? tags;
 
+  String? uuid; // Nullable String for uuid
+
+    @override
+    void initState() {
+      super.initState();
+      _loadUserData();
+    }
+
+    Future<void> _loadUserData() async {
+      String? fetchedUuid = await SharedData().getUserUuid();
+      setState(() {
+        uuid = fetchedUuid;
+      });
+    }
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +68,7 @@ class _ChoiceViewState extends State<ChoiceView> {
 
                   }),
                   const SizedBox(height: Constant.largeSpacing),
-                  ArtistComponent(title: "single upload", icon: Icons.circle, navigateTo: (context) =>  SongUpload(collectionPath: 'users/${SharedData().getUserUuid()}/music', type: "single"), finalTags: (finalTags) {
+                  ArtistComponent(title: "single upload", icon: Icons.circle, navigateTo: (context) =>  SongUpload(collectionPath: 'users/${uuid}/music', type: "single"), finalTags: (finalTags) {
 
                   }),
                 ],

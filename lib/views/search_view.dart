@@ -38,8 +38,6 @@ class _SearchTagViewState extends State<SearchTagView> {
                 CustomSearchBar(rectangleColor: Constant.inactiveColor, title: "tag", titleColor: Constant.activeColor, titleSize: Constant.smallMedText, onTagsUpdated: (updatedTags) {
                   setState(() {
                     tags = updatedTags;
-                    print("HEY");
-                    print(tags);
                     widget.finalTags(tags);
                   });
 
