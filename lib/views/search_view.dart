@@ -6,7 +6,10 @@ import 'package:ndy/global/controls.dart';
 import 'package:flutter/material.dart';
 
 class SearchTagView extends StatefulWidget {
-  const SearchTagView({super.key});
+
+  final Function(List<String>) finalTags;
+
+  const SearchTagView({super.key, required this.finalTags});
 
   @override
   _SearchTagViewState createState() => _SearchTagViewState();
@@ -30,12 +33,17 @@ class _SearchTagViewState extends State<SearchTagView> {
             alignment: Alignment.topCenter,
             child: Column(
               children: [
-                CustomAppBar(data: tags, title: "tags", titleColor: Constant.activeColor, titleSize: Constant.smallMedText, iconColor: Constant.activeColor, iconSize: Constant.smallMedText),
+                CustomAppBar(data: [], title: "tags", titleColor: Constant.activeColor, titleSize: Constant.smallMedText, iconColor: Constant.activeColor, iconSize: Constant.smallMedText),
                 const SizedBox(height: Constant.largeSpacing),
                 CustomSearchBar(rectangleColor: Constant.inactiveColor, title: "tag", titleColor: Constant.activeColor, titleSize: Constant.smallMedText, onTagsUpdated: (updatedTags) {
-                      setState(() {
-                        tags = updatedTags;
-                      });
+                  setState(() {
+                    tags = updatedTags;
+                    print("HEY");
+                    print(tags);
+                    widget.finalTags(tags);
+                  });
+
+                  
                 },),
                 // Other widgets can be added here to interact with 'tags'
               ],

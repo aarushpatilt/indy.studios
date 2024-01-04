@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ndy/create_account/albumupload.dart';
-import 'package:ndy/create_account/singleupload.dart';
+import 'package:ndy/create_account/songupload.dart';
 import 'package:ndy/global/backend.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:ndy/global/controls.dart';
 import 'package:ndy/global/inputs.dart';
+import 'package:ndy/global/shared.dart';
 import 'package:ndy/global/uploads.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,6 +20,7 @@ class ChoiceView extends StatefulWidget {
 class _ChoiceViewState extends State<ChoiceView> {
   File? profileImage; // Changed to nullable File and moved into state class
   List<String>? tags;
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class _ChoiceViewState extends State<ChoiceView> {
 
                   }),
                   const SizedBox(height: Constant.largeSpacing),
-                  ArtistComponent(title: "single upload", icon: Icons.circle, navigateTo: (context) => const SingleUpload(), finalTags: (finalTags) {
+                  ArtistComponent(title: "single upload", icon: Icons.circle, navigateTo: (context) =>  SongUpload(collectionPath: 'users/${SharedData().getUserUuid()}/music', type: "single"), finalTags: (finalTags) {
 
                   }),
                 ],

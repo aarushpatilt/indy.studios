@@ -7,7 +7,7 @@ import 'package:ndy/create_account/account.dart';
 import 'package:ndy/create_account/albumupload.dart';
 import 'package:ndy/create_account/choice.dart';
 import 'package:ndy/create_account/signup.dart';
-import 'package:ndy/create_account/singleupload.dart';
+import 'package:ndy/create_account/songupload.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:ndy/global/controls.dart';
 import 'package:ndy/global/uploads.dart';

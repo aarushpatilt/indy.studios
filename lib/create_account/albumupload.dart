@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:ndy/create_account/songupload.dart';
 import 'package:ndy/global/backend.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:ndy/global/controls.dart';
@@ -103,6 +104,7 @@ class _AlbumUploadState extends State<AlbumUpload> {
 
                                 String? uuid = await SharedData().getUserUuid();
                                 String? username = await SharedData().getUsername();
+                                String album_uuid = const Uuid().v4();
 
                                 Map<String, dynamic> data = {
 
@@ -110,18 +112,19 @@ class _AlbumUploadState extends State<AlbumUpload> {
                                   "description": Constant.textControllerThree.text,
                                   "tags" : tags,
                                   "images" : [null],
+                                  "type" : "album"
                                 };
 
                                 List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/${uuid!}'); 
                                 data['images'] = url;
 
 
-                                await FirebaseBackend().addDocumentToFirestoreWithId('users/${uuid!}/music/albums /${Constant.textControllerOne.text}', uuid, data);
+                                await FirebaseBackend().addDocumentToFirestoreWithId('users/${uuid!}/music/', album_uuid, data);
 
                                 Constant.textDispose();
 
                                 // ignore: use_build_context_synchronously
-                                //Navigator.push(context, MaterialPageRoute(builder: (context) => const Profile()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => SongUpload(collectionPath: 'users/${uuid!}/music/${album_uuid}', type: "album")));
                               },
                             ),
                         ],

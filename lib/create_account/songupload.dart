@@ -10,14 +10,18 @@ import 'package:uuid/uuid.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
-class SingleUpload extends StatefulWidget {
-  const SingleUpload({super.key});
+class SongUpload extends StatefulWidget {
+
+  final String collectionPath;
+  final String type;
+
+  const SongUpload({super.key, required this.collectionPath, required this.type});
 
   @override
-  _SingleUploadState createState() => _SingleUploadState();
+  _SongUploadState createState() => _SongUploadState();
 }
 
-class _SingleUploadState extends State<SingleUpload> {
+class _SongUploadState extends State<SongUpload> {
   File? profileImage; // Changed to nullable File and moved into state class
   List<String>? tags;
   File? musicFile;
@@ -118,8 +122,9 @@ class _SingleUploadState extends State<SingleUpload> {
                               titleText: 'done', // Button title text
                               onPressed: () async {
 
-                                String uuid = const Uuid().v4();
+                                String? uuid = await SharedData().getUserUuid();
                                 String? username = await SharedData().getUsername();
+                                String single_uuid = Uuid().v4();
 
                                 Map<String, dynamic> data = {
 
@@ -128,16 +133,17 @@ class _SingleUploadState extends State<SingleUpload> {
                                   "description": Constant.textControllerThree.text,
                                   "tags" : tags,
                                   "images" : [null],
-                                  "music" : [null]
+                                  "music" : [null],
+                                  "type": widget.type
                                 };
 
-                                List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/${SharedData().getUserUuid()}'); 
+                                List<String> url = await FirebaseBackend().uploadFiles([profileImage!], 'users/${uuid}'); 
                                 data['images'] = url;
 
-                                List<String> musicUrl = await FirebaseBackend().uploadFiles([musicFile!], 'users/${SharedData().getUserUuid()}'); 
+                                List<String> musicUrl = await FirebaseBackend().uploadFiles([musicFile!], 'users/${uuid}'); 
                                 data['music'] = musicUrl;
 
-                                await FirebaseBackend().addDocumentToFirestoreWithId('users/${SharedData().getUserUuid()}/music/singles/${Constant.textControllerOne.text}', uuid, data);
+                                await FirebaseBackend().addDocumentToFirestoreWithId(widget.collectionPath, single_uuid, data);
 
                                 Constant.textDispose();
 

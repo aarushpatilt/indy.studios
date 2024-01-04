@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:ndy/create_account/albumupload.dart';
-import 'package:ndy/create_account/singleupload.dart';
+import 'package:ndy/create_account/songupload.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ndy/views/search_view.dart';
@@ -36,14 +36,15 @@ class _TagComponentState extends State<TagComponent> {
                   color: Constant.activeColor,
                   size: Constant.smallMedText,
                 ),
-                onTap: () async {
-                  List<String> result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SearchTagView()),
-                  );
-                  setState(() {
-                    strings = result;
-                  });
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SearchTagView(finalTags: (finalTag) {
+
+                    setState(() {
+                      strings = finalTag;
+                      widget.finalTags(finalTag);
+                    });
+
+                   },)));
                 },
               ),
             ],
@@ -218,8 +219,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     if (addedTags.length < 3 && !addedTags.contains(tag)) {
       setState(() {
         addedTags.add(tag);
+        widget.onTagsUpdated(addedTags);
       });
-      widget.onTagsUpdated(addedTags);
     }
   }
 

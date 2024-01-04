@@ -104,7 +104,6 @@ class _CreateAccountState extends State<CreateAccount> {
                   TagComponent(title: "tags", icon: Icons.circle, finalTags: (finalTags) {
                     setState(() {
                       tags = finalTags;
-                      print(tags);
                     });
                   },)
                 ],
