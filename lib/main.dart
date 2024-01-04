@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart'
 import 'package:flutter/rendering.dart';
 import 'package:ndy/create_account/account.dart';
 import 'package:ndy/create_account/signup.dart';
+import 'package:ndy/create_account/singleupload.dart';
 import 'package:ndy/global/constants.dart';
 import 'package:ndy/global/controls.dart';
 import 'package:ndy/global/uploads.dart';
@@ -92,7 +93,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const CreateAccount(),
+      home: const SingleUpload(),
     );
   }
 }
