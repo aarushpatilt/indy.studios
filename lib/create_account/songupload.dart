@@ -79,14 +79,14 @@ class _SongUploadState extends State<SongUpload> {
                               if (snapshot.hasData && snapshot.data != null) {
                                 return Image.network(
                                   snapshot.data!,
-                                  width: 350,
-                                  height: 350,
+                                  width: MediaQuery.of(context).size.width * 0.95,
+                                  height: MediaQuery.of(context).size.width * 0.95,
                                   fit: BoxFit.cover,
                                 );
                               } else {
                                 return RectangleImagePicker(
-                                  width: 350,
-                                  height: 350,
+                                  width:MediaQuery.of(context).size.width * 0.95,
+                                  height: MediaQuery.of(context).size.width * 0.95,
                                   strokeColor: Constant.activeColor,
                                   onImagePicked: (File imageFile) {
                                     profileImage = imageFile;
@@ -189,7 +189,7 @@ class _SongUploadState extends State<SongUpload> {
                                 Constant.textDispose();
 
                                 // ignore: use_build_context_synchronously
-                                
+
                                 Navigator.pop(context, ["Complete"]);
                                 Navigator.pop(context, ["Complete"]);
 
