@@ -19,6 +19,8 @@ class SingleUpload extends StatefulWidget {
 class _SingleUploadState extends State<SingleUpload> {
   File? profileImage; // Changed to nullable File and moved into state class
   List<String>? tags;
+  File? musicFile;
+  String musicName = "";
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +94,15 @@ class _SingleUploadState extends State<SingleUpload> {
                             });
                           },),
                           const SizedBox(height: Constant.largeSpacing), 
-                          MusicUpload(title: "music upload", icon: Icons.circle, onFileSelected: (File ) {  },)
+                          MusicUpload(title: "music upload", icon: Icons.circle, onFileSelected: (File bruh) { 
+                            setState(() {
+                              musicFile = bruh;
+                              musicName = musicFile!.path.split('/').last;
+                              print(musicName);
+                            });
+                           },),
+                          const SizedBox(height: Constant.smallSpacing), 
+                          Text(musicName, style: const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText)),
                         ],
                       ),
                     ),

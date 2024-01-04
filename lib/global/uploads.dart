@@ -151,6 +151,7 @@ class _MusicUploadState extends State<MusicUpload> {
       if (duration > 30000) { // If more than 30 seconds
         file = await _trimAudio(file); // Trim the audio
       }
+      print("done!!");
       widget.onFileSelected(file);
     }
   }
