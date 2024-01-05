@@ -108,7 +108,114 @@ class _ProfileCardState extends State<ProfileCard> {
                                       ),
                                     ),
                                   ],
-                                )
+                                ),
+                                const SizedBox(height: Constant.largeSpacing + 5),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                                  child: Column(
+                                    children: [
+
+                                      TagBubbleComponent(
+                                        tags: userData['tags'].cast<String>(), 
+                                        textColor: Constant.activeColor, 
+                                        textSize: Constant.smallMedText, 
+                                        bubbleColor: Constant.inactiveColor,
+                                      ),
+                                      const SizedBox(height: Constant.largeSpacing + 5),
+                                      Container(
+                                        // Add padding, color, size, etc. as needed for the outer container
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.start,  // This will place the column and image at the start and end of the row respectively
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start, // Aligns the text to the start of the column
+                                              children: [
+                                                Text(userData['username'], style:  const TextStyle(color: Constant.activeColor, fontSize: Constant.largeText, fontWeight: FontWeight.w500),),
+                                                const SizedBox(height: Constant.mediumSpacing + 5),
+                                                Text(userData['bio'], style:  const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText, fontWeight: FontWeight.w300),),
+                                              ],
+                                            ),
+                                            ClipOval(
+                                              child: Image.network(
+                                                userData['images'][0], // Replace with your image URL
+                                                width: 75,
+                                                height: 75,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: Constant.mediumSpacing),
+
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          userData['link'],
+                                          style: const TextStyle(
+                                            color: Constant.activeColor,
+                                            fontSize: Constant.smallMedText,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: Constant.gapSpacing - 10),
+
+                                      Container(
+                                        // Add padding, color, size, etc. as needed for the outer container
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space between items
+                                          children: [
+                                            // First Component
+                                            Container(
+                                              // Add padding, color, size, etc. as needed for this inner container
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min, // Makes the column wrap its content
+                                                crossAxisAlignment: CrossAxisAlignment.center, // Center the text horizontally
+                                                children: [
+                                                  Text(userData['stats'][0].toString(), style:  const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText, fontWeight: FontWeight.w300),),
+                                                  SizedBox(height: Constant.smallSpacing),
+                                                  const Text("following", style:  const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText, fontWeight: FontWeight.w300),),
+                                                ],
+                                              ),
+                                            ),
+
+                                            // Second Component
+                                            Container(
+                                              // Add padding, color, size, etc. as needed for this inner container
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min, // Makes the column wrap its content
+                                                crossAxisAlignment: CrossAxisAlignment.center, // Center the text horizontally
+                                                children: [
+                                                  Text(userData['stats'][1].toString(), style:  const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText, fontWeight: FontWeight.w300),),
+                                                  const SizedBox(height: Constant.smallSpacing),
+                                                  const Text("followers", style: TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText, fontWeight: FontWeight.w300),),
+                                                ],
+                                              ),
+                                            ),
+
+                                            // Third Component
+                                            Container(
+                                              // Add padding, color, size, etc. as needed for this inner container
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min, // Makes the column wrap its content
+                                                crossAxisAlignment: CrossAxisAlignment.center, // Center the text horizontally
+                                                children:  [
+                                                  Text(userData['stats'][2].toString(), style:  const TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText, fontWeight: FontWeight.w300),),
+                                                  const SizedBox(height: Constant.smallSpacing),
+                                                  const Text("following", style: TextStyle(color: Constant.activeColor, fontSize: Constant.smallMedText, fontWeight: FontWeight.w300),),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           );
