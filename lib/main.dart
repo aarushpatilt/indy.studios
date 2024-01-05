@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:ndy/create_account/account.dart';
 import 'package:ndy/create_account/albumupload.dart';
 import 'package:ndy/create_account/choice.dart';
+import 'package:ndy/create_account/profilecard.dart';
 import 'package:ndy/create_account/signup.dart';
 import 'package:ndy/create_account/songupload.dart';
 import 'package:ndy/global/constants.dart';
@@ -95,7 +96,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const SignUpView(),
+      home: ProfileCard(uuid: 'd549aa98-e57b-46fc-b3e8-ccb9c3d0d26a',),
     );
   }
 }
